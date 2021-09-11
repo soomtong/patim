@@ -1,0 +1,583 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E67F5026EC5505005EC052 /* AppDelegate.swift */; };
+		46E67F5326EC5506005EC052 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F5226EC5506005EC052 /* Assets.xcassets */; };
+		46E67F5626EC5506005EC052 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F5426EC5506005EC052 /* MainMenu.xib */; };
+		46E67F6226EC5506005EC052 /* PatalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E67F6126EC5506005EC052 /* PatalTests.swift */; };
+		46E67F6D26EC5506005EC052 /* PatalUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E67F6C26EC5506005EC052 /* PatalUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		46E67F5E26EC5506005EC052 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46E67F4526EC5505005EC052 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 46E67F4C26EC5505005EC052;
+			remoteInfo = Patal;
+		};
+		46E67F6926EC5506005EC052 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46E67F4526EC5505005EC052 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 46E67F4C26EC5505005EC052;
+			remoteInfo = Patal;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		46E67F4D26EC5505005EC052 /* Patal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Patal.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		46E67F5026EC5505005EC052 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		46E67F5226EC5506005EC052 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		46E67F5526EC5506005EC052 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		46E67F5726EC5506005EC052 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		46E67F5826EC5506005EC052 /* Patal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Patal.entitlements; sourceTree = "<group>"; };
+		46E67F5D26EC5506005EC052 /* PatalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PatalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		46E67F6126EC5506005EC052 /* PatalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatalTests.swift; sourceTree = "<group>"; };
+		46E67F6326EC5506005EC052 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		46E67F6826EC5506005EC052 /* PatalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PatalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		46E67F6C26EC5506005EC052 /* PatalUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatalUITests.swift; sourceTree = "<group>"; };
+		46E67F6E26EC5506005EC052 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		46E67F4A26EC5505005EC052 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		46E67F5A26EC5506005EC052 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		46E67F6526EC5506005EC052 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		46E67F4426EC5505005EC052 = {
+			isa = PBXGroup;
+			children = (
+				46E67F4F26EC5505005EC052 /* Patal */,
+				46E67F6026EC5506005EC052 /* PatalTests */,
+				46E67F6B26EC5506005EC052 /* PatalUITests */,
+				46E67F4E26EC5505005EC052 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		46E67F4E26EC5505005EC052 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				46E67F4D26EC5505005EC052 /* Patal.app */,
+				46E67F5D26EC5506005EC052 /* PatalTests.xctest */,
+				46E67F6826EC5506005EC052 /* PatalUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		46E67F4F26EC5505005EC052 /* Patal */ = {
+			isa = PBXGroup;
+			children = (
+				46E67F5026EC5505005EC052 /* AppDelegate.swift */,
+				46E67F5226EC5506005EC052 /* Assets.xcassets */,
+				46E67F5426EC5506005EC052 /* MainMenu.xib */,
+				46E67F5726EC5506005EC052 /* Info.plist */,
+				46E67F5826EC5506005EC052 /* Patal.entitlements */,
+			);
+			path = Patal;
+			sourceTree = "<group>";
+		};
+		46E67F6026EC5506005EC052 /* PatalTests */ = {
+			isa = PBXGroup;
+			children = (
+				46E67F6126EC5506005EC052 /* PatalTests.swift */,
+				46E67F6326EC5506005EC052 /* Info.plist */,
+			);
+			path = PatalTests;
+			sourceTree = "<group>";
+		};
+		46E67F6B26EC5506005EC052 /* PatalUITests */ = {
+			isa = PBXGroup;
+			children = (
+				46E67F6C26EC5506005EC052 /* PatalUITests.swift */,
+				46E67F6E26EC5506005EC052 /* Info.plist */,
+			);
+			path = PatalUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		46E67F4C26EC5505005EC052 /* Patal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 46E67F7126EC5506005EC052 /* Build configuration list for PBXNativeTarget "Patal" */;
+			buildPhases = (
+				46E67F4926EC5505005EC052 /* Sources */,
+				46E67F4A26EC5505005EC052 /* Frameworks */,
+				46E67F4B26EC5505005EC052 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Patal;
+			productName = Patal;
+			productReference = 46E67F4D26EC5505005EC052 /* Patal.app */;
+			productType = "com.apple.product-type.application";
+		};
+		46E67F5C26EC5506005EC052 /* PatalTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 46E67F7426EC5506005EC052 /* Build configuration list for PBXNativeTarget "PatalTests" */;
+			buildPhases = (
+				46E67F5926EC5506005EC052 /* Sources */,
+				46E67F5A26EC5506005EC052 /* Frameworks */,
+				46E67F5B26EC5506005EC052 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				46E67F5F26EC5506005EC052 /* PBXTargetDependency */,
+			);
+			name = PatalTests;
+			productName = PatalTests;
+			productReference = 46E67F5D26EC5506005EC052 /* PatalTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		46E67F6726EC5506005EC052 /* PatalUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 46E67F7726EC5506005EC052 /* Build configuration list for PBXNativeTarget "PatalUITests" */;
+			buildPhases = (
+				46E67F6426EC5506005EC052 /* Sources */,
+				46E67F6526EC5506005EC052 /* Frameworks */,
+				46E67F6626EC5506005EC052 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				46E67F6A26EC5506005EC052 /* PBXTargetDependency */,
+			);
+			name = PatalUITests;
+			productName = PatalUITests;
+			productReference = 46E67F6826EC5506005EC052 /* PatalUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		46E67F4526EC5505005EC052 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					46E67F4C26EC5505005EC052 = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
+					46E67F5C26EC5506005EC052 = {
+						CreatedOnToolsVersion = 12.5.1;
+						TestTargetID = 46E67F4C26EC5505005EC052;
+					};
+					46E67F6726EC5506005EC052 = {
+						CreatedOnToolsVersion = 12.5.1;
+						TestTargetID = 46E67F4C26EC5505005EC052;
+					};
+				};
+			};
+			buildConfigurationList = 46E67F4826EC5505005EC052 /* Build configuration list for PBXProject "Patal" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 46E67F4426EC5505005EC052;
+			productRefGroup = 46E67F4E26EC5505005EC052 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				46E67F4C26EC5505005EC052 /* Patal */,
+				46E67F5C26EC5506005EC052 /* PatalTests */,
+				46E67F6726EC5506005EC052 /* PatalUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		46E67F4B26EC5505005EC052 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				46E67F5326EC5506005EC052 /* Assets.xcassets in Resources */,
+				46E67F5626EC5506005EC052 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		46E67F5B26EC5506005EC052 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		46E67F6626EC5506005EC052 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		46E67F4926EC5505005EC052 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		46E67F5926EC5506005EC052 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				46E67F6226EC5506005EC052 /* PatalTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		46E67F6426EC5506005EC052 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				46E67F6D26EC5506005EC052 /* PatalUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		46E67F5F26EC5506005EC052 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 46E67F4C26EC5505005EC052 /* Patal */;
+			targetProxy = 46E67F5E26EC5506005EC052 /* PBXContainerItemProxy */;
+		};
+		46E67F6A26EC5506005EC052 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 46E67F4C26EC5505005EC052 /* Patal */;
+			targetProxy = 46E67F6926EC5506005EC052 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		46E67F5426EC5506005EC052 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				46E67F5526EC5506005EC052 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		46E67F6F26EC5506005EC052 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		46E67F7026EC5506005EC052 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		46E67F7226EC5506005EC052 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Patal/Patal.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = LL75ZY5CKZ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = Patal/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.Patal;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		46E67F7326EC5506005EC052 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Patal/Patal.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = LL75ZY5CKZ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = Patal/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.Patal;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		46E67F7526EC5506005EC052 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = LL75ZY5CKZ;
+				INFOPLIST_FILE = PatalTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.PatalTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Patal.app/Contents/MacOS/Patal";
+			};
+			name = Debug;
+		};
+		46E67F7626EC5506005EC052 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = LL75ZY5CKZ;
+				INFOPLIST_FILE = PatalTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.PatalTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Patal.app/Contents/MacOS/Patal";
+			};
+			name = Release;
+		};
+		46E67F7826EC5506005EC052 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = LL75ZY5CKZ;
+				INFOPLIST_FILE = PatalUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.PatalUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Patal;
+			};
+			name = Debug;
+		};
+		46E67F7926EC5506005EC052 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = LL75ZY5CKZ;
+				INFOPLIST_FILE = PatalUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.PatalUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Patal;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		46E67F4826EC5505005EC052 /* Build configuration list for PBXProject "Patal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46E67F6F26EC5506005EC052 /* Debug */,
+				46E67F7026EC5506005EC052 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		46E67F7126EC5506005EC052 /* Build configuration list for PBXNativeTarget "Patal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46E67F7226EC5506005EC052 /* Debug */,
+				46E67F7326EC5506005EC052 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		46E67F7426EC5506005EC052 /* Build configuration list for PBXNativeTarget "PatalTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46E67F7526EC5506005EC052 /* Debug */,
+				46E67F7626EC5506005EC052 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		46E67F7726EC5506005EC052 /* Build configuration list for PBXNativeTarget "PatalUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46E67F7826EC5506005EC052 /* Debug */,
+				46E67F7926EC5506005EC052 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 46E67F4526EC5505005EC052 /* Project object */;
+}
