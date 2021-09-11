@@ -8,6 +8,7 @@
 import Cocoa
 import UserNotifications
 
+
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -15,11 +16,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     let notificationCenter = UNUserNotificationCenter.current()
     
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
-//        let notificationCenter = UNUserNotificationCenter.current()
-        UNUserNotificationCenter.current().delegate = self
-
-        notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+    func registNotificationHandler() -> Void {
+        self.notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
             print("requested notification")
             
             if granted {
@@ -30,7 +28,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 print(error?.localizedDescription as Any)
             }
         }
+    }
 
+    func pushNotification() {
         let notificatonContent = UNMutableNotificationContent()
         notificatonContent.title = "팥알입력기"
         notificatonContent.body = "디버그 메시지로 활용하도록 함"
@@ -40,20 +40,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
  
         let request1 = UNNotificationRequest(identifier: UUID().uuidString, content: notificatonContent, trigger: trigger)
-        notificationCenter.add(request1) { (error) in
+        self.notificationCenter.add(request1) { (error) in
             if error != nil {
                 print(error?.localizedDescription as Any)
             }
         }
+    }
+    
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
+        UNUserNotificationCenter.current().delegate = self
+
+        self.registNotificationHandler()
         
-//        let request2 = UNNotificationRequest(identifier: UUID().uuidString, content: notificatonContent, trigger: trigger)
-//        notificationCenter.add(request2)
-        
-        
+        notificationCenter.getNotificationSettings { (settings) in
+            if settings.authorizationStatus == .authorized {
+                self.pushNotification()
+            }
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
+        print("exit application")
     }
 }
 
