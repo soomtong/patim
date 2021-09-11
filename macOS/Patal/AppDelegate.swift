@@ -22,8 +22,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             if granted {
                 print("notification granted")
-            } else {
+            } else if !granted {
                 print("notification refused")
+            } else {
+                print(error?.localizedDescription as Any)
             }
         }
 
