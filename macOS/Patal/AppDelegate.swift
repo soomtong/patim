@@ -15,6 +15,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet var window: NSWindow!
     
     let notificationCenter = UNUserNotificationCenter.current()
+        
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
+        UNUserNotificationCenter.current().delegate = self
+
+        self.registNotificationHandler()
+        let notificationContent = NotificatonContent(title: "팥알입력기", body: "디버그 메시지로 활용하도록 함")
+        
+        notificationCenter.getNotificationSettings { (settings) in
+            if settings.authorizationStatus == .authorized {
+                self.pushNotification(from: notificationContent)
+            }
+        }
+    }
+
+    func applicationWillTerminate(_ aNotification: Notification) {
+        print("exit application")
+    }
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        return completionHandler([.sound])
+    }
     
     func registNotificationHandler() -> Void {
         self.notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
@@ -45,28 +68,5 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 print(error?.localizedDescription as Any)
             }
         }
-    }
-    
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
-        UNUserNotificationCenter.current().delegate = self
-
-        self.registNotificationHandler()
-        let notificationContent = NotificatonContent(title: "팥알입력기", body: "디버그 메시지로 활용하도록 함")
-        
-        notificationCenter.getNotificationSettings { (settings) in
-            if settings.authorizationStatus == .authorized {
-                self.pushNotification(from: notificationContent)
-            }
-        }
-    }
-
-    func applicationWillTerminate(_ aNotification: Notification) {
-        print("exit application")
-    }
-}
-
-extension AppDelegate: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        return completionHandler([.sound])
     }
 }
