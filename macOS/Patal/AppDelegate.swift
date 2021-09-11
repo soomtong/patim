@@ -13,12 +13,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet var window: NSWindow!
     
-    let center = UNUserNotificationCenter.current()
+    let notificationCenter = UNUserNotificationCenter.current()
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 
-//        center.requestAuthorization(options: [.alert, .badge, .sound], completionHandler: { (granted: Bool, error: Error?) -> Void in })
-        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+        notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
             print("requested notification")
             
             if granted {
@@ -28,19 +27,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
 
-        let content = UNMutableNotificationContent()
-        content.title = "팥알입력기"
-        content.body = "디버그 메시지로 활용하도록 함"
-        content.categoryIdentifier = "alarm"
-        content.sound = UNNotificationSound.default
+        let notificatonContent = UNMutableNotificationContent()
+        notificatonContent.title = "팥알입력기"
+        notificatonContent.body = "디버그 메시지로 활용하도록 함"
+        notificatonContent.categoryIdentifier = "alarm"
+        notificatonContent.sound = UNNotificationSound.default
         
 //        let trigger = UNNotificationTrigger(false)
  
-        let request1 = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-        center.add(request1)
+        let request1 = UNNotificationRequest(identifier: UUID().uuidString, content: notificatonContent, trigger: nil)
+        notificationCenter.add(request1)
         
-        let request2 = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-        center.add(request2)
+        let request2 = UNNotificationRequest(identifier: UUID().uuidString, content: notificatonContent, trigger: nil)
+        notificationCenter.add(request2)
         
         
     }
