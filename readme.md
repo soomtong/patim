@@ -15,6 +15,11 @@ P2 커스텀 배열 기반의 입력기
 - Spotlignt 에 진입할 때 영문 상태로 전환
 - 내장된 영문 자판 사용시 더 빠른 한/영 전환
 
+## TO DO
+
+- [ ] scaffold
+- [ ] basic input hook
+
 ## Note
 
 인터페이스 구성은 대체적으로 XIB 를 사용하는게 좋아 보인다.
@@ -23,4 +28,7 @@ P2 커스텀 배열 기반의 입력기
 
 오래된 글이긴 하지만 아직도 유효한 듯 하다. 필요하다면 나중에는 SwiftUI 를 쓰는게 어떨까 싶다.
 
-## TO DO
+AccentColor 라는 내용이 Assets.xcassets 에 추가되었는데 이게 뭔가...
+
+- https://mcmw.abilitynet.org.uk/changing-system-accent-colour-macos-1015-catalina
+
