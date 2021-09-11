@@ -1,0 +1,13 @@
+# Backup files from text editors
+*~
+.*.swp
+
+# cocospod
+Pods
+
+# Xcode crap
+/build
+
+# Junk files on Mac OS X
+*.DS_Store
+*.playground
