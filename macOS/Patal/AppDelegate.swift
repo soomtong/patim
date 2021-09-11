@@ -30,10 +30,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    func pushNotification() {
+    func pushNotification(from: NotificatonContent) {
         let notificatonContent = UNMutableNotificationContent()
-        notificatonContent.title = "팥알입력기"
-        notificatonContent.body = "디버그 메시지로 활용하도록 함"
+        notificatonContent.title = from.title
+        notificatonContent.body = from.body
         notificatonContent.categoryIdentifier = "alarm"
         notificatonContent.sound = UNNotificationSound.default
         
@@ -51,10 +51,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         UNUserNotificationCenter.current().delegate = self
 
         self.registNotificationHandler()
+        let notificationContent = NotificatonContent(title: "팥알입력기", body: "디버그 메시지로 활용하도록 함")
         
         notificationCenter.getNotificationSettings { (settings) in
             if settings.authorizationStatus == .authorized {
-                self.pushNotification()
+                self.pushNotification(from: notificationContent)
             }
         }
     }
