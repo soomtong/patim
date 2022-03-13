@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		134356FC27DDFCF20074E691 /* InputMethodKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 134356FB27DDFCF20074E691 /* InputMethodKit.framework */; };
+		134356FE27DDFD030074E691 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 134356FD27DDFD030074E691 /* Cocoa.framework */; };
+		1343570027DDFF850074E691 /* InputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134356FF27DDFF850074E691 /* InputController.swift */; };
+		1343570327DE0BEB0074E691 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1343570527DE0BEB0074E691 /* InfoPlist.strings */; };
 		461F6A4126ECCD2400573DB1 /* NotificationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461F6A4026ECCD2400573DB1 /* NotificationContent.swift */; };
 		46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E67F5026EC5505005EC052 /* AppDelegate.swift */; };
 		46E67F5326EC5506005EC052 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F5226EC5506005EC052 /* Assets.xcassets */; };
@@ -36,6 +40,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		134356FB27DDFCF20074E691 /* InputMethodKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = InputMethodKit.framework; path = System/Library/Frameworks/InputMethodKit.framework; sourceTree = SDKROOT; };
+		134356FD27DDFD030074E691 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		134356FF27DDFF850074E691 /* InputController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputController.swift; sourceTree = "<group>"; };
+		1343570427DE0BEB0074E691 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		461F6A4026ECCD2400573DB1 /* NotificationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationContent.swift; sourceTree = "<group>"; };
 		46E67F4D26EC5505005EC052 /* Patal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Patal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		46E67F5026EC5505005EC052 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -59,6 +67,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				134356FE27DDFD030074E691 /* Cocoa.framework in Frameworks */,
+				134356FC27DDFCF20074E691 /* InputMethodKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +89,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		134356FA27DDFCF20074E691 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				134356FD27DDFD030074E691 /* Cocoa.framework */,
+				134356FB27DDFCF20074E691 /* InputMethodKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		46E67F4426EC5505005EC052 = {
 			isa = PBXGroup;
 			children = (
@@ -87,6 +106,7 @@
 				46E67F6026EC5506005EC052 /* PatalTests */,
 				46E67F6B26EC5506005EC052 /* PatalUITests */,
 				46E67F4E26EC5505005EC052 /* Products */,
+				134356FA27DDFCF20074E691 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -108,6 +128,7 @@
 				46E67F5226EC5506005EC052 /* Assets.xcassets */,
 				46E67F5426EC5506005EC052 /* MainMenu.xib */,
 				46E67F5726EC5506005EC052 /* Info.plist */,
+				134356FF27DDFF850074E691 /* InputController.swift */,
 				46E67F5826EC5506005EC052 /* Patal.entitlements */,
 			);
 			path = Patal;
@@ -137,6 +158,7 @@
 				46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */,
 				46E67F7E26EC5CFA005EC052 /* han3-P2.png */,
 				46E67F7F26EC5CFA005EC052 /* icon.tiff */,
+				1343570527DE0BEB0074E691 /* InfoPlist.strings */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -245,6 +267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				46E67F5326EC5506005EC052 /* Assets.xcassets in Resources */,
+				1343570327DE0BEB0074E691 /* InfoPlist.strings in Resources */,
 				46E67F5626EC5506005EC052 /* MainMenu.xib in Resources */,
 				46E67F8026EC5CFA005EC052 /* han3-P2@2x.png in Resources */,
 				46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */,
@@ -273,6 +296,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1343570027DDFF850074E691 /* InputController.swift in Sources */,
 				461F6A4126ECCD2400573DB1 /* NotificationContent.swift in Sources */,
 				46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */,
 			);
@@ -310,6 +334,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		1343570527DE0BEB0074E691 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1343570427DE0BEB0074E691 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		46E67F5426EC5506005EC052 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -448,7 +480,7 @@
 				DEVELOPMENT_TEAM = LL75ZY5CKZ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Patal/Info.plist;
-				INSTALL_PATH = "~$(LOCAL_LIBRARY_DIR)/Input Methods";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Input Methods";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
