@@ -16,6 +16,8 @@ AccentColor 라는 내용이 Assets.xcassets 에 추가되었는데 이게 뭔�
 
 @main 어노테이션은 무엇인가?
 
+main.swift 를 따로 만들지 않아도 되도록 필요한 과정을 구성한다.
+
 - https://medium.com/@abedalkareemomreyh/what-is-main-in-swift-bc79fbee741c
 - https://useyourloaf.com/blog/what-does-main-do-in-swift-5.3/
 
