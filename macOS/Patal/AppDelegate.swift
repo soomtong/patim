@@ -7,16 +7,26 @@
 
 import Cocoa
 import UserNotifications
+import InputMethodKit
 
+private var server: IMKServer?
 
-@main
+@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    @IBOutlet var window: NSWindow!
+    @IBOutlet var menu: NSMenu!
     
     let notificationCenter = UNUserNotificationCenter.current()
         
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        // load input method server
+        let bundle = Bundle.main
+        server = IMKServer(name: bundle.infoDictionary?["InputMethodConnectionName"] as? String,
+                           bundleIdentifier: bundle.bundleIdentifier)
+        
+        NSLog("patime launch")
+        
+        // load notification handler
         UNUserNotificationCenter.current().delegate = self
 
         self.registNotificationHandler()
