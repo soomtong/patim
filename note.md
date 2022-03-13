@@ -2,6 +2,17 @@
 
 개발 일지
 
+### Day 2
+
+클래스 이니셜라이저의 종류가 하나가 아님. 기본 init 은 designated 의 상태고 convienience 타입의 init 이 추가된 형태.
+designated 보다 먼저 실행되는 듯. 단순히 override 하는 것보다 composite 하는게 편리한 경우가 있으니...
+
+- https://www.hackingwithswift.com/example-code/language/what-are-convenience-initializers
+- https://choi-log-life.tistory.com/entry/iOS-Swift-initialization-3
+
+outlet 으로 인터페이스와 연동하도록 하고 앱을 background 로 동작시키지 위해 `LSBackgroundOnly` 값을 추가한다.
+입력기에 등록시키기 위해 InputMethodServer 로 시작하는 키도 추가해야 한다.
+
 ### Day 1
 
 인터페이스 구성은 대체적으로 XIB 를 사용하는게 좋아 보인다.
