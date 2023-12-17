@@ -4,7 +4,7 @@
 
 ### Day 2
 
-클래스 이니셜라이저의 종류가 하나가 아님. 기본 init 은 designated 의 상태고 convienience 타입의 init 이 추가된 형태.
+클래스 이니셜라이저의 종류가 하나가 아님. 기본 init 은 designated 의 상태고 convenience 타입의 init 이 추가된 형태.
 designated 보다 먼저 실행되는 듯. 단순히 override 하는 것보다 composite 하는게 편리한 경우가 있으니...
 
 - https://www.hackingwithswift.com/example-code/language/what-are-convenience-initializers

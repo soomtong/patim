@@ -16,7 +16,6 @@
 		46E67F5326EC5506005EC052 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F5226EC5506005EC052 /* Assets.xcassets */; };
 		46E67F5626EC5506005EC052 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F5426EC5506005EC052 /* MainMenu.xib */; };
 		46E67F6226EC5506005EC052 /* PatalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E67F6126EC5506005EC052 /* PatalTests.swift */; };
-		46E67F6D26EC5506005EC052 /* PatalUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E67F6C26EC5506005EC052 /* PatalUITests.swift */; };
 		46E67F8026EC5CFA005EC052 /* han3-P2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */; };
 		46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7E26EC5CFA005EC052 /* han3-P2.png */; };
 		46E67F8226EC5CFA005EC052 /* icon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7F26EC5CFA005EC052 /* icon.tiff */; };
@@ -51,12 +50,8 @@
 		46E67F5526EC5506005EC052 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		46E67F5726EC5506005EC052 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46E67F5826EC5506005EC052 /* Patal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Patal.entitlements; sourceTree = "<group>"; };
-		46E67F5D26EC5506005EC052 /* PatalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PatalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		46E67F6126EC5506005EC052 /* PatalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatalTests.swift; sourceTree = "<group>"; };
 		46E67F6326EC5506005EC052 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		46E67F6826EC5506005EC052 /* PatalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PatalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		46E67F6C26EC5506005EC052 /* PatalUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatalUITests.swift; sourceTree = "<group>"; };
-		46E67F6E26EC5506005EC052 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-P2@2x.png"; sourceTree = "<group>"; };
 		46E67F7E26EC5CFA005EC052 /* han3-P2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-P2.png"; sourceTree = "<group>"; };
 		46E67F7F26EC5CFA005EC052 /* icon.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = icon.tiff; sourceTree = "<group>"; };
@@ -104,7 +99,6 @@
 				46E67F7C26EC5CFA005EC052 /* Resource */,
 				46E67F4F26EC5505005EC052 /* Patal */,
 				46E67F6026EC5506005EC052 /* PatalTests */,
-				46E67F6B26EC5506005EC052 /* PatalUITests */,
 				46E67F4E26EC5505005EC052 /* Products */,
 				134356FA27DDFCF20074E691 /* Frameworks */,
 			);
@@ -114,8 +108,6 @@
 			isa = PBXGroup;
 			children = (
 				46E67F4D26EC5505005EC052 /* Patal.app */,
-				46E67F5D26EC5506005EC052 /* PatalTests.xctest */,
-				46E67F6826EC5506005EC052 /* PatalUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -141,15 +133,6 @@
 				46E67F6326EC5506005EC052 /* Info.plist */,
 			);
 			path = PatalTests;
-			sourceTree = "<group>";
-		};
-		46E67F6B26EC5506005EC052 /* PatalUITests */ = {
-			isa = PBXGroup;
-			children = (
-				46E67F6C26EC5506005EC052 /* PatalUITests.swift */,
-				46E67F6E26EC5506005EC052 /* Info.plist */,
-			);
-			path = PatalUITests;
 			sourceTree = "<group>";
 		};
 		46E67F7C26EC5CFA005EC052 /* Resource */ = {
@@ -198,7 +181,6 @@
 			);
 			name = PatalTests;
 			productName = PatalTests;
-			productReference = 46E67F5D26EC5506005EC052 /* PatalTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		46E67F6726EC5506005EC052 /* PatalUITests */ = {
@@ -216,7 +198,6 @@
 			);
 			name = PatalUITests;
 			productName = PatalUITests;
-			productReference = 46E67F6826EC5506005EC052 /* PatalUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -315,7 +296,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				46E67F6D26EC5506005EC052 /* PatalUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "46E67F5C26EC5506005EC052"
-               BuildableName = "PatalTests.xctest"
+               BuildableName = "PatalTests"
                BlueprintName = "PatalTests"
                ReferencedContainer = "container:Patal.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "46E67F6726EC5506005EC052"
-               BuildableName = "PatalUITests.xctest"
+               BuildableName = "PatalUITests"
                BlueprintName = "PatalUITests"
                ReferencedContainer = "container:Patal.xcodeproj">
             </BuildableReference>
