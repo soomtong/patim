@@ -29,8 +29,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // load notification handler
         UNUserNotificationCenter.current().delegate = self
 
-        self.registNotificationHandler()
-        let notificationContent = NotificatonContent(title: "팥알입력기", body: "디버그 메시지로 활용하도록 함")
+        registerNotificationHandler()
+        let notificationContent = NotificationContent(title: "팥알입력기", body: "디버그 메시지로 활용하도록 함")
         
         notificationCenter.getNotificationSettings { (settings) in
             if settings.authorizationStatus == .authorized {
@@ -49,8 +49,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         return completionHandler([.sound])
     }
     
-    func registNotificationHandler() -> Void {
-        self.notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+    func registerNotificationHandler() -> Void {
+        notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
             print("requested notification")
             
             if granted {
@@ -63,17 +63,17 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
     }
 
-    func pushNotification(from: NotificatonContent) {
-        let notificatonContent = UNMutableNotificationContent()
-        notificatonContent.title = from.title
-        notificatonContent.body = from.body
-        notificatonContent.categoryIdentifier = "alarm"
-        notificatonContent.sound = UNNotificationSound.default
+    func pushNotification(from: NotificationContent) {
+        let notificationContent = UNMutableNotificationContent()
+        notificationContent.title = from.title
+        notificationContent.body = from.body
+        notificationContent.categoryIdentifier = "alarm"
+        notificationContent.sound = UNNotificationSound.default
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
  
-        let request1 = UNNotificationRequest(identifier: UUID().uuidString, content: notificatonContent, trigger: trigger)
-        self.notificationCenter.add(request1) { (error) in
+        let request1 = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: trigger)
+        notificationCenter.add(request1) { (error) in
             if error != nil {
                 print(error?.localizedDescription as Any)
             }

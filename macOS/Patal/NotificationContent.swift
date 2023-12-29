@@ -7,7 +7,7 @@
 
 import Foundation
 
-class NotificatonContent {
+class NotificationContent {
     let title, body: String
     
     init(title: String, body: String) {

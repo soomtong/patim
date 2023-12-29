@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  Patal
+
+  Created by TemplarAssassin on 2022/03/13.
+  
+*/
+inputmethod.han3shin = "신세벌식";
+inputmethod.han3shin-custom = "신세벌식 커스텀 4";

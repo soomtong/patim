@@ -2,7 +2,8 @@
   InfoPlist.strings
   Patal
 
-  Created by TemplarAssasin on 2022/03/13.
+  Created by TemplarAssassin on 2022/03/13.
   
 */
 inputmethod.han3shin = "Han 3set Shin";
+inputmethod.han3shin-custom = "Han 3set Shin Custom 4";
