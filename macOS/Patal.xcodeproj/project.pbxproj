@@ -11,10 +11,12 @@
 		134356FE27DDFD030074E691 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 134356FD27DDFD030074E691 /* Cocoa.framework */; };
 		1343570027DDFF850074E691 /* InputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134356FF27DDFF850074E691 /* InputController.swift */; };
 		1343570327DE0BEB0074E691 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1343570527DE0BEB0074E691 /* InfoPlist.strings */; };
+		461A81592B49B030005E7725 /* han3-shin-p2-custom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81552B49B030005E7725 /* han3-shin-p2-custom@2x.png */; };
+		461A815A2B49B030005E7725 /* han3-shin-p2.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81562B49B030005E7725 /* han3-shin-p2.png */; };
+		461A815B2B49B030005E7725 /* han3-shin-p2-custom.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81572B49B030005E7725 /* han3-shin-p2-custom.png */; };
+		461A815C2B49B030005E7725 /* han3-shin-p2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81582B49B030005E7725 /* han3-shin-p2@2x.png */; };
 		461F6A4126ECCD2400573DB1 /* NotificationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461F6A4026ECCD2400573DB1 /* NotificationContent.swift */; };
 		462EBD172B3F3DF400BD94B2 /* Korean.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 462EBD162B3F3DF400BD94B2 /* Korean.tiff */; };
-		4694103D2B3F31C8000EAB8F /* Shin3custom.png in Resources */ = {isa = PBXBuildFile; fileRef = 4694103B2B3F31C8000EAB8F /* Shin3custom.png */; };
-		4694103E2B3F31C8000EAB8F /* Shin3custom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4694103C2B3F31C8000EAB8F /* Shin3custom@2x.png */; };
 		46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E67F5026EC5505005EC052 /* AppDelegate.swift */; };
 		46E67F5326EC5506005EC052 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F5226EC5506005EC052 /* Assets.xcassets */; };
 		46E67F5626EC5506005EC052 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F5426EC5506005EC052 /* MainMenu.xib */; };
@@ -46,10 +48,12 @@
 		134356FD27DDFD030074E691 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		134356FF27DDFF850074E691 /* InputController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputController.swift; sourceTree = "<group>"; };
 		1343570427DE0BEB0074E691 /* en */ = {isa = PBXFileReference; explicitFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		461A81552B49B030005E7725 /* han3-shin-p2-custom@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2-custom@2x.png"; sourceTree = "<group>"; };
+		461A81562B49B030005E7725 /* han3-shin-p2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2.png"; sourceTree = "<group>"; };
+		461A81572B49B030005E7725 /* han3-shin-p2-custom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2-custom.png"; sourceTree = "<group>"; };
+		461A81582B49B030005E7725 /* han3-shin-p2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2@2x.png"; sourceTree = "<group>"; };
 		461F6A4026ECCD2400573DB1 /* NotificationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationContent.swift; sourceTree = "<group>"; };
 		462EBD162B3F3DF400BD94B2 /* Korean.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Korean.tiff; sourceTree = "<group>"; };
-		4694103B2B3F31C8000EAB8F /* Shin3custom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Shin3custom.png; sourceTree = "<group>"; };
-		4694103C2B3F31C8000EAB8F /* Shin3custom@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Shin3custom@2x.png"; sourceTree = "<group>"; };
 		46B3550B2B3EF8BA009305DC /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/MainMenu.strings; sourceTree = "<group>"; };
 		46B3550C2B3EF8BA009305DC /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		46B3550E2B3EF966009305DC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainMenu.strings; sourceTree = "<group>"; };
@@ -147,8 +151,10 @@
 		46E67F7C26EC5CFA005EC052 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				4694103B2B3F31C8000EAB8F /* Shin3custom.png */,
-				4694103C2B3F31C8000EAB8F /* Shin3custom@2x.png */,
+				461A81572B49B030005E7725 /* han3-shin-p2-custom.png */,
+				461A81552B49B030005E7725 /* han3-shin-p2-custom@2x.png */,
+				461A81562B49B030005E7725 /* han3-shin-p2.png */,
+				461A81582B49B030005E7725 /* han3-shin-p2@2x.png */,
 				46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */,
 				46E67F7E26EC5CFA005EC052 /* han3-P2.png */,
 				462EBD162B3F3DF400BD94B2 /* Korean.tiff */,
@@ -264,11 +270,13 @@
 				46E67F5326EC5506005EC052 /* Assets.xcassets in Resources */,
 				462EBD172B3F3DF400BD94B2 /* Korean.tiff in Resources */,
 				1343570327DE0BEB0074E691 /* InfoPlist.strings in Resources */,
-				4694103D2B3F31C8000EAB8F /* Shin3custom.png in Resources */,
+				461A815C2B49B030005E7725 /* han3-shin-p2@2x.png in Resources */,
+				461A815A2B49B030005E7725 /* han3-shin-p2.png in Resources */,
 				46E67F5626EC5506005EC052 /* MainMenu.xib in Resources */,
+				461A815B2B49B030005E7725 /* han3-shin-p2-custom.png in Resources */,
 				46E67F8026EC5CFA005EC052 /* han3-P2@2x.png in Resources */,
 				46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */,
-				4694103E2B3F31C8000EAB8F /* Shin3custom@2x.png in Resources */,
+				461A81592B49B030005E7725 /* han3-shin-p2-custom@2x.png in Resources */,
 				46E67F8226EC5CFA005EC052 /* icon.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -5,5 +5,5 @@
   Created by TemplarAssassin on 2022/03/13.
   
 */
-inputmethod.han3shin = "Han 3set Shin";
-inputmethod.han3shin-custom = "Han 3set Shin Custom 4";
+InputmethodHan3ShinP2 = "3-Set Korean Shin P2";
+InputmethodHan3ShinP2Custom = "3-Set Korean Shin P2 Custom";

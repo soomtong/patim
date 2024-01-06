@@ -5,5 +5,5 @@
   Created by TemplarAssassin on 2022/03/13.
   
 */
-inputmethod.han3shin = "신세벌식";
-inputmethod.han3shin-custom = "신세벌식 커스텀 4";
+InputmethodHan3ShinP2 = "한글 신세벌식 P2";
+InputmethodHan3ShinP2Custom = "한글 신세벌식 P2 커스텀";
