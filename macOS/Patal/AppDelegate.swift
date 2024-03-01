@@ -5,8 +5,6 @@
 //  Created by EarthShaker on 2021/09/11.
 //
 
-import os.log
-
 import Cocoa
 import UserNotifications
 import InputMethodKit
@@ -20,26 +18,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     let notificationCenter = UNUserNotificationCenter.current()
     
-    let currentDate = Date()
-    let dateFormatter = DateFormatter()
-
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // load input method server
         let bundle = Bundle.main
         server = IMKServer(name: bundle.infoDictionary?["InputMethodConnectionName"] as? String,
                            bundleIdentifier: bundle.bundleIdentifier)
 
-        os_log("Patal input method launched")
+        debug("팥알 입력기 활성화")
 
         // load notification handler
         UNUserNotificationCenter.current().delegate = self
 
         registerNotificationHandler()
 
-        dateFormatter.dateFormat = "HH:mm:ss"
-        let currentTimeString = dateFormatter.string(from: currentDate)
-        
-        let message = "디버그 메시지로 활용: \(currentTimeString)"
+        let bundleVersion = bundle.infoDictionary?["CFBundleVersion"] as? String ?? ""
+        let message = "빌드 넘버: \(bundleVersion)"
         let notificationContent = NotificationContent(title: "팥알입력기", body: message)
 
         notificationCenter.getNotificationSettings { (settings) in
@@ -50,7 +43,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        os_log("Patal input method exit")
+        debug("팥알 입력기 비활성화")
     }
 }
 
