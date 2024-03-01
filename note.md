@@ -18,7 +18,7 @@
 
 > https://developer.apple.com/documentation/os/logging/generating_log_messages_from_your_code
 
-- [ ] subsystem, category, log level 도 추가해 사용해보자.
+- [x] subsystem, category, log level 도 추가해 사용해보자.
 
 `ESC` 키를 누르면 라틴 자판으로 변경되는 구성을 만들자.
 
@@ -26,6 +26,16 @@
 
 `inputText` 를 override 하는 경우 몇 몇 앱에서 `ESC` 를 캡쳐하지 못한다. 하지만 iTerm 이나 wezTerm 에서 잘 작동한다. 우선 지금 상태로 구현해보자.
 그리고 일반 GUI 앱에서는 잘 동작한다.
+
+```shell
+log stream --predicate 'subsystem=="com.soomtong.inputmethod.Patal"' --debug --style compact --type log
+```
+
+콘솔 앱에서 보이지 않는 메시지가 터미널 로그 명령으로 보인다. 그냥 위 명령을 쓰는게 좋겠다.
+
+그리고 또 알게된 사실. `inputText` 로 입력이 안되는 앱이 좀 있는 듯 하다. 일반 GUI 앱은 잘 되지만, 
+~~내가 사용하는 zsh 세팅의 + wezterm 에서 한글 입력이 되지 않는다.~~ 그런데 iterm 에서는 잘 된다. 
+그냥 `handle` 써야 하나보다. 하지만 우선 이 상태로 먼저 구현해 보자. 세세한 튜닝은 나중에 해도 된다.
 
 ### Day 4
 

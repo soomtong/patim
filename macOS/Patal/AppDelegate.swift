@@ -11,20 +11,19 @@ import InputMethodKit
 
 private var server: IMKServer?
 
-@NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+@NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet var menu: NSMenu!
-    
+
     let notificationCenter = UNUserNotificationCenter.current()
-    
+    let customLogger = CustomLogger(category: "Application Delegate")
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // load input method server
         let bundle = Bundle.main
-        server = IMKServer(name: bundle.infoDictionary?["InputMethodConnectionName"] as? String,
-                           bundleIdentifier: bundle.bundleIdentifier)
+        server = IMKServer(name: bundle.infoDictionary?["InputMethodConnectionName"] as? String, bundleIdentifier: bundle.bundleIdentifier)
 
-        debug("팥알 입력기 활성화")
+        customLogger.debug("팥알 입력기 활성화")
 
         // load notification handler
         UNUserNotificationCenter.current().delegate = self
@@ -43,7 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        debug("팥알 입력기 비활성화")
+        customLogger.debug("팥알 입력기 비활성화")
     }
 }
 

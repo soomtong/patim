@@ -8,13 +8,18 @@
 import os
 import Foundation
 
-func debug(_ message: String = "") {
-    let isDebug = true
-    if isDebug {
-        // Logger().debug("\(message, privacy: .public)")
-        os_log("\(message, privacy: .public)")
+class CustomLogger {
+    let debugLogger: Logger
+
+    init(category: String) {
+        debugLogger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: category)
+    }
+
+    func debug(_ message: String = "") {
+        let isDebug = true
+        if isDebug {
+            debugLogger.debug("\(message, privacy: .public)")
+        }
     }
 }
 
-// private var subsystem = Bundle.main.bundleIdentifier!
-// let baseLogger = Logger(subsystem: subsystem, category: "baseLogger")
