@@ -130,10 +130,10 @@
 			children = (
 				46E67F5026EC5505005EC052 /* AppDelegate.swift */,
 				461F6A4026ECCD2400573DB1 /* NotificationContent.swift */,
+				134356FF27DDFF850074E691 /* InputController.swift */,
 				46E67F5226EC5506005EC052 /* Assets.xcassets */,
 				46E67F5426EC5506005EC052 /* MainMenu.xib */,
 				46E67F5726EC5506005EC052 /* Info.plist */,
-				134356FF27DDFF850074E691 /* InputController.swift */,
 				46E67F5826EC5506005EC052 /* Patal.entitlements */,
 			);
 			path = Patal;

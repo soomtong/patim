@@ -4,6 +4,7 @@
 //
 //  Created by TemplarAssassin on 2022/03/13.
 //
+import os.log
 
 import Foundation
 import InputMethodKit
@@ -11,7 +12,7 @@ import InputMethodKit
 @objc(PatInputController)
 internal class InputController: IMKInputController {
     override func inputText(_ string: String!, client sender: Any!) -> Bool {
-        NSLog(string)
+        os_log("입력된 문자: \(string)")
         guard let client = sender as? IMKTextInput else {
             return false
         }
