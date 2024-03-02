@@ -10,14 +10,26 @@ import Foundation
 class InputTextKey {
     let logger = CustomLogger(category: "InputTextKey")
 
-    let string: String
-    let keyCode: Int
-    let flags: Int
+    var string: String
+    var keyCode: Int
+    var flags: Int
 
     // 키코드 목록 https://eastmanreference.com/complete-list-of-applescript-key-codes
+    private let cmdFlags = 1_048_576
+    private let ctrlFlags = 262144
+    private let optFlags = 524288
+    private let shiftFlags = 131072
+
     private let escKeyCode = 53
 
     init(string: String, keyCode: Int, flags: Int) {
+        logger.debug("입력키 처리 클래스 초기화")
+        self.string = string
+        self.keyCode = keyCode
+        self.flags = flags
+    }
+
+    func bind(string: String, keyCode: Int, flags: Int) {
         // 특수 키 - ESC ENTER SHIFT 등의 입력을 위해 keyCode 를 받아야 함
         logger.debug("입력된 문자: \(String(describing: string)), \(keyCode), \(flags)")
 
@@ -27,7 +39,8 @@ class InputTextKey {
     }
 
     func isEscaped() -> Bool {
-        if self.keyCode == self.escKeyCode {
+        if self.keyCode == self.escKeyCode && self.flags == 0 {
+            logger.debug("ESC 키 입력됨 자판 전환")
             return true
         }
 
