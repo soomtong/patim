@@ -44,17 +44,25 @@ class LayoutSwitcher {
             return isSwitchable(layoutID: layout.tisInputSource.id)
         }) ?? selectedLayout
     }
-    //    func findCandidateLayout() -> InputSource {
-    //        return InputSource.sources.first { isSwitchable(layoutID: $0.tisInputSource.id) } ?? selectedLayout
-    //    }
 
     func isSwitchable(layoutID: String) -> Bool {
         return switchableLayoutIDList.contains { $0 == layoutID }
     }
 
     func changeLayout() {
-        // return
         logger.debug("ESC 키 입력됨 자판 전환: \(selectedLayout.tisInputSource.id)")
-        TISSelectInputSource(selectedLayout.tisInputSource)
+
+        let checkOptPrompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString
+        let options = [checkOptPrompt: true]
+        let isAppTrusted = AXIsProcessTrustedWithOptions(options as CFDictionary?)
+
+        if isAppTrusted {
+            // TISSelectInputSource(selectedLayout.tisInputSource)
+            // CJKV 레이아웃은 추가 작업이 필요함 (잘 알려진 버그: https://github.com/pqrs-org/Karabiner-Elements/issues/1602)
+            logger.debug("한글인가? \(selectedLayout.isCJKV)")
+            logger.debug("한글인가 확인 후 한 번 더 전환")
+            // TISSelectInputSource(selectedLayout.tisInputSource)
+            InputSource.postPreviousLayoutKey()
+        }
     }
 }

@@ -21,4 +21,8 @@ class CustomLogger {
             debugLogger.debug("\(message, privacy: .public)")
         }
     }
+
+    func error(_ message: String = "") {
+        debugLogger.error("\(message, privacy: .public)")
+    }
 }

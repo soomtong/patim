@@ -21,6 +21,7 @@ internal class InputController: IMKInputController {
 
         if key.isEscaped() {
             layoutSwitcher.changeLayout()
+            return false
         }
 
         guard let client = sender as? IMKTextInput else {
