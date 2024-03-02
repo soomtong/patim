@@ -7,7 +7,6 @@
 
 import Carbon
 import Foundation
-import os.log
 
 // sourced by https://github.com/hatashiro/kawa
 extension TISInputSource {
@@ -35,6 +34,10 @@ class InputSource {
 
     init(tisInputSource: TISInputSource) {
         self.tisInputSource = tisInputSource
+    }
+
+    static func getCurrentLayout() -> InputSource {
+        return InputSource(tisInputSource: TISCopyCurrentKeyboardInputSource().takeRetainedValue())
     }
 
     static var sources: [InputSource] {
