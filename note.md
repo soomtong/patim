@@ -2,6 +2,15 @@
 
 개발 일지
 
+### Day 6
+
+각 입력기의 인풋 소스 아이디를 알아야 한다. 보통 `Info.Plist` 에 `TISInputSourceID` 로 정의되어 있다.
+TISInputSourceID 는 `com.apple.inputmethod.Korean.2SetKorean` 와 같은 형태로 정의되어 있다.
+내가 사용하는 구름입력기의 경우 영문은 `org.youknowone.inputmethod.Gureum.system` 이고 한글은 `org.youknowone.inputmethod.Gureum.han3shin` 이다.
+
+입력기 전환 매커니즘은 `https://github.com/laishulu/macism` 를 참고했다.
+입력기의 SourceID 목록을 가져와야 한다. 이 목록 가져오는 것은 `https://github.com/hatashiro/kawa` 를 참고했다.
+
 ### Day 5
 
 입력기를 점검할 때 맥OS에 새로운 계정을 하나 만들고 개발 환경을 로그아웃하지 않고 새 계정에서 입력기 상태를 점검하는 방법을 사용하기 시작했다.
