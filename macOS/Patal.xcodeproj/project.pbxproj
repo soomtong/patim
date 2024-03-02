@@ -20,6 +20,7 @@
 		464092A82B92ECD500F5D81D /* LayoutSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464092A72B92ECD500F5D81D /* LayoutSwitcher.swift */; };
 		464092AA2B92EDA800F5D81D /* InputKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464092A92B92EDA800F5D81D /* InputKey.swift */; };
 		469C537F2B91E1C200446511 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469C537E2B91E1C200446511 /* Logger.swift */; };
+		46C888DE2B931CFA00473C44 /* InputSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C888DD2B931CFA00473C44 /* InputSource.swift */; };
 		46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E67F5026EC5505005EC052 /* AppDelegate.swift */; };
 		46E67F5326EC5506005EC052 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F5226EC5506005EC052 /* Assets.xcassets */; };
 		46E67F5626EC5506005EC052 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F5426EC5506005EC052 /* MainMenu.xib */; };
@@ -63,6 +64,7 @@
 		46B3550B2B3EF8BA009305DC /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/MainMenu.strings; sourceTree = "<group>"; };
 		46B3550C2B3EF8BA009305DC /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		46B3550E2B3EF966009305DC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainMenu.strings; sourceTree = "<group>"; };
+		46C888DD2B931CFA00473C44 /* InputSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputSource.swift; sourceTree = "<group>"; };
 		46E67F4D26EC5505005EC052 /* Patal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Patal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		46E67F5026EC5505005EC052 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		46E67F5226EC5506005EC052 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				46E67F5026EC5505005EC052 /* AppDelegate.swift */,
 				461F6A4026ECCD2400573DB1 /* NotificationContent.swift */,
 				134356FF27DDFF850074E691 /* InputController.swift */,
+				46C888DD2B931CFA00473C44 /* InputSource.swift */,
 				464092A92B92EDA800F5D81D /* InputKey.swift */,
 				469C537E2B91E1C200446511 /* Logger.swift */,
 				464092A72B92ECD500F5D81D /* LayoutSwitcher.swift */,
@@ -317,6 +320,7 @@
 				469C537F2B91E1C200446511 /* Logger.swift in Sources */,
 				464092AA2B92EDA800F5D81D /* InputKey.swift in Sources */,
 				464092A82B92ECD500F5D81D /* LayoutSwitcher.swift in Sources */,
+				46C888DE2B931CFA00473C44 /* InputSource.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,7 +509,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = LL75ZY5CKZ;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -536,7 +540,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = LL75ZY5CKZ;
 				ENABLE_HARDENED_RUNTIME = YES;

@@ -20,7 +20,7 @@ internal class InputController: IMKInputController {
         key.bind(string: string, keyCode: keyCode, flags: flags)
 
         if key.isEscaped() {
-            layoutSwitcher.change(layout: "ABC")
+            layoutSwitcher.changeLayout(layout: "ABC")
         }
 
         guard let client = sender as? IMKTextInput else {
