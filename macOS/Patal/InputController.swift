@@ -12,8 +12,8 @@ import InputMethodKit
 internal class InputController: IMKInputController {
     let logger = CustomLogger(category: "InputController")
 
-    let key = InputTextKey(string: "", keyCode: 0, flags: 0)
     let layoutSwitcher = LayoutSwitcher()
+    let key = InputTextKey(string: "", keyCode: 0, flags: 0)
 
     override func inputText(_ string: String!, key keyCode: Int, modifiers flags: Int, client sender: Any!) -> Bool {
         // 재사용하면 성능이 오를까? 클래스 생성을 한 번만 하기로
