@@ -5,8 +5,8 @@
 //  Created by Earth Shaker on 2024/03/01.
 //
 
-import os
 import Foundation
+import os
 
 class CustomLogger {
     let debugLogger: Logger
@@ -22,4 +22,3 @@ class CustomLogger {
         }
     }
 }
-

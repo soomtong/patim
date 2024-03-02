@@ -10,24 +10,25 @@ import InputMethodKit
 
 @objc(PatInputController)
 internal class InputController: IMKInputController {
-    let customLogger = CustomLogger(category: "Input Controller")
-
-    // 키코드 목록 https://eastmanreference.com/complete-list-of-applescript-key-codes
-    private let escKeyCode = 53
+    let logger = CustomLogger(category: "InputController")
 
     override func inputText(_ string: String!, key keyCode: Int, modifiers flags: Int, client sender: Any!) -> Bool {
-        // 특수 키 - ESC ENTER SHIFT 등의 입력을 위해 keyCode 를 받아야 함
-        customLogger.debug("입력된 문자: \(String(describing: string)), \(keyCode), \(flags)")
+        let key = InputTextKey(string: string, keyCode: keyCode, flags: flags)
 
-        if keyCode == escKeyCode {
-            customLogger.debug("이거야 ESC!!!")
+        if key.isEscaped() {
+            switchLatinKeyLayout()
         }
 
         guard let client = sender as? IMKTextInput else {
             return false
         }
 
-        let defaultChar = "ㅎ하한글?횂!"; client.insertText(defaultChar, replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
+        guard let char = key.getChar() else {
+            return false
+        }
+
+        client.insertText(char, replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
+
         return true
     }
 

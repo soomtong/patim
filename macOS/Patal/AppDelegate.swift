@@ -6,8 +6,8 @@
 //
 
 import Cocoa
-import UserNotifications
 import InputMethodKit
+import UserNotifications
 
 private var server: IMKServer?
 
@@ -16,14 +16,16 @@ private var server: IMKServer?
     @IBOutlet var menu: NSMenu!
 
     let notificationCenter = UNUserNotificationCenter.current()
-    let customLogger = CustomLogger(category: "Application Delegate")
+    let logger = CustomLogger(category: "AppDelegate")
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // load input method server
         let bundle = Bundle.main
-        server = IMKServer(name: bundle.infoDictionary?["InputMethodConnectionName"] as? String, bundleIdentifier: bundle.bundleIdentifier)
+        server = IMKServer(
+            name: bundle.infoDictionary?["InputMethodConnectionName"] as? String,
+            bundleIdentifier: bundle.bundleIdentifier)
 
-        customLogger.debug("팥알 입력기 활성화")
+        logger.debug("팥알 입력기 활성화")
 
         // load notification handler
         UNUserNotificationCenter.current().delegate = self
@@ -42,16 +44,19 @@ private var server: IMKServer?
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        customLogger.debug("팥알 입력기 비활성화")
+        logger.debug("팥알 입력기 비활성화")
     }
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter, willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
         return completionHandler([.sound])
     }
 
-    func registerNotificationHandler() -> Void {
+    func registerNotificationHandler() {
         notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
             print("requested notification")
 
@@ -74,7 +79,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
 
-        let request1 = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: trigger)
+        let request1 = UNNotificationRequest(
+            identifier: UUID().uuidString, content: notificationContent, trigger: trigger)
         notificationCenter.add(request1) { (error) in
             if error != nil {
                 print(error?.localizedDescription as Any)
