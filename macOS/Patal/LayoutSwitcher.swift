@@ -7,6 +7,13 @@
 
 import Foundation
 
-func switchLatinKeyLayout() {
-    // return
+class LayoutSwitcher {
+    let logger = CustomLogger(category: "LayoutSwither")
+
+    init() {}
+
+    func change(layout: String) {
+        // return
+        logger.debug("ESC 키 입력됨 자판 전환: \(layout)")
+    }
 }

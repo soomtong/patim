@@ -40,10 +40,8 @@ class InputTextKey {
 
     func isEscaped() -> Bool {
         if self.keyCode == self.escKeyCode && self.flags == 0 {
-            logger.debug("ESC 키 입력됨 자판 전환")
             return true
         }
-
         return false
     }
 
