@@ -30,8 +30,9 @@ class LayoutSwitcher {
 
     var isAppTrusted: Bool
 
-    let selfLayout: InputSource
-    var selectedLayout: InputSource = InputSource.getCurrentLayout()
+    // 현재 레이아웃을 저장
+    let currentLayout: InputSource = InputSource.getCurrentLayout()
+    var candicateLayout: InputSource?
 
     init() {
         logger.debug("레이아웃 선택기 생성")
@@ -41,19 +42,17 @@ class LayoutSwitcher {
         isAppTrusted = AXIsProcessTrustedWithOptions(options as CFDictionary?)
         logger.debug("보안 모드: \(isAppTrusted)")
 
-        // 현재 레이아웃을 저장
-        selfLayout = self.selectedLayout
-        logger.debug("현재 팥알 레이아웃: \(selfLayout.tisInputSource.id)")
+        logger.debug("현재 팥알 레이아웃: \(currentLayout.tisInputSource.id)")
         // 클래스 생성시 전환할 자판을 선택
-        selectedLayout = self.findCandidateLayout()
+        candicateLayout = self.findCandidateLayout()
 
-        logger.debug("선택된 영문 레이아웃: \(selectedLayout.tisInputSource.id)")
+        logger.debug("선택된 영문 레이아웃: \(String(describing: candicateLayout?.tisInputSource.id))")
     }
 
     func findCandidateLayout() -> InputSource {
         return InputSource.sources.first(where: { (layout: InputSource) -> Bool in
             return isSwitchable(layoutID: layout.tisInputSource.id)
-        }) ?? selectedLayout
+        }) ?? currentLayout
     }
 
     func isSwitchable(layoutID: String) -> Bool {
@@ -61,13 +60,11 @@ class LayoutSwitcher {
     }
 
     func changeLayout() {
-        logger.debug("ESC 키 입력됨 자판 전환: \(selectedLayout.tisInputSource.id)")
+        logger.debug("ESC 키 입력됨 자판 전환: \(String(describing: candicateLayout?.tisInputSource.id))")
         // CJKV으로 변경 레이아웃은 추가 작업이 필요함 (잘 알려진 버그: https://github.com/pqrs-org/Karabiner-Elements/issues/1602)
-        // logger.debug("지금은 한글인가? \(selfLayout.isCJKV)")
-        // logger.debug("다음은 한글인가? \(selectedLayout.isCJKV)")
-        TISSelectInputSource(selectedLayout.tisInputSource)
-        // logger.debug("한글인가 확인 후 한 번 더 전환")
-        // InputSource.postPreviousLayoutKey()
-        // TISSelectInputSource(selfLayout.tisInputSource)
+        // 여기는 CJKV으로 변경이 아니기 때문에 필요하지 않음
+        if candicateLayout != nil {
+            TISSelectInputSource(candicateLayout!.tisInputSource)
+        }
     }
 }
