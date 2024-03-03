@@ -32,7 +32,9 @@ class LayoutSwitcher {
 
     // 현재 레이아웃을 저장
     let currentLayout: InputSource = InputSource.getCurrentLayout()
-    var candicateLayout: InputSource?
+    // 입력기 목록 생성
+    let candidateLayouts: [InputSource] = InputSource.sources
+    var candidateLayout: InputSource?
 
     init() {
         logger.debug("레이아웃 선택기 생성")
@@ -44,13 +46,17 @@ class LayoutSwitcher {
 
         logger.debug("현재 팥알 레이아웃: \(currentLayout.tisInputSource.id)")
         // 클래스 생성시 전환할 자판을 선택
-        candicateLayout = self.findCandidateLayout()
+        candidateLayout = selectCandidateLayout()
 
-        logger.debug("선택된 영문 레이아웃: \(String(describing: candicateLayout?.tisInputSource.id))")
+        logger.debug("선택된 영문 레이아웃: \(String(describing: candidateLayout?.tisInputSource.id))")
+    }
+    
+    func findCandidateLayouts() -> [InputSource] {
+        return InputSource.sources
     }
 
-    func findCandidateLayout() -> InputSource {
-        return InputSource.sources.first(where: { (layout: InputSource) -> Bool in
+    func selectCandidateLayout() -> InputSource {
+        return candidateLayouts.first(where: { (layout: InputSource) -> Bool in
             return isSwitchable(layoutID: layout.tisInputSource.id)
         }) ?? currentLayout
     }
@@ -60,11 +66,15 @@ class LayoutSwitcher {
     }
 
     func changeLayout() {
-        logger.debug("ESC 키 입력됨 자판 전환: \(String(describing: candicateLayout?.tisInputSource.id))")
+        logger.debug("ESC 키 입력됨 자판 전환: \(String(describing: candidateLayout?.tisInputSource.id))")
         // CJKV으로 변경 레이아웃은 추가 작업이 필요함 (잘 알려진 버그: https://github.com/pqrs-org/Karabiner-Elements/issues/1602)
         // 여기는 CJKV으로 변경이 아니기 때문에 필요하지 않음
-        if candicateLayout != nil {
-            TISSelectInputSource(candicateLayout!.tisInputSource)
+        if candidateLayout != nil {
+            candidateLayout!.selectInputSource()
+            // let result = TISSelectInputSource(candicateLayout!.tisInputSource)
+            // InputSource.postPreviousLayoutKey()
+            let current = InputSource.getCurrentLayout()
+            logger.debug("전환 결과: \(current.tisInputSource.id), \(current.tisInputSource.sourceLanguages)")
         }
     }
 }

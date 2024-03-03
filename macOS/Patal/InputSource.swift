@@ -36,27 +36,31 @@ extension TISInputSource {
 class InputSource {
     let tisInputSource: TISInputSource
 
-    static var uSeconds: UInt32 = 20000
-
     init(tisInputSource: TISInputSource) {
         self.tisInputSource = tisInputSource
     }
-
-    static func getCurrentLayout() -> InputSource {
-        return InputSource(tisInputSource: TISCopyCurrentKeyboardInputSource().takeRetainedValue())
+    
+    func selectInputSource() {
+        TISSelectInputSource(self.tisInputSource)
     }
+}
 
+extension InputSource {
     static var sources: [InputSource] {
         // 타입(static) 메서드인 `sources` 를 위해 여기에서 CustomLogger 를 생성
-        let logger = CustomLogger(category: "InputSourceList")
+//        let logger = CustomLogger(category: "InputSourceList")
 
         let inputSourceNSArray = TISCreateInputSourceList(nil, false).takeRetainedValue() as NSArray
         let inputSourceList = inputSourceNSArray as! [TISInputSource]
 
-        inputSourceList.forEach {
-            logger.debug("\($0.id): \($0.isSelectable)")
-        }
+//        inputSourceList.forEach {
+//            logger.debug("\($0.id): \($0.isSelectable)")
+//        }
 
         return inputSourceList.filter { $0.isSelectable }.map { InputSource(tisInputSource: $0) }
+    }
+    
+    static func getCurrentLayout() -> InputSource {
+        return InputSource(tisInputSource: TISCopyCurrentKeyboardInputSource().takeRetainedValue())
     }
 }
