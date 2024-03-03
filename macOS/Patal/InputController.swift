@@ -21,10 +21,6 @@ internal class InputController: IMKInputController {
 
         if key.isEscaped() {
             layoutSwitcher.changeLayout()
-            // let result = TISSelectInputSource(layoutSwitcher.candicateLayout!.tisInputSource)
-            // InputSource.selectInputSource(layoutSwitcher.candicateLayout!)
-            // let currentLayout = InputSource.getCurrentLayout()
-            // logger.debug("전환 결과: \(currentLayout.tisInputSource.id), \(currentLayout.tisInputSource.sourceLanguages) \(result)")
             return false
         }
 

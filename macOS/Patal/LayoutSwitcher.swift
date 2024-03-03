@@ -69,12 +69,13 @@ class LayoutSwitcher {
         logger.debug("ESC 키 입력됨 자판 전환: \(String(describing: candidateLayout?.tisInputSource.id))")
         // CJKV으로 변경 레이아웃은 추가 작업이 필요함 (잘 알려진 버그: https://github.com/pqrs-org/Karabiner-Elements/issues/1602)
         // 여기는 CJKV으로 변경이 아니기 때문에 필요하지 않음
-        if candidateLayout != nil {
-            candidateLayout!.selectInputSource()
-            // let result = TISSelectInputSource(candicateLayout!.tisInputSource)
-            // InputSource.postPreviousLayoutKey()
-            let current = InputSource.getCurrentLayout()
-            logger.debug("전환 결과: \(current.tisInputSource.id), \(current.tisInputSource.sourceLanguages)")
-        }
+        logger.debug("전환 전 상태: \(String(describing: currentLayout.tisInputSource.id)), \(String(describing: currentLayout.tisInputSource.sourceLanguages))")
+        guard let inputSource = candidateLayout else { return }
+        inputSource.select()
+        logger.debug("전환 후 상태: \(inputSource.tisInputSource.id), \(inputSource.tisInputSource.sourceLanguages)")
+        // let result = TISSelectInputSource(candicateLayout!.tisInputSource)
+        // InputSource.postPreviousLayoutKey()
+        // let current = InputSource.getCurrentLayout()
+        // logger.debug("전환 결과: \(current.tisInputSource.id), \(current.tisInputSource.sourceLanguages)")
     }
 }
