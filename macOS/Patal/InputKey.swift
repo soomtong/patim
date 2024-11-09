@@ -71,7 +71,7 @@ class InputTextKey {
         // keyCode 대신 string 을 직접 사용해 보자.
         // 초성이 들어오면 조합 시작
         if let char = self.buffer.first {
-            return isChosung(char: char.char) ? "Chosung detected" : "Not a Chosung"
+            return pickChosung(char: char.char)
         }
         return nil
     }

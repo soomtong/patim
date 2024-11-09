@@ -19,6 +19,10 @@ func isChosung(char: String) -> Bool {
     return true
 }
 
-func pickChosung(char: String) -> 초성? {
-    return layoutMap[char]
+func pickChosung(char: String) -> String? {
+    guard let chosung = layoutMap[char] else {
+        return nil
+    }
+    let utf16CodeUnits: [unichar] = [chosung.rawValue]
+    return String(utf16CodeUnits: utf16CodeUnits, count: utf16CodeUnits.count)
 }
