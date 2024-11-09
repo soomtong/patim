@@ -29,6 +29,7 @@ class InputTextKey {
     private let shiftFlags = 131072
 
     private let escKeyCode = 53
+    private let layout: Han3ShinPcsLayout
 
     init(string: String, keyCode: Int, flags: Int) {
         logger.debug("입력키 처리 클래스 초기화")
@@ -37,6 +38,7 @@ class InputTextKey {
         self.flags = flags
 
         self.buffer = []
+        self.layout = Han3ShinPcsLayout()
     }
 
     func bind(string: String, keyCode: Int, flags: Int) {
@@ -71,7 +73,7 @@ class InputTextKey {
         // keyCode 대신 string 을 직접 사용해 보자.
         // 초성이 들어오면 조합 시작
         if let char = self.buffer.first {
-            let composed = pickChosung(char: char.char)
+            let composed = self.layout.pickChosung(char: char.char)
             self.buffer.removeFirst()
             return composed
         }

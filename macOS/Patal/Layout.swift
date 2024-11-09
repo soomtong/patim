@@ -7,7 +7,15 @@
 
 import Foundation
 
-struct Han3ShinPcsLayout {
+protocol Chosung {
+    func pickChosung(char: String) -> String?
+}
+
+protocol Jungsung {
+    func pickJungsung(char: String) -> String?
+}
+
+struct Han3ShinPcsLayout: Chosung {
     let chosungMap: [String: 초성] = [
         "k": 초성.기역,
         "h": 초성.니은,
@@ -24,16 +32,14 @@ struct Han3ShinPcsLayout {
         "p": 초성.피읖,
         "m": 초성.히읗,
     ]
-}
 
-// todo: 클래스나 구조체로 묶어야겠지?
-let defaultLayout = Han3ShinPcsLayout()
+    func pickChosung(char: String) -> String? {
+        guard let chosung = self.chosungMap[char] else {
+            return nil
+        }
 
-func pickChosung(char: String) -> String? {
-    guard let chosung = defaultLayout.chosungMap[char] else {
-        return nil
+        let utf16CodeUnits: [unichar] = [chosung.rawValue]
+        return String(
+            utf16CodeUnits: utf16CodeUnits, count: utf16CodeUnits.count)
     }
-    
-    let utf16CodeUnits: [unichar] = [chosung.rawValue]
-    return String(utf16CodeUnits: utf16CodeUnits, count: utf16CodeUnits.count)
 }
