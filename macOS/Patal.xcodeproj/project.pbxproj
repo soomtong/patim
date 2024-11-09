@@ -11,9 +11,9 @@
 		134356FE27DDFD030074E691 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 134356FD27DDFD030074E691 /* Cocoa.framework */; };
 		1343570027DDFF850074E691 /* InputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134356FF27DDFF850074E691 /* InputController.swift */; };
 		1343570327DE0BEB0074E691 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1343570527DE0BEB0074E691 /* InfoPlist.strings */; };
-		461A81592B49B030005E7725 /* han3-shin-p2-custom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81552B49B030005E7725 /* han3-shin-p2-custom@2x.png */; };
+		461A81592B49B030005E7725 /* han3-shin-pcs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81552B49B030005E7725 /* han3-shin-pcs@2x.png */; };
 		461A815A2B49B030005E7725 /* han3-shin-p2.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81562B49B030005E7725 /* han3-shin-p2.png */; };
-		461A815B2B49B030005E7725 /* han3-shin-p2-custom.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81572B49B030005E7725 /* han3-shin-p2-custom.png */; };
+		461A815B2B49B030005E7725 /* han3-shin-pcs.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81572B49B030005E7725 /* han3-shin-pcs.png */; };
 		461A815C2B49B030005E7725 /* han3-shin-p2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81582B49B030005E7725 /* han3-shin-p2@2x.png */; };
 		461F6A4126ECCD2400573DB1 /* NotificationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461F6A4026ECCD2400573DB1 /* NotificationContent.swift */; };
 		462EBD172B3F3DF400BD94B2 /* Korean.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 462EBD162B3F3DF400BD94B2 /* Korean.tiff */; };
@@ -28,6 +28,7 @@
 		46E67F8026EC5CFA005EC052 /* han3-P2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */; };
 		46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7E26EC5CFA005EC052 /* han3-P2.png */; };
 		46E67F8226EC5CFA005EC052 /* icon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7F26EC5CFA005EC052 /* icon.tiff */; };
+		E2972D032CDF8C18001278E3 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2972D022CDF8C11001278E3 /* Layout.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,9 +53,9 @@
 		134356FD27DDFD030074E691 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		134356FF27DDFF850074E691 /* InputController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputController.swift; sourceTree = "<group>"; };
 		1343570427DE0BEB0074E691 /* en */ = {isa = PBXFileReference; explicitFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		461A81552B49B030005E7725 /* han3-shin-p2-custom@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2-custom@2x.png"; sourceTree = "<group>"; };
+		461A81552B49B030005E7725 /* han3-shin-pcs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-pcs@2x.png"; sourceTree = "<group>"; };
 		461A81562B49B030005E7725 /* han3-shin-p2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2.png"; sourceTree = "<group>"; };
-		461A81572B49B030005E7725 /* han3-shin-p2-custom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2-custom.png"; sourceTree = "<group>"; };
+		461A81572B49B030005E7725 /* han3-shin-pcs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-pcs.png"; sourceTree = "<group>"; };
 		461A81582B49B030005E7725 /* han3-shin-p2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2@2x.png"; sourceTree = "<group>"; };
 		461F6A4026ECCD2400573DB1 /* NotificationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationContent.swift; sourceTree = "<group>"; };
 		462EBD162B3F3DF400BD94B2 /* Korean.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Korean.tiff; sourceTree = "<group>"; };
@@ -76,6 +77,7 @@
 		46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-P2@2x.png"; sourceTree = "<group>"; };
 		46E67F7E26EC5CFA005EC052 /* han3-P2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-P2.png"; sourceTree = "<group>"; };
 		46E67F7F26EC5CFA005EC052 /* icon.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = icon.tiff; sourceTree = "<group>"; };
+		E2972D022CDF8C11001278E3 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +143,7 @@
 				134356FF27DDFF850074E691 /* InputController.swift */,
 				46C888DD2B931CFA00473C44 /* InputSource.swift */,
 				464092A92B92EDA800F5D81D /* InputKey.swift */,
+				E2972D022CDF8C11001278E3 /* Layout.swift */,
 				469C537E2B91E1C200446511 /* Logger.swift */,
 				464092A72B92ECD500F5D81D /* LayoutSwitcher.swift */,
 				46E67F5226EC5506005EC052 /* Assets.xcassets */,
@@ -163,8 +166,8 @@
 		46E67F7C26EC5CFA005EC052 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				461A81572B49B030005E7725 /* han3-shin-p2-custom.png */,
-				461A81552B49B030005E7725 /* han3-shin-p2-custom@2x.png */,
+				461A81572B49B030005E7725 /* han3-shin-pcs.png */,
+				461A81552B49B030005E7725 /* han3-shin-pcs@2x.png */,
 				461A81562B49B030005E7725 /* han3-shin-p2.png */,
 				461A81582B49B030005E7725 /* han3-shin-p2@2x.png */,
 				46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */,
@@ -238,7 +241,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1510;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					46E67F4C26EC5505005EC052 = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -285,10 +288,10 @@
 				461A815C2B49B030005E7725 /* han3-shin-p2@2x.png in Resources */,
 				461A815A2B49B030005E7725 /* han3-shin-p2.png in Resources */,
 				46E67F5626EC5506005EC052 /* MainMenu.xib in Resources */,
-				461A815B2B49B030005E7725 /* han3-shin-p2-custom.png in Resources */,
+				461A815B2B49B030005E7725 /* han3-shin-pcs.png in Resources */,
 				46E67F8026EC5CFA005EC052 /* han3-P2@2x.png in Resources */,
 				46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */,
-				461A81592B49B030005E7725 /* han3-shin-p2-custom@2x.png in Resources */,
+				461A81592B49B030005E7725 /* han3-shin-pcs@2x.png in Resources */,
 				46E67F8226EC5CFA005EC052 /* icon.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -319,6 +322,7 @@
 				46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */,
 				469C537F2B91E1C200446511 /* Logger.swift in Sources */,
 				464092AA2B92EDA800F5D81D /* InputKey.swift in Sources */,
+				E2972D032CDF8C18001278E3 /* Layout.swift in Sources */,
 				464092A82B92ECD500F5D81D /* LayoutSwitcher.swift in Sources */,
 				46C888DE2B931CFA00473C44 /* InputSource.swift in Sources */,
 			);
@@ -563,7 +567,6 @@
 		46E67F7526EC5506005EC052 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -586,7 +589,6 @@
 		46E67F7626EC5506005EC052 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -609,7 +611,6 @@
 		46E67F7826EC5506005EC052 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -630,7 +631,6 @@
 		46E67F7926EC5506005EC052 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;

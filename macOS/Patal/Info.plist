@@ -54,10 +54,10 @@
 	<dict>
 		<key>tsInputModeListKey</key>
 		<dict>
-			<key>InputmethodHan3ShinP2Custom</key>
+			<key>InputmethodHan3ShinPCS</key>
 			<dict>
 				<key>TISInputSourceID</key>
-				<string>com.soomtong.inputmethod.shin3-p2custom</string>
+				<string>com.soomtong.inputmethod.shin3-pcs</string>
 				<key>TISIntendedLanguage</key>
 				<string>ko</string>
 				<key>TISIconLabels</key>
@@ -68,11 +68,11 @@
 				<key>TISIconIsTemplate</key>
 				<true/>
 				<key>tsInputModeMenuIconFileKey</key>
-				<string>han3-shin-p2-custom</string>
+				<string>han3-shin-pcs.png</string>
 				<key>tsInputModeAlternateMenuIconFileKey</key>
-				<string>han3-shin-p2-custom</string>
+				<string>han3-shin-pcs.png</string>
 				<key>tsInputModePaletteIconFileKey</key>
-				<string>han3-shin-p2-custom</string>
+				<string>han3-shin-pcs.png</string>
 				<key>tsInputModeDefaultStateKey</key>
 				<false/>
 				<key>tsInputModePrimaryInScriptKey</key>
@@ -113,7 +113,7 @@
 		</dict>
 		<key>tsVisibleInputModeOrderedArrayKey</key>
 		<array>
-			<string>InputmethodHan3ShinP2Custom</string>
+			<string>InputmethodHan3ShinPCS</string>
 			<string>InputmethodHan3ShinP2</string>
 		</array>
 	</dict>
