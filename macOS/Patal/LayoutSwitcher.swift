@@ -50,7 +50,7 @@ class LayoutSwitcher {
 
         logger.debug("선택된 영문 레이아웃: \(String(describing: candidateLayout?.tisInputSource.id))")
     }
-    
+
     func findCandidateLayouts() -> [InputSource] {
         return InputSource.sources
     }
@@ -69,7 +69,9 @@ class LayoutSwitcher {
         logger.debug("ESC 키 입력됨 자판 전환: \(String(describing: candidateLayout?.tisInputSource.id))")
         // CJKV으로 변경 레이아웃은 추가 작업이 필요함 (잘 알려진 버그: https://github.com/pqrs-org/Karabiner-Elements/issues/1602)
         // 여기는 CJKV으로 변경이 아니기 때문에 필요하지 않음
-        logger.debug("전환 전 상태: \(String(describing: currentLayout.tisInputSource.id)), \(String(describing: currentLayout.tisInputSource.sourceLanguages))")
+        logger.debug(
+            "전환 전 상태: \(String(describing: currentLayout.tisInputSource.id)), \(String(describing: currentLayout.tisInputSource.sourceLanguages))"
+        )
         guard let inputSource = candidateLayout else { return }
         inputSource.select()
         logger.debug("전환 후 상태: \(inputSource.tisInputSource.id), \(inputSource.tisInputSource.sourceLanguages)")

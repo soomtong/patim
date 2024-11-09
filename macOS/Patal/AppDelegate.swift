@@ -51,13 +51,15 @@ private var server: IMKServer?
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(
         _ center: UNUserNotificationCenter, willPresent notification: UNNotification,
-        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) ->
+            Void
     ) {
         return completionHandler([.sound])
     }
 
     func registerNotificationHandler() {
-        notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+        notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) {
+            (granted, error) in
             print("requested notification")
 
             if granted {

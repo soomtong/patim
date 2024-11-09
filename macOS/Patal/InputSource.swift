@@ -39,7 +39,7 @@ class InputSource {
     init(tisInputSource: TISInputSource) {
         self.tisInputSource = tisInputSource
     }
-    
+
     func select() {
         TISSelectInputSource(self.tisInputSource)
     }
@@ -52,7 +52,7 @@ extension InputSource {
 
         return inputSourceList.filter { $0.isSelectable }.map { InputSource(tisInputSource: $0) }
     }
-    
+
     static func getCurrentLayout() -> InputSource {
         return InputSource(tisInputSource: TISCopyCurrentKeyboardInputSource().takeRetainedValue())
     }

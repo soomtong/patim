@@ -2,6 +2,21 @@
 
 개발 일지
 
+### Day 7
+
+애플리케이션 구성 복기.
+
+IMKServer 클래스가 반드시 필요하다. 이 프레임워크는 InputMethodKit 을 필요로 하고 NS 프레임워크를 사용할테니 Cocoa 도 필요하다.
+imkServer 가 생성되면 시스템에 의해 호출된다. 그래서, 별도로 호출하는 코드가 보이지 않는다.
+
+실제 코드는 IMKInputController 를 구현하는implement 것이다.
+이 클래스는 open 인 경우도 있고 internal 로 scope 를 제한해도 동작하는 듯 하다.
+
+클래스 안에서 몇 가지 method 를 override 로 구현한다. 가장 적절한 `inputText(string, keyCode, flags)` 를 사용하기로 했다.
+
+이제 오토마타를 구현해야 하는데 우선 키 조합은 string 을 사용하는 구현을 먼저 진행하려고 한다.
+추후 다양한 응용을 위해 키코드를 통해 조합을 하는 것도 고려하고 있다. 
+
 ### Day 6
 
 각 입력기의 인풋 소스 아이디를 알아야 한다. 보통 `Info.Plist` 에 `TISInputSourceID` 로 정의되어 있다.
