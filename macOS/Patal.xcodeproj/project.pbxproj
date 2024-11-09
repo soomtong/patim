@@ -29,6 +29,7 @@
 		46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7E26EC5CFA005EC052 /* han3-P2.png */; };
 		46E67F8226EC5CFA005EC052 /* icon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7F26EC5CFA005EC052 /* icon.tiff */; };
 		E2972D032CDF8C18001278E3 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2972D022CDF8C11001278E3 /* Layout.swift */; };
+		E2B1644B2CDFAFD4003FCE85 /* HangulCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,7 @@
 		46E67F7E26EC5CFA005EC052 /* han3-P2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-P2.png"; sourceTree = "<group>"; };
 		46E67F7F26EC5CFA005EC052 /* icon.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = icon.tiff; sourceTree = "<group>"; };
 		E2972D022CDF8C11001278E3 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
+		E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulCode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +140,7 @@
 		46E67F4F26EC5505005EC052 /* Patal */ = {
 			isa = PBXGroup;
 			children = (
+				E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */,
 				46E67F5026EC5505005EC052 /* AppDelegate.swift */,
 				461F6A4026ECCD2400573DB1 /* NotificationContent.swift */,
 				134356FF27DDFF850074E691 /* InputController.swift */,
@@ -319,6 +322,7 @@
 			files = (
 				1343570027DDFF850074E691 /* InputController.swift in Sources */,
 				461F6A4126ECCD2400573DB1 /* NotificationContent.swift in Sources */,
+				E2B1644B2CDFAFD4003FCE85 /* HangulCode.swift in Sources */,
 				46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */,
 				469C537F2B91E1C200446511 /* Logger.swift in Sources */,
 				464092AA2B92EDA800F5D81D /* InputKey.swift in Sources */,
