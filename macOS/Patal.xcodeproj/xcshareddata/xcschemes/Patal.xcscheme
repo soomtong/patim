@@ -32,19 +32,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "46E67F5C26EC5506005EC052"
-               BuildableName = "PatalTests"
+               BlueprintIdentifier = "E289CD4B2CE9CD3D00E309D8"
+               BuildableName = "PatalTests.xctest"
                BlueprintName = "PatalTests"
-               ReferencedContainer = "container:Patal.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "46E67F6726EC5506005EC052"
-               BuildableName = "PatalUITests"
-               BlueprintName = "PatalUITests"
                ReferencedContainer = "container:Patal.xcodeproj">
             </BuildableReference>
          </TestableReference>

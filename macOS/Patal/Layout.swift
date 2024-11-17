@@ -8,11 +8,11 @@
 import Foundation
 
 protocol Chosung {
-    func pickChosung(char: String) -> String?
+    func pickChosung(by char: String) -> String?
 }
 
 protocol Jungsung {
-    func pickJungsung(char: String) -> String?
+    func pickJungsung(by char: String) -> String?
 }
 
 struct Han3ShinPcsLayout: Chosung {
@@ -33,7 +33,7 @@ struct Han3ShinPcsLayout: Chosung {
         "m": 초성.히읗,
     ]
 
-    func pickChosung(char: String) -> String? {
+    func pickChosung(by char: String) -> String? {
         guard let chosung = self.chosungMap[char] else {
             return nil
         }

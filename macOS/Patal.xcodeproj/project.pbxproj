@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -24,7 +24,6 @@
 		46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E67F5026EC5505005EC052 /* AppDelegate.swift */; };
 		46E67F5326EC5506005EC052 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F5226EC5506005EC052 /* Assets.xcassets */; };
 		46E67F5626EC5506005EC052 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F5426EC5506005EC052 /* MainMenu.xib */; };
-		46E67F6226EC5506005EC052 /* PatalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E67F6126EC5506005EC052 /* PatalTests.swift */; };
 		46E67F8026EC5CFA005EC052 /* han3-P2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */; };
 		46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7E26EC5CFA005EC052 /* han3-P2.png */; };
 		46E67F8226EC5CFA005EC052 /* icon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7F26EC5CFA005EC052 /* icon.tiff */; };
@@ -33,14 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		46E67F5E26EC5506005EC052 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 46E67F4526EC5505005EC052 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 46E67F4C26EC5505005EC052;
-			remoteInfo = Patal;
-		};
-		46E67F6926EC5506005EC052 /* PBXContainerItemProxy */ = {
+		E289CD502CE9CD3D00E309D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 46E67F4526EC5505005EC052 /* Project object */;
 			proxyType = 1;
@@ -73,14 +65,17 @@
 		46E67F5526EC5506005EC052 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		46E67F5726EC5506005EC052 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46E67F5826EC5506005EC052 /* Patal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Patal.entitlements; sourceTree = "<group>"; };
-		46E67F6126EC5506005EC052 /* PatalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatalTests.swift; sourceTree = "<group>"; };
-		46E67F6326EC5506005EC052 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-P2@2x.png"; sourceTree = "<group>"; };
 		46E67F7E26EC5CFA005EC052 /* han3-P2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-P2.png"; sourceTree = "<group>"; };
 		46E67F7F26EC5CFA005EC052 /* icon.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = icon.tiff; sourceTree = "<group>"; };
+		E289CD4C2CE9CD3D00E309D8 /* PatalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PatalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2972D022CDF8C11001278E3 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 		E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulCode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		E289CD4D2CE9CD3D00E309D8 /* PatalTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = PatalTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		46E67F4A26EC5505005EC052 /* Frameworks */ = {
@@ -92,14 +87,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		46E67F5A26EC5506005EC052 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		46E67F6526EC5506005EC052 /* Frameworks */ = {
+		E289CD492CE9CD3D00E309D8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -123,7 +111,7 @@
 			children = (
 				46E67F7C26EC5CFA005EC052 /* Resource */,
 				46E67F4F26EC5505005EC052 /* Patal */,
-				46E67F6026EC5506005EC052 /* PatalTests */,
+				E289CD4D2CE9CD3D00E309D8 /* PatalTests */,
 				46E67F4E26EC5505005EC052 /* Products */,
 				134356FA27DDFCF20074E691 /* Frameworks */,
 			);
@@ -133,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				46E67F4D26EC5505005EC052 /* Patal.app */,
+				E289CD4C2CE9CD3D00E309D8 /* PatalTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -155,15 +144,6 @@
 				46E67F5826EC5506005EC052 /* Patal.entitlements */,
 			);
 			path = Patal;
-			sourceTree = "<group>";
-		};
-		46E67F6026EC5506005EC052 /* PatalTests */ = {
-			isa = PBXGroup;
-			children = (
-				46E67F6126EC5506005EC052 /* PatalTests.swift */,
-				46E67F6326EC5506005EC052 /* Info.plist */,
-			);
-			path = PatalTests;
 			sourceTree = "<group>";
 		};
 		46E67F7C26EC5CFA005EC052 /* Resource */ = {
@@ -202,39 +182,28 @@
 			productReference = 46E67F4D26EC5505005EC052 /* Patal.app */;
 			productType = "com.apple.product-type.application";
 		};
-		46E67F5C26EC5506005EC052 /* PatalTests */ = {
+		E289CD4B2CE9CD3D00E309D8 /* PatalTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 46E67F7426EC5506005EC052 /* Build configuration list for PBXNativeTarget "PatalTests" */;
+			buildConfigurationList = E289CD522CE9CD3E00E309D8 /* Build configuration list for PBXNativeTarget "PatalTests" */;
 			buildPhases = (
-				46E67F5926EC5506005EC052 /* Sources */,
-				46E67F5A26EC5506005EC052 /* Frameworks */,
-				46E67F5B26EC5506005EC052 /* Resources */,
+				E289CD482CE9CD3D00E309D8 /* Sources */,
+				E289CD492CE9CD3D00E309D8 /* Frameworks */,
+				E289CD4A2CE9CD3D00E309D8 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				46E67F5F26EC5506005EC052 /* PBXTargetDependency */,
+				E289CD512CE9CD3D00E309D8 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				E289CD4D2CE9CD3D00E309D8 /* PatalTests */,
 			);
 			name = PatalTests;
+			packageProductDependencies = (
+			);
 			productName = PatalTests;
+			productReference = E289CD4C2CE9CD3D00E309D8 /* PatalTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		46E67F6726EC5506005EC052 /* PatalUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 46E67F7726EC5506005EC052 /* Build configuration list for PBXNativeTarget "PatalUITests" */;
-			buildPhases = (
-				46E67F6426EC5506005EC052 /* Sources */,
-				46E67F6526EC5506005EC052 /* Frameworks */,
-				46E67F6626EC5506005EC052 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				46E67F6A26EC5506005EC052 /* PBXTargetDependency */,
-			);
-			name = PatalUITests;
-			productName = PatalUITests;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -243,18 +212,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1250;
+				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					46E67F4C26EC5505005EC052 = {
 						CreatedOnToolsVersion = 12.5.1;
 					};
-					46E67F5C26EC5506005EC052 = {
-						CreatedOnToolsVersion = 12.5.1;
-						TestTargetID = 46E67F4C26EC5505005EC052;
-					};
-					46E67F6726EC5506005EC052 = {
-						CreatedOnToolsVersion = 12.5.1;
+					E289CD4B2CE9CD3D00E309D8 = {
+						CreatedOnToolsVersion = 16.1;
 						TestTargetID = 46E67F4C26EC5505005EC052;
 					};
 				};
@@ -274,8 +239,7 @@
 			projectRoot = "";
 			targets = (
 				46E67F4C26EC5505005EC052 /* Patal */,
-				46E67F5C26EC5506005EC052 /* PatalTests */,
-				46E67F6726EC5506005EC052 /* PatalUITests */,
+				E289CD4B2CE9CD3D00E309D8 /* PatalTests */,
 			);
 		};
 /* End PBXProject section */
@@ -299,14 +263,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		46E67F5B26EC5506005EC052 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		46E67F6626EC5506005EC052 /* Resources */ = {
+		E289CD4A2CE9CD3D00E309D8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -332,15 +289,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		46E67F5926EC5506005EC052 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				46E67F6226EC5506005EC052 /* PatalTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		46E67F6426EC5506005EC052 /* Sources */ = {
+		E289CD482CE9CD3D00E309D8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -350,15 +299,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		46E67F5F26EC5506005EC052 /* PBXTargetDependency */ = {
+		E289CD512CE9CD3D00E309D8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 46E67F4C26EC5505005EC052 /* Patal */;
-			targetProxy = 46E67F5E26EC5506005EC052 /* PBXContainerItemProxy */;
-		};
-		46E67F6A26EC5506005EC052 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 46E67F4C26EC5505005EC052 /* Patal */;
-			targetProxy = 46E67F6926EC5506005EC052 /* PBXContainerItemProxy */;
+			targetProxy = E289CD502CE9CD3D00E309D8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -568,87 +512,48 @@
 			};
 			name = Release;
 		};
-		46E67F7526EC5506005EC052 /* Debug */ = {
+		E289CD532CE9CD3E00E309D8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = LL75ZY5CKZ;
-				INFOPLIST_FILE = PatalTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 11.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.PatalTests;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = soomtong.PatalTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Patal.app/Contents/MacOS/Patal";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Patal.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Patal";
 			};
 			name = Debug;
 		};
-		46E67F7626EC5506005EC052 /* Release */ = {
+		E289CD542CE9CD3E00E309D8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = LL75ZY5CKZ;
-				INFOPLIST_FILE = PatalTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 11.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.PatalTests;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = soomtong.PatalTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Patal.app/Contents/MacOS/Patal";
-			};
-			name = Release;
-		};
-		46E67F7826EC5506005EC052 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = LL75ZY5CKZ;
-				INFOPLIST_FILE = PatalUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.PatalUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = Patal;
-			};
-			name = Debug;
-		};
-		46E67F7926EC5506005EC052 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = LL75ZY5CKZ;
-				INFOPLIST_FILE = PatalUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.PatalUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = Patal;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Patal.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Patal";
 			};
 			name = Release;
 		};
@@ -673,20 +578,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		46E67F7426EC5506005EC052 /* Build configuration list for PBXNativeTarget "PatalTests" */ = {
+		E289CD522CE9CD3E00E309D8 /* Build configuration list for PBXNativeTarget "PatalTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				46E67F7526EC5506005EC052 /* Debug */,
-				46E67F7626EC5506005EC052 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		46E67F7726EC5506005EC052 /* Build configuration list for PBXNativeTarget "PatalUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				46E67F7826EC5506005EC052 /* Debug */,
-				46E67F7926EC5506005EC052 /* Release */,
+				E289CD532CE9CD3E00E309D8 /* Debug */,
+				E289CD542CE9CD3E00E309D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

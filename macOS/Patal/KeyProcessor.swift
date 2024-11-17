@@ -66,7 +66,7 @@ class HangulProcessor {
     func getComposedChar() -> String? {
         // 초성이 들어오면 조합 시작
         if let char = self.buffer.first {
-            let composed = self.layout.pickChosung(char: char.char)
+            let composed = self.layout.pickChosung(by: char.char)
             self.buffer.removeFirst()
             return composed
         }
