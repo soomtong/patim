@@ -9,16 +9,16 @@ import Testing
 
 @testable import Patal
 
-struct LayoutTests {
+@Suite("신세벌 커스텀 레이아웃 테스트")
+struct Han3ShinPcsLayoutTests {
     let layout = Han3ShinPcsLayout()
+    let 초성기역 = String(
+        utf16CodeUnits: [초성.기역.rawValue],
+        count: [초성.기역.rawValue].count
+    )
 
     @Test()
     func pickChosung() {
-        let 초성기역 = String(
-            utf16CodeUnits: [초성.기역.rawValue],
-            count: [초성.기역.rawValue].count
-        )
-
         #expect(layout.pickChosung(by: "k") == 초성기역)
     }
 }
