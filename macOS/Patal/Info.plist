@@ -20,93 +20,63 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<key>LSMinimumSystemVersion</key>
-	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
-	<key>LSBackgroundOnly</key>
-	<true/>
-	<key>LSUIElement</key>
-	<string>1</string>
-	<key>InputMethodConnectionName</key>
-	<string>PatInputMethod_1_Connection</string>
-	<key>InputMethodServerControllerClass</key>
-	<string>PatInputController</string>
-	<key>InputMethodServerDelegateClass</key>
-	<string>PatInputController</string>
-	<key>TISInputSourceID</key>
-	<string>com.soomtong.inputmethod.ko</string>
-	<key>tsInputMethodCharacterRepertoireKey</key>
-	<array>
-		<string>Hang</string>
-	</array>
-	<key>tsInputMethodIconFileKey</key>
-	<string>Korean.tiff</string>
-	<key>TISIconIsTemplate</key>
-	<true/>
-	<key>TICapsLockLanguageSwitchCapable</key>
-	<true/>
-	<key>TISCapsLockResetOnModeSwitch</key>
-	<true/>
 	<key>ComponentInputModeDict</key>
 	<dict>
 		<key>tsInputModeListKey</key>
 		<dict>
-			<key>InputmethodHan3ShinPCS</key>
-			<dict>
-				<key>TISInputSourceID</key>
-				<string>com.soomtong.inputmethod.shin3-pcs</string>
-				<key>TISIntendedLanguage</key>
-				<string>ko</string>
-				<key>TISIconLabels</key>
-				<dict>
-					<key>Primary</key>
-					<string>숨</string>
-				</dict>
-				<key>TISIconIsTemplate</key>
-				<true/>
-				<key>tsInputModeMenuIconFileKey</key>
-				<string>han3-shin-pcs.png</string>
-				<key>tsInputModeAlternateMenuIconFileKey</key>
-				<string>han3-shin-pcs.png</string>
-				<key>tsInputModePaletteIconFileKey</key>
-				<string>han3-shin-pcs.png</string>
-				<key>tsInputModeDefaultStateKey</key>
-				<false/>
-				<key>tsInputModePrimaryInScriptKey</key>
-				<false/>
-				<key>tsInputModeIsVisibleKey</key>
-				<true/>
-				<key>tsInputModeScriptKey</key>
-				<string>smKorean</string>
-			</dict>
 			<key>InputmethodHan3ShinP2</key>
 			<dict>
-				<key>TISInputSourceID</key>
-				<string>com.soomtong.inputmethod.shin3-p2</string>
-				<key>TISIntendedLanguage</key>
-				<string>ko</string>
+				<key>TISIconIsTemplate</key>
+				<true/>
 				<key>TISIconLabels</key>
 				<dict>
 					<key>Primary</key>
 					<string>팥</string>
 				</dict>
-				<key>TISIconIsTemplate</key>
-				<true/>
-				<key>tsInputModeMenuIconFileKey</key>
-				<string>han3-shin-p2.png</string>
+				<key>TISInputSourceID</key>
+				<string>com.soomtong.inputmethod.shin3-p2</string>
+				<key>TISIntendedLanguage</key>
+				<string>ko</string>
 				<key>tsInputModeAlternateMenuIconFileKey</key>
-				<string>han3-shin-p2.png</string>
-				<key>tsInputModePaletteIconFileKey</key>
 				<string>han3-shin-p2.png</string>
 				<key>tsInputModeDefaultStateKey</key>
 				<true/>
 				<key>tsInputModeIsVisibleKey</key>
 				<true/>
+				<key>tsInputModeMenuIconFileKey</key>
+				<string>han3-shin-p2.png</string>
+				<key>tsInputModePaletteIconFileKey</key>
+				<string>han3-shin-p2.png</string>
 				<key>tsInputModePrimaryInScriptKey</key>
 				<true/>
+				<key>tsInputModeScriptKey</key>
+				<string>smKorean</string>
+			</dict>
+			<key>InputmethodHan3ShinPCS</key>
+			<dict>
+				<key>TISIconIsTemplate</key>
+				<true/>
+				<key>TISIconLabels</key>
+				<dict>
+					<key>Primary</key>
+					<string>숨</string>
+				</dict>
+				<key>TISInputSourceID</key>
+				<string>com.soomtong.inputmethod.shin3-pcs</string>
+				<key>TISIntendedLanguage</key>
+				<string>ko</string>
+				<key>tsInputModeAlternateMenuIconFileKey</key>
+				<string>han3-shin-pcs.png</string>
+				<key>tsInputModeDefaultStateKey</key>
+				<false/>
+				<key>tsInputModeIsVisibleKey</key>
+				<true/>
+				<key>tsInputModeMenuIconFileKey</key>
+				<string>han3-shin-pcs.png</string>
+				<key>tsInputModePaletteIconFileKey</key>
+				<string>han3-shin-pcs.png</string>
+				<key>tsInputModePrimaryInScriptKey</key>
+				<false/>
 				<key>tsInputModeScriptKey</key>
 				<string>smKorean</string>
 			</dict>
@@ -117,5 +87,35 @@
 			<string>InputmethodHan3ShinP2</string>
 		</array>
 	</dict>
+	<key>InputMethodConnectionName</key>
+	<string>PatInputMethod_1_Connection</string>
+	<key>InputMethodServerControllerClass</key>
+	<string>PatInputController</string>
+	<key>InputMethodServerDelegateClass</key>
+	<string>PatInputController</string>
+	<key>LSBackgroundOnly</key>
+	<true/>
+	<key>LSMinimumSystemVersion</key>
+	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>LSUIElement</key>
+	<string>1</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>TICapsLockLanguageSwitchCapable</key>
+	<true/>
+	<key>TISCapsLockResetOnModeSwitch</key>
+	<true/>
+	<key>TISIconIsTemplate</key>
+	<true/>
+	<key>TISInputSourceID</key>
+	<string>com.soomtong.inputmethod.ko</string>
+	<key>tsInputMethodCharacterRepertoireKey</key>
+	<array>
+		<string>Hang</string>
+	</array>
+	<key>tsInputMethodIconFileKey</key>
+	<string>Korean.tiff</string>
 </dict>
 </plist>

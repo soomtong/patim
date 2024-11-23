@@ -11,7 +11,8 @@ import UserNotifications
 
 private var server: IMKServer?
 
-@NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
+@main
+class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet var menu: NSMenu!
 
