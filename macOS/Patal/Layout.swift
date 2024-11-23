@@ -97,7 +97,7 @@ struct Han3ShinPcsLayout: Chosung {
             return nil
         }
 
-        logger.debug("초성: \(chosung.rawValue)")
+        logger.debug("초성 있음: \(chosung.rawValue)")
         return chosung.rawValue
     }
 
@@ -106,7 +106,7 @@ struct Han3ShinPcsLayout: Chosung {
             return nil
         }
 
-        logger.debug("중성: \(jungsung.rawValue)")
+        logger.debug("중성 있음: \(jungsung.rawValue)")
         return jungsung.rawValue
     }
 
@@ -115,7 +115,7 @@ struct Han3ShinPcsLayout: Chosung {
             return nil
         }
         
-        logger.debug("종성: \(jongsung.rawValue)")
+        logger.debug("종성 있음: \(jongsung.rawValue)")
         return jongsung.rawValue
     }
 }

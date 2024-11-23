@@ -22,15 +22,15 @@ internal class InputController: IMKInputController {
             return false
         }
 
-        processor.setKey(string: string, keyCode: keyCode, flags: flags)
+        processor.setKey(string: string)
 
         guard let (state, char) = processor.getComposedChar() else {
             return false
         }
 
-        logger.debug(
-            "inputText: \(string), keyCode: \(keyCode), flags: \(flags), state: \(state), char: \(char)"
-        )
+        // logger.debug(
+        // "inputText: \(string), keyCode: \(keyCode), flags: \(flags), state: \(state), char: \(char)"
+        // )
         client.insertText(char, replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
 
         return true
