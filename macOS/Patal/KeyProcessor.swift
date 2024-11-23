@@ -56,13 +56,6 @@ class HangulProcessor {
         logger.debug("버퍼: \(self.buffer.count) \(char.char)")
     }
 
-    func isEscaped() -> Bool {
-        if self.keyCode == ESC_KEYCODE && self.flags == 0 {
-            return true
-        }
-        return false
-    }
-
     func getComposedChar() -> String? {
         // 초성이 들어오면 조합 시작
         if let char = self.buffer.first {
