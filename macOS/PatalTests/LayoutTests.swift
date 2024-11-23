@@ -25,6 +25,15 @@ struct Han3ShinPcsLayoutTests {
         let chosung2 = layout.pickChosung(by: "h")
         #expect(chosung2 == 초성.니은.rawValue)
     }
+    
+    @Test()
+    func pickDoubleChosung() {
+        let doubleChosung1 = layout.pickChosung(by: "kk")
+        #expect(doubleChosung1 == 초성.쌍기역.rawValue)
+        
+        let doubleChosung2 = layout.pickChosung(by: ";;")
+        #expect(doubleChosung2 == 초성.쌍비읍.rawValue)
+    }
 
     @Test()
     func pickJungsung() {
@@ -34,6 +43,18 @@ struct Han3ShinPcsLayoutTests {
         let jungsung2 = layout.pickJungsung(by: "e")
         #expect(jungsung2 == 중성.애.rawValue)
     }
+    
+    @Test()
+    func pickDoubleJungsung() {
+        let doubleJungsung1 = layout.pickJungsung(by: "pf")
+        #expect(doubleJungsung1 == 중성.와.rawValue)
+        
+        let doubleJungsung2 = layout.pickJungsung(by: "od")
+        #expect(doubleJungsung2 == 중성.위.rawValue)
+        
+        let doubleJungsung3 = layout.pickJungsung(by: "z")
+        #expect(doubleJungsung3 == 중성.의.rawValue)
+    }
 
     @Test()
     func pickJongsung() {
@@ -42,5 +63,20 @@ struct Han3ShinPcsLayoutTests {
 
         let jongsung2 = layout.pickJongsung(by: "s")
         #expect(jongsung2 == 종성.니은.rawValue)
+    }
+    
+    @Test()
+    func pickDoubleJongsung() {
+        let doubleJongsung1 = layout.pickJongsung(by: "cc")
+        #expect(doubleJongsung1 == 종성.쌍기역.rawValue)
+        
+        let doubleJongsung2 = layout.pickJongsung(by: "sd")
+        #expect(doubleJongsung2 == 종성.니은히읗.rawValue)
+        
+        let doubleJongsung3 = layout.pickJongsung(by: "we")
+        #expect(doubleJongsung3 == 종성.리을비읍.rawValue)
+        
+        let doubleJongsung4 = layout.pickJongsung(by: "x")
+        #expect(doubleJongsung4 == 종성.쌍시옷.rawValue)
     }
 }
