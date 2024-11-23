@@ -14,21 +14,23 @@ internal class InputController: IMKInputController {
 
     let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
 
+    // 이 입력 방법은 OS 에서 백스페이스, 엔터 등을 처리함. 즉, 완성된 키코드를 제공함.
     override func inputText(
         _ string: String!, key keyCode: Int, modifiers flags: Int, client sender: Any!
     ) -> Bool {
         guard let client = sender as? IMKTextInput else {
             return false
         }
-        
+
         processor.setKey(string: string, keyCode: keyCode, flags: flags)
 
-        guard let char = processor.getComposedChar() else {
+        guard let (state, char) = processor.getComposedChar() else {
             return false
         }
 
-        // 조합중인 글자를 처리하기 위해, 백스페이스를 처리하기 위해 커서를 움직여야 함.
-        // 이 조합 조건들은 모두 테스트 케이스를 먼저 디자인할 것
+        logger.debug(
+            "inputText: \(string), keyCode: \(keyCode), flags: \(flags), state: \(state), char: \(char)"
+        )
         client.insertText(char, replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
 
         return true

@@ -19,6 +19,24 @@ struct Han3ShinPcsLayoutTests {
 
     @Test()
     func pickChosung() {
-        #expect(layout.pickChosung(by: "k") == 초성기역)
+        let chosung1 = layout.pickChosung(by: "k")
+        #expect(chosung1 == 초성.기역.rawValue)
+
+        let chosung2 = layout.pickChosung(by: "h")
+        #expect(chosung2 == 초성.니은.rawValue)
+    }
+
+    @Test()
+    func pickJungsung() {
+        let jungsung1 = layout.pickJungsung(by: "f")
+        #expect(jungsung1 == 중성.아.rawValue)
+
+        let jungsung2 = layout.pickJungsung(by: "e")
+        #expect(jungsung2 == 중성.애.rawValue)
+    }
+
+    @Test()
+    func compose가() {
+        //
     }
 }

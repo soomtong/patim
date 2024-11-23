@@ -13,6 +13,13 @@ struct ComposedChar {
     var flags: Int
 }
 
+enum ComposeState {
+    case none
+    case initial
+    case composing
+    case committed
+}
+
 // 키코드 목록 https://eastmanreference.com/complete-list-of-applescript-key-codes
 let CMD_FLAG = 1_048_576
 let CTRL_FLAG = 262144
@@ -27,42 +34,63 @@ class HangulProcessor {
     var keyCode: Int
     var flags: Int
 
-    var buffer: [ComposedChar]
+    var buffer: ComposedChar
     var preedit: [unichar]
     var commit: [unichar]
-    var layout: Han3ShinPcsLayout
+
+    private var state: ComposeState = .none
+
+    let hangulLayout = Han3ShinPcsLayout()
 
     init(layout: String) {
         logger.debug("입력키 처리 클래스 초기화: \(layout)")
         self.string = ""
         self.keyCode = 0
         self.flags = 0
-        self.buffer = []
+        
+        self.buffer = ComposedChar(char: "", keyCode: 0, flags: 0)
         self.preedit = []
         self.commit = []
-        self.layout = Han3ShinPcsLayout()
+    }
+
+    deinit {
+        logger.debug("입력키 처리 클래스 해제")
     }
 
     func setKey(string: String, keyCode: Int, flags: Int) {
-        // 특수 키 - ESC ENTER SHIFT 등의 입력을 위해 keyCode 를 받아야 함
         logger.debug("입력된 문자: \(String(describing: string)), \(keyCode), \(flags)")
 
         self.string = string
         self.keyCode = keyCode
         self.flags = flags
 
-        let char = ComposedChar(char: self.string, keyCode: self.keyCode, flags: self.flags)
-        self.buffer.append(char)
-        logger.debug("버퍼: \(self.buffer.count) \(char.char)")
+        self.buffer = ComposedChar(char: self.string, keyCode: self.keyCode, flags: self.flags)
+        logger.debug("버퍼: \(self.buffer.char)")
     }
 
-    func getComposedChar() -> String? {
-        // 초성이 들어오면 조합 시작
-        if let char = self.buffer.first {
-            let composed = self.layout.pickChosung(by: char.char)
-            self.buffer.removeFirst()
-            return composed
+    func getComposedChar() -> (ComposeState, String)? {
+        // 키가 들어오면 조합 시작
+        // kf -> 가
+        if let initialConsonan = hangulLayout.pickChosung(by: self.buffer.char) {
+            self.preedit.append(initialConsonan)
+            self.state = .composing
+            let char = String(utf16CodeUnits: [initialConsonan], count: 1)
+            return (self.state, char)
         }
-        return nil
+        
+        if let initialVowel = hangulLayout.pickJungsung(by: self.buffer.char) {
+            self.preedit.append(initialVowel)
+            self.state = .composing
+            let char = String(utf16CodeUnits: [initialVowel], count: 1)
+            return (self.state, char)
+        }
+
+        // todo: 각각의 낱자를 조합하는 과정이 필요함
+        // self.commit = self.preedit
+        //            return "\(initialConsonant)\(vowelComposed)"
+        // let utf16CodeUnits: [unichar] = [chosung.rawValue]
+        // return (chosung, String(utf16CodeUnits: utf16CodeUnits, count: utf16CodeUnits.count))
+        logger.debug("조합 대상: \(self.preedit)")
+        return (self.state, "조합 중!")
     }
 }
