@@ -57,11 +57,41 @@ struct Han3ShinPcsLayout: Chosung {
         "d": 중성.이,
     ]
 
+    let jongsungMap: [String: 종성] = [
+        "c": 종성.기역,
+        "cc": 종성.쌍기역,
+        "cq": 종성.기역시옷,
+        "s": 종성.니은,
+        "sw": 종성.니은지읒,
+        "sn": 종성.니은히읗,
+        "g": 종성.디귿,
+        "w": 종성.리을,
+        "wg": 종성.리을기역,
+        "wh": 종성.리을미음,
+        "wj": 종성.리을비읍,
+        "wp": 종성.리을시옷,
+        "wr": 종성.리을티긑,
+        "wf": 종성.리을피읖,
+        "wd": 종성.리을히읗,
+        "z": 종성.미음,
+        "e": 종성.비읍,
+        "q": 종성.시옷,
+        "qq": 종성.쌍시옷,
+        "x": 종성.쌍시옷,
+        "a": 종성.이응,
+        "v": 종성.지읒,
+        "b": 종성.치읓,
+        "t": 종성.키엌,
+        "r": 종성.티긑,
+        "f": 종성.피읖,
+        "d": 종성.히흫,
+    ]
+
     func pickChosung(by char: String) -> unichar? {
         guard let chosung = self.chosungMap[char] else {
             return nil
         }
-        
+
         logger.debug("초성: \(chosung.rawValue)")
         return chosung.rawValue
     }
@@ -73,5 +103,14 @@ struct Han3ShinPcsLayout: Chosung {
 
         logger.debug("중성: \(jungsung.rawValue)")
         return jungsung.rawValue
+    }
+
+    func pickJongsung(by char: String) -> unichar? {
+        guard let jongsung = self.jongsungMap[char] else {
+            return nil
+        }
+        
+        logger.debug("종성: \(jongsung.rawValue)")
+        return jongsung.rawValue
     }
 }

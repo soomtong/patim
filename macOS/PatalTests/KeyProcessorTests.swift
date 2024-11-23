@@ -22,7 +22,7 @@ struct KeyProcessorTests {
     }
 
     @Test()
-    func getComposedChar1() {
+    func getComposedChar_가() {
         let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
 
         processor.setKey(string: "k", keyCode: 40, flags: 0)
@@ -34,7 +34,7 @@ struct KeyProcessorTests {
         processor.setKey(string: "f", keyCode: 3, flags: 0)
         if let (state2, test2) = processor.getComposedChar() {
             #expect(state2 == .composing)
-            #expect(test2 == "ㅏ")
+            #expect(test2 == "가")
         }
     }
 }

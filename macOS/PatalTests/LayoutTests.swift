@@ -36,7 +36,11 @@ struct Han3ShinPcsLayoutTests {
     }
 
     @Test()
-    func compose가() {
-        //
+    func pickJongsung() {
+        let jongsung1 = layout.pickJongsung(by: "a")
+        #expect(jongsung1 == 종성.이응.rawValue)
+
+        let jongsung2 = layout.pickJongsung(by: "s")
+        #expect(jongsung2 == 종성.니은.rawValue)
     }
 }
