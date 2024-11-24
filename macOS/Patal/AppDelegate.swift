@@ -9,12 +9,12 @@ import Cocoa
 import InputMethodKit
 import UserNotifications
 
-private var server: IMKServer?
-
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet var menu: NSMenu!
+
+    var server: IMKServer?
 
     let notificationCenter = UNUserNotificationCenter.current()
     let logger = CustomLogger(category: "AppDelegate")
