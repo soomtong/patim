@@ -33,8 +33,8 @@ class HangulProcessor {
     var preedit: [unichar]
     var commit: String
 
-    private var state: ComposeState = .none
-    private var hangulStatus: HangulStatus = .none
+    var state: ComposeState = .none
+    var hangulStatus: HangulStatus = .none
 
     let hangulLayout = Han3ShinPcsLayout()
 
@@ -56,6 +56,12 @@ class HangulProcessor {
 
         self.rawChar = string
         logger.debug("입력: \(self.rawChar) 버퍼: \(self.previous)")
+    }
+    
+    func flush() {
+        self.previous.removeAll()
+        self.preedit.removeAll()
+        self.commit = ""
     }
 
     func getComposedChar() -> (ComposeState, String)? {

@@ -9,7 +9,7 @@ import Testing
 
 @testable import Patal
 
-@Suite("신세벌 커스텀 레이아웃 테스트")
+@Suite("신세벌 커스텀 레이아웃 테스트", .serialized)
 struct Han3ShinPcsLayoutTests {
     let layout = Han3ShinPcsLayout()
     let 초성기역 = String(

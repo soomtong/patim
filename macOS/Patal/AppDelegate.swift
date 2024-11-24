@@ -26,7 +26,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             name: bundle.infoDictionary?["InputMethodConnectionName"] as? String,
             bundleIdentifier: bundle.bundleIdentifier)
 
-        logger.debug("팥알 입력기 활성화")
+        logger.debug(
+            "팥알 입력기 활성화 \(String(describing: bundle.bundleIdentifier)) \(String(describing: bundle.infoDictionary?["InputMethodConnectionName"]))"
+        )
 
         // load notification handler
         UNUserNotificationCenter.current().delegate = self
