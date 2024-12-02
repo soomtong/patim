@@ -30,6 +30,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             "팥알 입력기 활성화 \(String(describing: bundle.bundleIdentifier)) \(String(describing: bundle.infoDictionary?["InputMethodConnectionName"]))"
         )
 
+        if let inputMethodID = getCurrentInputMethodID() {
+            logger.debug("입력기 서버 자판: \(inputMethodID)")
+        }
+
         // load notification handler
         UNUserNotificationCenter.current().delegate = self
 

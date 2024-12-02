@@ -25,6 +25,7 @@
 		46E67F8026EC5CFA005EC052 /* han3-P2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */; };
 		46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7E26EC5CFA005EC052 /* han3-P2.png */; };
 		46E67F8226EC5CFA005EC052 /* icon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7F26EC5CFA005EC052 /* icon.tiff */; };
+		E284B61B2CFDF4F20009DE1C /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = E284B61A2CFDF4F20009DE1C /* Util.swift */; };
 		E2972D032CDF8C18001278E3 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2972D022CDF8C11001278E3 /* Layout.swift */; };
 		E2B1644B2CDFAFD4003FCE85 /* HangulCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */; };
 /* End PBXBuildFile section */
@@ -64,6 +65,7 @@
 		46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-P2@2x.png"; sourceTree = "<group>"; };
 		46E67F7E26EC5CFA005EC052 /* han3-P2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-P2.png"; sourceTree = "<group>"; };
 		46E67F7F26EC5CFA005EC052 /* icon.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = icon.tiff; sourceTree = "<group>"; };
+		E284B61A2CFDF4F20009DE1C /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		E289CD4C2CE9CD3D00E309D8 /* PatalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PatalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2972D022CDF8C11001278E3 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 		E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulCode.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				464092A92B92EDA800F5D81D /* KeyProcessor.swift */,
 				E2972D022CDF8C11001278E3 /* Layout.swift */,
 				469C537E2B91E1C200446511 /* Logger.swift */,
+				E284B61A2CFDF4F20009DE1C /* Util.swift */,
 				46E67F5226EC5506005EC052 /* Assets.xcassets */,
 				46E67F5426EC5506005EC052 /* MainMenu.xib */,
 				46E67F5726EC5506005EC052 /* Info.plist */,
@@ -274,6 +277,7 @@
 				1343570027DDFF850074E691 /* InputController.swift in Sources */,
 				461F6A4126ECCD2400573DB1 /* NotificationContent.swift in Sources */,
 				E2B1644B2CDFAFD4003FCE85 /* HangulCode.swift in Sources */,
+				E284B61B2CFDF4F20009DE1C /* Util.swift in Sources */,
 				46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */,
 				469C537F2B91E1C200446511 /* Logger.swift in Sources */,
 				464092AA2B92EDA800F5D81D /* KeyProcessor.swift in Sources */,

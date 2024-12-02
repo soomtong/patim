@@ -9,16 +9,39 @@ import Foundation
 import InputMethodKit
 
 @objc(PatInputController)
-internal class InputController: IMKInputController {
+class InputController: IMKInputController {
     let logger = CustomLogger(category: "InputController")
 
     let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
 
+    override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
+        super.init(server: server, delegate: delegate, client: inputClient)
+    }
+
+    @MainActor
+    override open func activateServer(_ sender: Any!) {
+        super.activateServer(sender)
+        logger.debug("입력기 서버 시작")
+        if let inputMethodID = getCurrentInputMethodID() {
+            logger.debug("팥알 입력기 자판: \(inputMethodID)")
+        }
+    }
+
+    @MainActor
+    override open func deactivateServer(_ sender: Any!) {
+        super.deactivateServer(sender)
+        logger.debug("입력기 서버 중단")
+    }
+
     // 이 입력 방법은 OS 에서 백스페이스, 엔터 등을 처리함. 즉, 완성된 키코드를 제공함.
+    @MainActor
     override func inputText(_ string: String!, client sender: Any!) -> Bool {
         guard let client = sender as? IMKTextInput else {
             return false
         }
+
+        // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
+        logger.debug("this client: \(client.bundleIdentifier() ?? "")")
 
         processor.setKey(string: string)
 
