@@ -20,3 +20,13 @@ func getCurrentInputMethodID() -> String? {
 
     return nil
 }
+
+// function returns char: Int map with sequenced number from 0
+func generateOffsetDictionary<T: Hashable>(_ array: [T]) -> [T: Int] {
+    var map: [T: Int] = [:]
+    for (index, key) in array.enumerated() {
+        print("\(key): \(index)")
+        map[key] = index
+    }
+    return map
+}

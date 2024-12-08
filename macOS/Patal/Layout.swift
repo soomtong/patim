@@ -114,7 +114,7 @@ struct Han3ShinPcsLayout: Chosung {
         guard let jongsung = self.jongsungMap[char] else {
             return nil
         }
-        
+
         logger.debug("종성 있음: \(jongsung.rawValue)")
         return jongsung.rawValue
     }
