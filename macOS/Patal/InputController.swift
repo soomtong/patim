@@ -18,7 +18,6 @@ class InputController: IMKInputController {
         super.init(server: server, delegate: delegate, client: inputClient)
     }
 
-    @MainActor
     override open func activateServer(_ sender: Any!) {
         super.activateServer(sender)
         logger.debug("입력기 서버 시작")
@@ -27,14 +26,12 @@ class InputController: IMKInputController {
         }
     }
 
-    @MainActor
     override open func deactivateServer(_ sender: Any!) {
         super.deactivateServer(sender)
         logger.debug("입력기 서버 중단")
     }
 
     // 이 입력 방법은 OS 에서 백스페이스, 엔터 등을 처리함. 즉, 완성된 키코드를 제공함.
-    @MainActor
     override func inputText(_ string: String!, client sender: Any!) -> Bool {
         guard let client = sender as? IMKTextInput else {
             return false
@@ -43,24 +40,27 @@ class InputController: IMKInputController {
         // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
         logger.debug("this client: \(client.bundleIdentifier() ?? "")")
 
-        processor.setKey(string: string)
-
-        guard let (_, char) = processor.getComposedChar() else {
+        let valid = processor.bindRawCharactor(char: string)
+        if !valid {
             return false
         }
 
+        let strategy = processor.getInputStrategy(client: client)
+        let state = processor.composeBuffer()
+        let charactor = processor.getComposedCharactor()
+        
         // logger.debug(
         // "inputText: \(string), keyCode: \(keyCode), flags: \(flags), state: \(state), char: \(char)"
         // )
-        if processor.state == .composing {
-            let selectionRange = NSRange(location: 0, length: 0)
-            let replacementRange = NSRange(location: 0, length: 0)
-            client.setMarkedText(
-                char, selectionRange: selectionRange, replacementRange: replacementRange)
-        } else {
+//        if processor.state == .composing {
+//            let selectionRange = NSRange(location: 0, length: 0)
+//            let replacementRange = NSRange(location: 0, length: 0)
+//            client.setMarkedText(
+//                char, selectionRange: selectionRange, replacementRange: replacementRange)
+//        } else {
             client.insertText(
-                char, replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
-        }
+                charactor, replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
+//        }
 
         return true
     }
