@@ -49,18 +49,13 @@ class InputController: IMKInputController {
         let state = processor.composeBuffer()
         let charactor = processor.getComposedCharactor()
         
-        // logger.debug(
-        // "inputText: \(string), keyCode: \(keyCode), flags: \(flags), state: \(state), char: \(char)"
-        // )
-//        if processor.state == .composing {
-//            let selectionRange = NSRange(location: 0, length: 0)
-//            let replacementRange = NSRange(location: 0, length: 0)
-//            client.setMarkedText(
-//                char, selectionRange: selectionRange, replacementRange: replacementRange)
-//        } else {
-            client.insertText(
-                charactor, replacementRange: NSRange(location: NSNotFound, length: NSNotFound))
-//        }
+        // state 에 따라서 조합된거 조합중인거를 구분하고
+        // 선택된 strategy 에 따라서 insert 또는 setMark 를 고르고
+        // charactor 를 출력하기
+
+        print("strategy: \(String(describing: strategy))")
+        print("state: \(String(describing: state))")
+        print("charactor: \(String(describing: charactor))")
 
         return true
     }

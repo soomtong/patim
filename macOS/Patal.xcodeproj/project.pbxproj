@@ -17,7 +17,7 @@
 		461A815C2B49B030005E7725 /* han3-shin-p2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81582B49B030005E7725 /* han3-shin-p2@2x.png */; };
 		461F6A4126ECCD2400573DB1 /* NotificationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461F6A4026ECCD2400573DB1 /* NotificationContent.swift */; };
 		462EBD172B3F3DF400BD94B2 /* Korean.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 462EBD162B3F3DF400BD94B2 /* Korean.tiff */; };
-		464092AA2B92EDA800F5D81D /* KeyProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464092A92B92EDA800F5D81D /* KeyProcessor.swift */; };
+		464092AA2B92EDA800F5D81D /* HangulProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464092A92B92EDA800F5D81D /* HangulProcessor.swift */; };
 		469C537F2B91E1C200446511 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469C537E2B91E1C200446511 /* Logger.swift */; };
 		46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E67F5026EC5505005EC052 /* AppDelegate.swift */; };
 		46E67F5326EC5506005EC052 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F5226EC5506005EC052 /* Assets.xcassets */; };
@@ -52,7 +52,7 @@
 		461A81582B49B030005E7725 /* han3-shin-p2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2@2x.png"; sourceTree = "<group>"; };
 		461F6A4026ECCD2400573DB1 /* NotificationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationContent.swift; sourceTree = "<group>"; };
 		462EBD162B3F3DF400BD94B2 /* Korean.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Korean.tiff; sourceTree = "<group>"; };
-		464092A92B92EDA800F5D81D /* KeyProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyProcessor.swift; sourceTree = "<group>"; };
+		464092A92B92EDA800F5D81D /* HangulProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulProcessor.swift; sourceTree = "<group>"; };
 		469C537E2B91E1C200446511 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		46B3550B2B3EF8BA009305DC /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/MainMenu.strings; sourceTree = "<group>"; };
 		46B3550C2B3EF8BA009305DC /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -134,7 +134,7 @@
 				134356FF27DDFF850074E691 /* InputController.swift */,
 				E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */,
 				E299CA4E2D008F2F00E2FD0D /* HangulComposition.swift */,
-				464092A92B92EDA800F5D81D /* KeyProcessor.swift */,
+				464092A92B92EDA800F5D81D /* HangulProcessor.swift */,
 				E2972D022CDF8C11001278E3 /* Layout.swift */,
 				469C537E2B91E1C200446511 /* Logger.swift */,
 				E284B61A2CFDF4F20009DE1C /* Util.swift */,
@@ -284,7 +284,7 @@
 				E284B61B2CFDF4F20009DE1C /* Util.swift in Sources */,
 				46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */,
 				469C537F2B91E1C200446511 /* Logger.swift in Sources */,
-				464092AA2B92EDA800F5D81D /* KeyProcessor.swift in Sources */,
+				464092AA2B92EDA800F5D81D /* HangulProcessor.swift in Sources */,
 				E2972D032CDF8C18001278E3 /* Layout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
