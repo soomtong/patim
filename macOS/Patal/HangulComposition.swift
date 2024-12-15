@@ -7,41 +7,28 @@
 
 import Foundation
 
-// 초성 19개 ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ
-//let chosungMap: [초성] = [초성.기역, 초성.쌍기역, 초성.니은, 초성.디귿, 초성.리을,
-//    초성.미음, 초성.비읍, 초성.쌍비읍, 초성.시옷, 초성.쌍시옷, 초성.이응, 초성.지읒,
-//    초성.쌍지읒, 초성.치읓, 초성.키읔, 초성.티긑, 초성.피읖, 초성.히읗]
-let chosungMap: [Character] = Array("ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ")
-let chosungMapOffset: [Character: Int] = generateOffsetDictionary(chosungMap)
-//let chosungMapOffset2: [Character: Int] = [
-//    "ㄱ": 0, "ㄲ": 1, "ㄴ": 2, "ㄷ": 3, "ㄸ": 4, "ㄹ": 5, "ㅁ": 6,
-//    "ㅂ": 7, "ㅃ": 8, "ㅅ": 9, "ㅆ": 10, "ㅇ": 11, "ㅈ": 12, "ㅉ": 13,
-//    "ㅊ": 14, "ㅋ": 15, "ㅌ": 16, "ㅍ": 17, "ㅎ": 18,
-//    chosungMap[0]: 0, chosungMap[1]: 1, chosungMap[2]: 2, chosungMap[3]: 3,
-//    chosungMap[4]: 4, chosungMap[5]: 5, chosungMap[6]: 6, chosungMap[7]: 7,
-//    chosungMap[8]: 8, chosungMap[9]: 9, chosungMap[10]: 10, chosungMap[11]: 11,
-//    chosungMap[12]: 12, chosungMap[13]: 13, chosungMap[14]: 14, chosungMap[15]: 15,
-//    chosungMap[16]: 16, chosungMap[17]: 17, chosungMap[18]: 18,
-//]
+// 초성 19조합: ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ
+let chosungMap: [초성] = [
+    초성.기역, 초성.쌍기역, 초성.니은, 초성.디귿, 초성.쌍디귿, 초성.리을, 초성.미음, 초성.비읍, 초성.쌍비읍, 초성.시옷,
+    초성.쌍시옷, 초성.이응, 초성.지읒, 초성.쌍지읒, 초성.치읓, 초성.키읔, 초성.티긑, 초성.피읖, 초성.히읗,
+]
+let chosungMapOffset: [초성: Int] = generateOffsetDictionary(chosungMap)
 
-// 중성 21개 ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ
-let jungsungMap: [Character] = Array("ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ")
-let jungsungMapOffset: [Character: Int] = generateOffsetDictionary(jungsungMap)
-//let jungsungMapOffset2: [Character: Int] = [
-//    "ㅏ": 0, "ㅐ": 1, "ㅑ": 2, "ㅒ": 3, "ㅓ": 4, "ㅔ": 5, "ㅕ": 6, "ㅖ": 7,
-//    "ㅗ": 8, "ㅘ": 9, "ㅙ": 10, "ㅚ": 11, "ㅛ": 12, "ㅜ": 13, "ㅝ": 14,
-//    "ㅞ": 15, "ㅟ": 16, "ㅠ": 17, "ㅡ": 18, "ㅢ": 19, "ㅣ": 20,
-//]
+// 중성 21조합: ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ
+let jungsungMap: [중성] = [
+    중성.아, 중성.애, 중성.야, 중성.얘, 중성.어, 중성.에, 중성.여, 중성.예, 중성.오, 중성.와,
+    중성.왜, 중성.외, 중성.요, 중성.우, 중성.워, 중성.웨, 중성.위, 중성.유, 중성.으, 중성.의, 중성.이,
+]
+let jungsungMapOffset: [중성: Int] = generateOffsetDictionary(jungsungMap)
 
-// 종성 28개 (빈 끝소리) + ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ
-let jongsungMap: [Character] = Array(" ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ")
-let jongsungPlusEmptyMapOffset: [Character: Int] = generateOffsetDictionary(jongsungMap)
-//let jongsungPlusEmptyMapOffset2: [Character: Int] = [
-//    " ": 0, "ㄱ": 1, "ㄲ": 2, "ㄳ": 3, "ㄴ": 4, "ㄵ": 5, "ㄶ": 6, "ㄷ": 7,
-//    "ㄹ": 8, "ㄺ": 9, "ㄻ": 10, "ㄼ": 11, "ㄽ": 12, "ㄾ": 13, "ㄿ": 14,
-//    "ㅀ": 15, "ㅁ": 16, "ㅂ": 17, "ㅄ": 18, "ㅅ": 19, "ㅆ": 20, "ㅇ": 21,
-//    "ㅈ": 22, "ㅊ": 23, "ㅋ": 24, "ㅌ": 25, "ㅍ": 26, "ㅎ": 27,
-//]
+// 종성 28조합: (빈 끝소리) + ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ
+let jongsungMap: [종성] = [
+    종성.없음, 종성.기역, 종성.쌍기역, 종성.기역시옷, 종성.니은, 종성.니은지읒, 종성.니은히읗, 종성.디귿,
+    종성.리을, 종성.리을기역, 종성.리을미음, 종성.리을비읍, 종성.리을시옷, 종성.리을티긑,
+    종성.리을피읖, 종성.리을히읗, 종성.미음, 종성.비읍, 종성.비읍시옷, 종성.시옷, 종성.쌍시옷,
+    종성.이응, 종성.지읒, 종성.치읓, 종성.키엌, 종성.티긑, 종성.피읖, 종성.히흫,
+]
+let jongsungMapOffset: [종성: Int] = generateOffsetDictionary(jongsungMap)
 
 let hangulUnicodeOffset = 0xAC00
 
@@ -49,12 +36,19 @@ let chosungOffset19 = chosungMap.count
 let jungsungOffset21 = jungsungMap.count
 let jongsungOffset28 = jongsungMap.count
 
-struct HangulComposition {
-    var chosungPoint: Character? = nil
-    var jungsungPoint: Character? = nil
-    var jongsungPoint: Character? = nil
+func combinePreedit(preedit: 글자) -> unichar {
+    //    let (chosung, jungsung, jongsung?) = preedit
+    // 두 세 개의 코드포인트를 조합하여 하나의 코드포인트로 만드는 것
 
-    init?(chosungPoint: Character?, jungsungPoint: Character?, jongsungPoint: Character?) {
+    return 0x1112
+}
+
+struct HangulComposition {
+    var chosungPoint: 초성? = nil
+    var jungsungPoint: 중성? = nil
+    var jongsungPoint: 종성? = nil
+
+    init?(chosungPoint: 초성?, jungsungPoint: 중성?, jongsungPoint: 종성?) {
         print(
             "test Syllable compose: \(String(describing: chosungPoint)), \(String(describing: jungsungPoint)), \(String(describing: jongsungPoint))"
         )
@@ -65,7 +59,7 @@ struct HangulComposition {
             self.chosungPoint = chosungPoint
         case (nil, let jungsungPoint?, nil) where jungsungMapOffset[jungsungPoint] != nil:
             self.jungsungPoint = jungsungPoint
-        case (nil, nil, let jongsungPoint?) where jongsungPlusEmptyMapOffset[jongsungPoint] != nil:
+        case (nil, nil, let jongsungPoint?) where jongsungMapOffset[jongsungPoint] != nil:
             self.jongsungPoint = jongsungPoint
         case (let chosungPoint?, let jungsungPoint?, nil)
         where chosungMapOffset[chosungPoint] != nil && jungsungMapOffset[jungsungPoint] != nil:
@@ -79,42 +73,10 @@ struct HangulComposition {
         //   self.jongsungPoint = jongsungPoint
         case (let chosungPoint?, let jungsungPoint?, let jongsungPoint?)
         where chosungMapOffset[chosungPoint] != nil && jungsungMapOffset[jungsungPoint] != nil
-            && jongsungPlusEmptyMapOffset[jongsungPoint] != nil:
+            && jongsungMapOffset[jongsungPoint] != nil:
             self.chosungPoint = chosungPoint
             self.jungsungPoint = jungsungPoint
             self.jongsungPoint = jongsungPoint
-        default:
-            return nil
-        }
-    }
-
-    init?(_ character: Character) {
-        // print("test Syllable decompose: \(character)")
-        switch character {
-        case chosungMap[0]...chosungMap[18] where chosungMapOffset[character] != nil:
-            chosungPoint = character
-        case jungsungMap[0]...jungsungMap[20] where jungsungMapOffset[character] != nil:
-            jungsungPoint = character
-        case jongsungMap[1]...jongsungMap[27] where jongsungPlusEmptyMapOffset[character] != nil:
-            jongsungPoint = character
-        case "가"..."힣":
-            let baseIndex = Int(character.unicodeScalars.first!.value) - Int(hangulUnicodeOffset)
-            // print("베이스 \(baseIndex): char \(character.unicodeScalars.first!.value)")
-            let jongsungIndex = baseIndex % jongsungOffset28
-            let jungsungIndex = ((baseIndex - jongsungIndex) / jongsungOffset28) % jungsungOffset21
-            let chosungIndex =
-                (baseIndex - jongsungIndex - (jungsungIndex * jongsungOffset28))
-                / (jongsungOffset28 * jungsungOffset21)
-            // let chosungIndex = (baseIndex / (jongsungOffset28 * jungsungOffset21))
-            // let jungsungIndex = (baseIndex % (jongsungOffset28 * jungsungOffset21)) / jongsungOffset28
-            // let jongsungIndex = baseIndex % jongsungOffset28
-            print("초성 \(chosungIndex)")
-            print("중성 \(jungsungIndex)")
-            print("종성 \(jongsungIndex)")
-
-            chosungPoint = chosungMap[chosungIndex]
-            jungsungPoint = jungsungMap[jungsungIndex]
-            jongsungPoint = jongsungIndex == 0 ? nil : jongsungMap[jongsungIndex]
         default:
             return nil
         }
@@ -125,11 +87,11 @@ struct HangulComposition {
         case (nil, nil, nil):
             return nil
         case (let chosung?, nil, nil):
-            return chosung
+            return Character(UnicodeScalar(chosung.rawValue)!)
         case (nil, let jungsug?, nil):
-            return jungsug
+            return Character(UnicodeScalar(jungsug.rawValue)!)
         case (nil, nil, let jongsung?):
-            return jongsung
+            return Character(UnicodeScalar(jongsung.rawValue)!)
         case (let chosung?, let jungsung?, nil):
             var offset = 0
             if let chosungOffset = chosungMapOffset[chosung] {
@@ -148,7 +110,7 @@ struct HangulComposition {
             if let jungsungOffset = jungsungMapOffset[jungsung] {
                 offset += jungsungOffset * jongsungOffset28
             }
-            if let jongsungOffset = jongsungPlusEmptyMapOffset[jongsung] {
+            if let jongsungOffset = jongsungMapOffset[jongsung] {
                 offset += jongsungOffset
             }
 

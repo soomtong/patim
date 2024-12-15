@@ -40,24 +40,49 @@ class InputController: IMKInputController {
         // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
         logger.debug("this client: \(client.bundleIdentifier() ?? "")")
 
-        let valid = processor.bindRawCharactor(char: string)
-        if !valid {
+        if processor.bindRawCharacter(char: string) {
             return false
         }
+        logger.debug("OS 에서 제공한 문자: \(String(describing: string))")
 
         let strategy = processor.getInputStrategy(client: client)
         let state = processor.composeBuffer()
-        let charactor = processor.getComposedCharactor()
-        
+        let character = processor.getComposedCharacter()
+
         // state 에 따라서 조합된거 조합중인거를 구분하고
         // 선택된 strategy 에 따라서 insert 또는 setMark 를 고르고
-        // charactor 를 출력하기
+        // character 를 출력하기
 
-        print("strategy: \(String(describing: strategy))")
-        print("state: \(String(describing: state))")
-        print("charactor: \(String(describing: charactor))")
+        // logger.debug("strategy: \(String(describing: strategy))")
+        // logger.debug("state: \(String(describing: state))")
+        // logger.debug("character: \(String(describing: character))")
+
+        // 입력 테스트
+        let defaultRange = NSRange(location: NSNotFound, length: 0)
+        let selectionRange = NSRange(location: 0, length: 0)
+        let replacementRange = NSRange(location: NSNotFound, length: NSNotFound)
+        logger.debug(
+            "선택범위: \(String(describing: selectionRange)), 교체범위: \(String(describing: replacementRange))"
+        )
+
+        client.insertText("강산", replacementRange: defaultRange)
 
         return true
+
+        // 조합 테스트
+        // let defaultRange = NSRange(location: NSNotFound, length: 0)
+        // let selectionRange = NSRange(location: 0, length: 0)
+        // let replacementRange = NSRange(location: NSNotFound, length: NSNotFound)
+        // logger.debug(
+        //     "선택범위: \(String(describing: selectionRange)), 교체범위: \(String(describing: replacementRange))"
+        // )
+        //
+        // client
+        //     .setMarkedText(
+        //         "강산", selectionRange: defaultRange, replacementRange: defaultRange
+        //     )
+        //
+        // return true
     }
 
     override func commitComposition(_ sender: Any!) {
