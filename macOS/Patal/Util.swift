@@ -25,7 +25,6 @@ func getCurrentInputMethodID() -> String? {
 func generateOffsetDictionary<T: Hashable>(_ array: [T]) -> [T: Int] {
     var map: [T: Int] = [:]
     for (index, key) in array.enumerated() {
-        print("\(key): \(index)")
         map[key] = index
     }
     return map

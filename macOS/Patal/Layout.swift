@@ -7,15 +7,13 @@
 
 import Foundation
 
-protocol Chosung {
+protocol HangulAutomata {
     func pickChosung(by char: String) -> unichar?
-}
-
-protocol Jungsung {
     func pickJungsung(by char: String) -> unichar?
+    func pickJongsung(by char: String) -> unichar?
 }
 
-struct Han3ShinPcsLayout: Chosung {
+struct Han3ShinPcsLayout: HangulAutomata {
     let logger = CustomLogger(category: "Han3ShinPcsLayout")
 
     let chosungMap: [String: 초성] = [
