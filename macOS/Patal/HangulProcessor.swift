@@ -71,10 +71,9 @@ class HangulProcessor {
         logger.debug("입력키 처리 클래스 해제")
     }
 
-    func bindRawCharacter(char: String) -> Bool {
-        logger.debug("입력된 문자: \(String(describing: char))")
+    func verifyCombosable(char: String) -> Bool {
+        logger.debug("입력된 문자: \(String(describing: self.rawChar))")
 
-        // return false if not included chosungMap or jungsungMap or jongsungMap
         if !hangulLayout.chosungMap.keys.contains(char)
             && !hangulLayout.jungsungMap.keys.contains(char)
             && !hangulLayout.jongsungMap.keys.contains(char)
@@ -84,11 +83,6 @@ class HangulProcessor {
             return false
         }
 
-        self.rawChar = char
-        logger
-            .debug(
-                "입력: \(self.rawChar) 이전: \(self.previous) 프리에딧: \(String(describing: self.preedit))"
-            )
         return true
     }
 
