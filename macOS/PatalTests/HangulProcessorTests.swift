@@ -15,11 +15,10 @@ struct HangulProcessorTests {
     func setKey() {
         let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
 
-        var r1 = processor.verifyCombosable(char: "i")
+        var r1 = processor.verifyCombosable("i")
         #expect(r1 == true)
-        #expect(processor.previous == [])
 
-        r1 = processor.verifyCombosable(char: "!")
+        r1 = processor.verifyCombosable("!")
         #expect(r1 == false)
     }
 
@@ -27,36 +26,44 @@ struct HangulProcessorTests {
     func getComposedChar_가() {
         let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
 
-        var r1 = processor.verifyCombosable(char: "k")
+        var r1 = processor.verifyCombosable("k")
         #expect(r1 == true)
-        if let c1 = processor.getComposedCharacter() {
-            #expect(c1.hashValue == "ᄀ".hash)
-        }
-        r1 = processor.verifyCombosable(char: "f")
+        processor.rawChar = "k"
+        let s1 = processor.composeBuffer()
+        #expect(s1 == ComposeState.composing)
+        let c1 = processor.getComposedCharacter()
+        #expect(c1 == "ᄀ")
+        
+        r1 = processor.verifyCombosable("f")
         #expect(r1 == true)
-        if let c2 = processor.getComposedCharacter() {
-            #expect(c2.hashValue == "가".hash)
-        }
+        processor.rawChar = "f"
+        let s2 = processor.composeBuffer()
+        #expect(s2 == ComposeState.composing)
+        let c2 = processor.getComposedCharacter()
+        #expect(c2 == "가")
     }
 
     @Test("까")
     func getComposedChar_까() {
         let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
 
-        var r1 = processor.verifyCombosable(char: "k")
+        var r1 = processor.verifyCombosable("k")
         #expect(r1 == true)
+        processor.rawChar = "k"
         if let c1 = processor.getComposedCharacter() {
             #expect(c1.hashValue == "ᄀ".hash)
         }
 
-        r1 = processor.verifyCombosable(char: "k")
+        r1 = processor.verifyCombosable("k")
         #expect(r1 == true)
+        processor.rawChar = "k"
         if let c2 = processor.getComposedCharacter() {
             #expect(c2.hashValue == "ᄁ".hash)
         }
 
-        r1 = processor.verifyCombosable(char: "f")
+        r1 = processor.verifyCombosable("f")
         #expect(r1 == true)
+        processor.rawChar = "f"
         if let c3 = processor.getComposedCharacter() {
             #expect(c3.hashValue == "까".hash)
         }
@@ -66,19 +73,19 @@ struct HangulProcessorTests {
     func getComposedChar_강() {
         let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
 
-        var r1 = processor.verifyCombosable(char: "k")
+        var r1 = processor.verifyCombosable("k")
         #expect(r1 == true)
         if let c1 = processor.getComposedCharacter() {
             #expect(c1.hashValue == "ᄀ".hash)
         }
 
-        r1 = processor.verifyCombosable(char: "f")
+        r1 = processor.verifyCombosable("f")
         #expect(r1 == true)
         if let c2 = processor.getComposedCharacter() {
             #expect(c2.hashValue == "가".hash)
         }
 
-        r1 = processor.verifyCombosable(char: "a")
+        r1 = processor.verifyCombosable("a")
         #expect(r1 == true)
         if let c3 = processor.getComposedCharacter() {
             #expect(c3 == "강")

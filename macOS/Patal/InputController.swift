@@ -40,7 +40,7 @@ class InputController: IMKInputController {
         // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
         logger.debug("this client: \(client.bundleIdentifier() ?? "")")
 
-        if !processor.verifyCombosable(char: string) {
+        if !processor.verifyCombosable(string) {
             return false
         }
 

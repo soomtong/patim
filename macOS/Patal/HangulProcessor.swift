@@ -43,7 +43,7 @@ class HangulProcessor {
     var composedHangulChar: Character?
 
     var previous: [String]
-    var preedit: 글자?
+    var preedit: 글자
     var commit: Character?
 
     var state: ComposeState = .none
@@ -62,7 +62,7 @@ class HangulProcessor {
         // preedit 에 처리중인 rawChar
         self.previous = []
         // previous 를 한글 처리된 문자
-        self.preedit = nil
+        self.preedit = 글자()
         // 조합 종료된 한글
         self.commit = nil
     }
@@ -71,19 +71,20 @@ class HangulProcessor {
         logger.debug("입력키 처리 클래스 해제")
     }
 
-    func verifyCombosable(char: String) -> Bool {
-        logger.debug("입력된 문자: \(String(describing: self.rawChar))")
+    func verifyCombosable(_ s: String) -> Bool {
+        logger.debug("입력된 문자: \(String(describing: s))")
 
-        if !hangulLayout.chosungMap.keys.contains(char)
-            && !hangulLayout.jungsungMap.keys.contains(char)
-            && !hangulLayout.jongsungMap.keys.contains(char)
-        {
-            logger.debug("입력된 문자 \(char) 은 초성, 중성, 종성이 아닙니다.")
-            self.rawChar = ""
-            return false
+        let isValid =
+            hangulLayout.chosungMap.keys.contains(s)
+            || hangulLayout.jungsungMap.keys.contains(s)
+            || hangulLayout.jongsungMap.keys.contains(s)
+        
+        if isValid {
+            return true
         }
 
-        return true
+        logger.debug("입력된 문자 \(s) 은 초성, 중성, 종성이 아닙니다.")
+        return false
     }
 
     func getInputStrategy(client: IMKTextInput) -> InputStrategy {
@@ -110,31 +111,65 @@ class HangulProcessor {
                 "입력: \(self.rawChar) 이전: \(self.previous) 프리에딧: \(String(describing: self.preedit))"
             )
         self.previous.append(self.rawChar)
-
-        if let 초성코드 = hangulLayout.pickChosung(by: self.rawChar) {
-            self.preedit?.chosung = 초성(rawValue: 초성코드)
+        
+//        if let 초성코드 = hangulLayout.pickChosung(by: self.rawChar) {
+//            self.preedit.chosung = 초성(rawValue: 초성코드)
+//        }
+//        if let 중성코드 = hangulLayout.pickJungsung(by: self.rawChar) {
+//            self.preedit.jungsung = 중성(rawValue: 중성코드)
+//        }
+//        if let 종성코드 = hangulLayout.pickJongsung(by: self.rawChar) {
+//            self.preedit.jongsung = 종성(rawValue: 종성코드)
+//        }
+        let 초성코드 = hangulLayout.pickChosung(by: self.rawChar)
+        let 중성코드 = hangulLayout.pickJungsung(by: self.rawChar)
+        let 종성코드 = hangulLayout.pickJongsung(by: self.rawChar)
+        
+        if 초성코드 != nil {
+            self.preedit.chosung = 초성(rawValue: 초성코드!)
+            return ComposeState.composing
         }
-        if let 중성코드 = hangulLayout.pickJungsung(by: self.rawChar) {
-            self.preedit?.jungsung = 중성(rawValue: 중성코드)
+        
+        if 중성코드 != nil {
+            if self.preedit.chosung == nil {
+                return ComposeState.composing
+            }
+            
+            if self.preedit.jungsung == nil {
+                self.preedit.jungsung = 중성(rawValue: 중성코드!)
+                return ComposeState.composing
+            }
+            
+            if self.preedit.jongsung == nil {
+                self.preedit.jongsung = 종성(rawValue: 종성코드!)
+                return ComposeState.composing
+            }
         }
-        if let 종성코드 = hangulLayout.pickJongsung(by: self.rawChar) {
-            self.preedit?.jongsung = 종성(rawValue: 종성코드)
+        
+        if self.preedit.chosung != nil {
+            if self.preedit.jungsung != nil {
+                if self.preedit.jongsung != nil {
+                    self.preedit.jongsung = nil
+                }
+                self.preedit.jungsung = nil
+            }
+            self.preedit.chosung = nil
         }
-
+        
+        print("preedit: \(String(describing: self.preedit))")
+        
         return ComposeState.composing
     }
 
     func getComposedCharacter() -> Character? {
-        if let preedit = self.preedit {
-            logger.debug("조합중 preedit: \(preedit)")
-            let hangulComposer = HangulComposer(
-                chosungPoint: preedit.chosung, jungsungPoint: preedit.jungsung, jongsungPoint: preedit.jongsung
-            )
-            let composition = hangulComposer?.getSyllable()
-            logger.debug("조합됨 composition: \(String(describing: composition))")
-            return composition
-        }
-        return nil
+        logger.debug("조합중 preedit: \(preedit)")
+        let hangulComposer = HangulComposer(
+            chosungPoint: preedit.chosung, jungsungPoint: preedit.jungsung,
+            jongsungPoint: preedit.jongsung
+        )
+        let composition = hangulComposer?.getSyllable()
+        logger.debug("조합됨 composition: \(String(describing: composition))")
+        return composition
     }
 
     func flush() {
