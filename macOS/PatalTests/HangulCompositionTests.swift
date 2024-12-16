@@ -22,7 +22,7 @@ struct HangulCompositionTest {
     struct getSyllableTest {
         @Test("닿소리")
         func consonantTest() {
-            if let composition = HangulComposition(
+            if let composition = HangulComposer(
                 chosungPoint: 초성.기역,
                 jungsungPoint: nil,
                 jongsungPoint: nil
@@ -34,7 +34,7 @@ struct HangulCompositionTest {
                 #expect(composition.jongsungPoint == nil)
             }
 
-            if let composition = HangulComposition(
+            if let composition = HangulComposer(
                 chosungPoint: 초성.히읗,
                 jungsungPoint: nil,
                 jongsungPoint: nil
@@ -49,7 +49,7 @@ struct HangulCompositionTest {
 
         @Test("초성+중성")
         func chosungAndJungsung() {
-            if let composition = HangulComposition(
+            if let composition = HangulComposer(
                 chosungPoint: 초성.init(rawValue: 0x1100),
                 jungsungPoint: 중성.init(rawValue: 0x1161),
                 jongsungPoint: nil
@@ -59,21 +59,21 @@ struct HangulCompositionTest {
                 #expect(composition.jungsungPoint == 중성.아)
                 #expect(composition.jongsungPoint == nil)
             }
-            if let composition = HangulComposition(
+            if let composition = HangulComposer(
                 chosungPoint: 초성.기역,
                 jungsungPoint: 중성.아,
                 jongsungPoint: nil
             ) {
                 #expect(composition.getSyllable() == Character("가"))
             }
-            if let composition = HangulComposition(
+            if let composition = HangulComposer(
                 chosungPoint: 초성.니은,
                 jungsungPoint: 중성.아,
                 jongsungPoint: nil
             ) {
                 #expect(composition.getSyllable() == Character("나"))
             }
-            if let composition = HangulComposition(
+            if let composition = HangulComposer(
                 chosungPoint: 초성.니은,
                 jungsungPoint: 중성.어,
                 jongsungPoint: nil
@@ -84,7 +84,7 @@ struct HangulCompositionTest {
 
         @Test("초성+중성+종성")
         func chosungAndJungsungAndJongsung() {
-            if let composition = HangulComposition(
+            if let composition = HangulComposer(
                 chosungPoint: 초성.기역,
                 jungsungPoint: 중성.아,
                 jongsungPoint: 종성.이응
@@ -94,7 +94,7 @@ struct HangulCompositionTest {
                 #expect(composition.jungsungPoint == 중성.아)
                 #expect(composition.jongsungPoint == 종성.이응)
             }
-            if let composition = HangulComposition(
+            if let composition = HangulComposer(
                 chosungPoint: 초성.시옷,
                 jungsungPoint: 중성.아,
                 jongsungPoint: 종성.니은
@@ -108,7 +108,7 @@ struct HangulCompositionTest {
 
         @Test("초성+중성+종성종성")
         func chosungAndJungsungAndJongsungJongsung() {
-            if let composition = HangulComposition(
+            if let composition = HangulComposer(
                 chosungPoint: 초성.이응,
                 jungsungPoint: 중성.아,
                 jongsungPoint: 종성.리을미음

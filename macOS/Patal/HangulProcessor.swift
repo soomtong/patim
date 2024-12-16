@@ -126,9 +126,13 @@ class HangulProcessor {
 
     func getComposedCharacter() -> Character? {
         if let preedit = self.preedit {
-            logger.debug("preedit: \(preedit)")
-            let composition = combinePreedit(preedit: preedit)
-            return Character(UnicodeScalar(composition)!)
+            logger.debug("조합중 preedit: \(preedit)")
+            let hangulComposer = HangulComposer(
+                chosungPoint: preedit.chosung, jungsungPoint: preedit.jungsung, jongsungPoint: preedit.jongsung
+            )
+            let composition = hangulComposer?.getSyllable()
+            logger.debug("조합됨 composition: \(String(describing: composition))")
+            return composition
         }
         return nil
     }

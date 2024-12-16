@@ -36,14 +36,7 @@ let chosungOffset19 = chosungMap.count
 let jungsungOffset21 = jungsungMap.count
 let jongsungOffset28 = jongsungMap.count
 
-func combinePreedit(preedit: 글자) -> unichar {
-    //    let (chosung, jungsung, jongsung?) = preedit
-    // 두 세 개의 코드포인트를 조합하여 하나의 코드포인트로 만드는 것
-
-    return 0x1112
-}
-
-struct HangulComposition {
+struct HangulComposer {
     var chosungPoint: 초성? = nil
     var jungsungPoint: 중성? = nil
     var jongsungPoint: 종성? = nil

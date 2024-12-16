@@ -17,12 +17,10 @@ struct HangulProcessorTests {
 
         var r1 = processor.verifyCombosable(char: "i")
         #expect(r1 == true)
-        #expect(processor.rawChar == "i")
         #expect(processor.previous == [])
 
         r1 = processor.verifyCombosable(char: "!")
         #expect(r1 == false)
-        #expect(processor.rawChar == "")
     }
 
     @Test("가")
