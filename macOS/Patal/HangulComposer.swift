@@ -42,10 +42,6 @@ struct HangulComposer {
     var jongsungPoint: 종성? = nil
 
     init?(chosungPoint: 초성?, jungsungPoint: 중성?, jongsungPoint: 종성?) {
-        print(
-            "test Syllable compose: \(String(describing: chosungPoint)), \(String(describing: jungsungPoint)), \(String(describing: jongsungPoint))"
-        )
-
         // 초성이 없거나 중성이 없는 조합은 배제한다.
         switch (chosungPoint, jungsungPoint, jongsungPoint) {
         case (let chosungPoint?, nil, nil) where chosungMapOffset[chosungPoint] != nil:

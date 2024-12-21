@@ -19,6 +19,7 @@ struct Han3ShinPcsLayout: HangulAutomata {
     let chosungMap: [String: 초성] = [
         "k": 초성.기역,
         "kk": 초성.쌍기역,
+        "kkk": 초성.키읔,
         "h": 초성.니은,
         "u": 초성.디귿,
         "uu": 초성.쌍디귿,
@@ -95,7 +96,6 @@ struct Han3ShinPcsLayout: HangulAutomata {
             return nil
         }
 
-        logger.debug("초성 있음: \(chosung.rawValue)")
         return chosung.rawValue
     }
 
@@ -104,7 +104,6 @@ struct Han3ShinPcsLayout: HangulAutomata {
             return nil
         }
 
-        logger.debug("중성 있음: \(jungsung.rawValue)")
         return jungsung.rawValue
     }
 
@@ -113,7 +112,6 @@ struct Han3ShinPcsLayout: HangulAutomata {
             return nil
         }
 
-        logger.debug("종성 있음: \(jongsung.rawValue)")
         return jongsung.rawValue
     }
 }

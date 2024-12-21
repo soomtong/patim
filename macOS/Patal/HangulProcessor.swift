@@ -51,10 +51,6 @@ class HangulProcessor {
 
     let hangulLayout = Han3ShinPcsLayout()
 
-    // var chosung: 초성?
-    // var jungsung: 중성?
-    // var jongsung: 종성?
-
     init(layout: String) {
         logger.debug("입력키 처리 클래스 초기화: \(layout)")
         // OS 에서 제공한 원본 문자
@@ -71,6 +67,9 @@ class HangulProcessor {
         logger.debug("입력키 처리 클래스 해제")
     }
 
+    /**
+     조합 가능한 입력인지 검증한다.
+     */
     func verifyCombosable(_ s: String) -> Bool {
         logger.debug("입력된 문자: \(String(describing: s))")
 
@@ -78,7 +77,7 @@ class HangulProcessor {
             hangulLayout.chosungMap.keys.contains(s)
             || hangulLayout.jungsungMap.keys.contains(s)
             || hangulLayout.jongsungMap.keys.contains(s)
-        
+
         if isValid {
             return true
         }
@@ -105,59 +104,77 @@ class HangulProcessor {
         return InputStrategy.swapMarked
     }
 
+    /**
+     조합 가능한 문자가 들어온다. 다시 검수할 필요는 없음. 겹자음/겹모음이 있을 수 있기 때문에 previous 를 기준으로 운영.
+     previous=raw char 조합, preedit=조합중인 한글, commit=조합된 한글
+     */
     func composeBuffer() -> ComposeState {
-        logger
-            .debug(
-                "입력: \(self.rawChar) 이전: \(self.previous) 프리에딧: \(String(describing: self.preedit))"
-            )
-        self.previous.append(self.rawChar)
-        
-//        if let 초성코드 = hangulLayout.pickChosung(by: self.rawChar) {
-//            self.preedit.chosung = 초성(rawValue: 초성코드)
-//        }
-//        if let 중성코드 = hangulLayout.pickJungsung(by: self.rawChar) {
-//            self.preedit.jungsung = 중성(rawValue: 중성코드)
-//        }
-//        if let 종성코드 = hangulLayout.pickJongsung(by: self.rawChar) {
-//            self.preedit.jongsung = 종성(rawValue: 종성코드)
-//        }
-        let 초성코드 = hangulLayout.pickChosung(by: self.rawChar)
-        let 중성코드 = hangulLayout.pickJungsung(by: self.rawChar)
-        let 종성코드 = hangulLayout.pickJongsung(by: self.rawChar)
-        
-        if 초성코드 != nil {
+        logger.debug("입력: \(self.rawChar)")
+        logger.debug("-- 이전: \(self.previous) 프리에딧: \(String(describing: self.preedit))")
+
+        //        let 중성코드 = hangulLayout.pickJungsung(by: self.previous.joined())
+        //        let 종성코드 = hangulLayout.pickJongsung(by: self.previous.joined())
+
+        /* "" -> "ㄱ" */
+        if self.preedit.chosung == nil {
+            print("시작! 초성을 채움")
+            self.previous = [self.rawChar]
+            let 초성코드 = hangulLayout.pickChosung(by: self.previous.joined())
             self.preedit.chosung = 초성(rawValue: 초성코드!)
+
             return ComposeState.composing
         }
-        
-        if 중성코드 != nil {
-            if self.preedit.chosung == nil {
-                return ComposeState.composing
-            }
-            
-            if self.preedit.jungsung == nil {
-                self.preedit.jungsung = 중성(rawValue: 중성코드!)
-                return ComposeState.composing
-            }
-            
-            if self.preedit.jongsung == nil {
-                self.preedit.jongsung = 종성(rawValue: 종성코드!)
-                return ComposeState.composing
-            }
-        }
-        
+
+        /* "ㄱ" -> "ㄲ", "ㄱ" -> "ㄱㄴ", "ㄲ" -> "ㅋ" */
         if self.preedit.chosung != nil {
-            if self.preedit.jungsung != nil {
-                if self.preedit.jongsung != nil {
-                    self.preedit.jongsung = nil
-                }
-                self.preedit.jungsung = nil
+            print("\(self.previous): 초성이 있는데 또 초성이 온 경우, 또는 연타해서 다른 글자를 만들 경우 kkk 를 누르면 ㅋ 을 제공할 수 있음")
+            self.previous.append(self.rawChar)
+            print("--- 다음: \(self.previous)")
+            let 복합초성코드 = hangulLayout.pickChosung(by: self.previous.joined())
+            if 복합초성코드 != nil {
+                self.preedit.chosung = 초성(rawValue: 복합초성코드!)
+
+                return ComposeState.composing
             }
-            self.preedit.chosung = nil
+
+            print("이제는 새로운 초성이 온 거임 \(self.rawChar)")
+            self.previous.removeAll()
+            self.previous.append(self.rawChar)
+            let 초성코드 = hangulLayout.pickChosung(by: self.previous.joined())
+            if 초성코드 != nil {
+                self.preedit.chosung = 초성(rawValue: 초성코드!)
+                return ComposeState.committed
+            }
         }
-        
+
+        //        if 중성코드 != nil {
+        //            if self.preedit.chosung == nil {
+        //                return ComposeState.composing
+        //            }
+        //
+        //            if self.preedit.jungsung == nil {
+        //                self.preedit.jungsung = 중성(rawValue: 중성코드!)
+        //                return ComposeState.composing
+        //            }
+        //
+        //            if self.preedit.jongsung == nil {
+        //                self.preedit.jongsung = 종성(rawValue: 종성코드!)
+        //                return ComposeState.composing
+        //            }
+        //        }
+        //
+        //        if self.preedit.chosung != nil {
+        //            if self.preedit.jungsung != nil {
+        //                if self.preedit.jongsung != nil {
+        //                    self.preedit.jongsung = nil
+        //                }
+        //                self.preedit.jungsung = nil
+        //            }
+        //            self.preedit.chosung = nil
+        //        }
+
         print("preedit: \(String(describing: self.preedit))")
-        
+
         return ComposeState.composing
     }
 
