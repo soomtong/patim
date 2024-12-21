@@ -186,49 +186,47 @@ class HangulProcessor {
             self.previous.append(self.rawChar)
 
             let 복합중성코드 = hangulLayout.pickJungsung(by: self.previous.joined())
-            print("이중 모음인가? \(String(describing: 복합중성코드))")
             if 복합중성코드 != nil {
                 self.preedit.jungsung = 중성(rawValue: 복합중성코드!)
 
                 return ComposeState.composing
             }
 
-        // todo: 종성이 왔다면?
-        default:
-            print("default")
+            print("종성이 왔다면!")
+            /* "ㄱ" + "ㅏ" + "ㅇ" -> "강" */
+            self.previous.removeAll()
+            self.previous.append(self.rawChar)
+
+            let 종성코드 = hangulLayout.pickJongsung(by: self.previous.joined())
+            print("종성인가? \(String(describing: 종성코드))")
+            if 종성코드 != nil {
+                self.preedit.jongsung = 종성(rawValue: 종성코드!)
+
+                return ComposeState.composing
+            }
+        case (_, _, _):
+            print("초성, 중성, 종성이 있는데?")
+            print("겹자음 종성이 있는 경우만 처리")
+            /* "ㅂ" + "ㅏ" + "ㄱ" + "ㄱ" -> "밖" */
+            self.previous.append(self.rawChar)
+
+            let 복합종성코드 = hangulLayout.pickJongsung(by: self.previous.joined())
+            print("복합 종성인가? \(String(describing: 복합종성코드))")
+            if 복합종성코드 != nil {
+                self.preedit.jongsung = 종성(rawValue: 복합종성코드!)
+
+                return ComposeState.committed
+            }
+
+            print("그 외 나머지는 다음 커밋을 진행해야 하는데??? 지금 있는 previous 를 처리해야 함!")
+            // committed 라면 이전에 받은 글자를 다시 사용해야 함
+            // committed 라면 previous.removeAll 부터 시작해야 함
+            return ComposeState.committed
         }
-
-        //        let 종성코드 = hangulLayout.pickJongsung(by: self.previous.joined())
-
-        //        if 중성코드 != nil {
-        //            if self.preedit.chosung == nil {
-        //                return ComposeState.composing
-        //            }
-        //
-        //            if self.preedit.jungsung == nil {
-        //                self.preedit.jungsung = 중성(rawValue: 중성코드!)
-        //                return ComposeState.composing
-        //            }
-        //
-        //            if self.preedit.jongsung == nil {
-        //                self.preedit.jongsung = 종성(rawValue: 종성코드!)
-        //                return ComposeState.composing
-        //            }
-        //        }
-        //
-        //        if self.preedit.chosung != nil {
-        //            if self.preedit.jungsung != nil {
-        //                if self.preedit.jongsung != nil {
-        //                    self.preedit.jongsung = nil
-        //                }
-        //                self.preedit.jungsung = nil
-        //            }
-        //            self.preedit.chosung = nil
-        //        }
 
         print("preedit: \(String(describing: self.preedit))")
 
-        return ComposeState.composing
+        return ComposeState.committed
     }
 
     func getComposedCharacter() -> Character? {

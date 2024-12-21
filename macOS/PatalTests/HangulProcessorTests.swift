@@ -343,6 +343,42 @@ struct HangulProcessorTests {
         #expect(c3 == "강")
     }
 
+    @Test("밖")
+    func getComposedChar_밖() {
+        let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
+
+        // 밖 ;fcc
+        var r1 = processor.verifyCombosable(";")
+        #expect(r1 == true)
+        processor.rawChar = ";"
+        let s1 = processor.composeBuffer()
+        #expect(s1 == ComposeState.composing)
+        let c1 = processor.getComposedCharacter()
+        #expect(c1 == "\u{1107}")
+
+        r1 = processor.verifyCombosable("f")
+        #expect(r1 == true)
+        processor.rawChar = "f"
+        let s2 = processor.composeBuffer()
+        #expect(s2 == ComposeState.composing)
+        let c2 = processor.getComposedCharacter()
+        #expect(c2 == "바")
+
+        r1 = processor.verifyCombosable("c")
+        #expect(r1 == true)
+        processor.rawChar = "c"
+        let s3 = processor.composeBuffer()
+        #expect(s3 == ComposeState.composing)
+        let c3 = processor.getComposedCharacter()
+        #expect(c3 == "박")
+
+        processor.rawChar = "c"
+        let s4 = processor.composeBuffer()
+        #expect(s4 == ComposeState.committed)
+        let c4 = processor.getComposedCharacter()
+        #expect(c4 == "밖")
+    }
+
     //    @Test("강남")
     //    func getComposedChar_강남() {
     //        let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
