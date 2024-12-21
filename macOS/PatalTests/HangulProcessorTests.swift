@@ -147,6 +147,28 @@ struct HangulProcessorTests {
         #expect(c2 == "\u{1112}")
     }
 
+    @Test("ㅏ", .disabled("미구현"))
+    func getComposedChar_ㅏ() {
+        let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
+
+        processor.rawChar = "F"
+        let s1 = processor.composeBuffer()
+        #expect(s1 == ComposeState.composing)
+        let c1 = processor.getComposedCharacter()
+        #expect(c1 == "\u{1161}")
+    }
+
+    @Test("ㄴ", .disabled("우선 순위를 정해야 함"))
+    func getComposedChar_ㄴ() {
+        let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
+
+        processor.rawChar = "s"
+        let s1 = processor.composeBuffer()
+        #expect(s1 == ComposeState.composing)
+        let c1 = processor.getComposedCharacter()
+        #expect(c1 == "\u{11AB}")
+    }
+
     @Test("가")
     func getComposedChar_가() {
         let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
@@ -210,6 +232,86 @@ struct HangulProcessorTests {
         #expect(s3 == ComposeState.composing)
         let c3 = processor.getComposedCharacter()
         #expect(c3 == "까")
+    }
+
+    @Test("의")
+    func getComposedChar_의() {
+        let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
+
+        processor.rawChar = "j"
+        let s1 = processor.composeBuffer()
+        #expect(s1 == ComposeState.composing)
+        let c1 = processor.getComposedCharacter()
+        #expect(c1 == "\u{110B}")
+
+        processor.rawChar = "z"
+        let s2 = processor.composeBuffer()
+        #expect(s2 == ComposeState.composing)
+        let c2 = processor.getComposedCharacter()
+        #expect(c2 == "의")
+    }
+
+    @Test("매")
+    func getComposedChar_매() {
+        let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
+
+        processor.rawChar = "i"
+        let s1 = processor.composeBuffer()
+        #expect(s1 == ComposeState.composing)
+        let c1 = processor.getComposedCharacter()
+        #expect(c1 == "\u{1106}")
+
+        processor.rawChar = "e"
+        let s2 = processor.composeBuffer()
+        #expect(s2 == ComposeState.composing)
+        let c2 = processor.getComposedCharacter()
+        #expect(c2 == "매")
+    }
+
+    @Test("뫄")
+    func getComposedChar_뫄() {
+        let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
+
+        processor.rawChar = "i"
+        let s1 = processor.composeBuffer()
+        #expect(s1 == ComposeState.composing)
+        let c1 = processor.getComposedCharacter()
+        #expect(c1 == "\u{1106}")
+
+        processor.rawChar = "p"
+        let s2 = processor.composeBuffer()
+        #expect(s2 == ComposeState.composing)
+        let c2 = processor.getComposedCharacter()
+        #expect(c2 == "모")
+
+        processor.rawChar = "f"
+        let s3 = processor.composeBuffer()
+        #expect(s3 == ComposeState.composing)
+        let c3 = processor.getComposedCharacter()
+        #expect(c3 == "뫄")
+    }
+
+    @Test("취")
+    func getComposedChar_위() {
+        let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
+
+        processor.rawChar = "o"
+        let s1 = processor.composeBuffer()
+        #expect(s1 == ComposeState.composing)
+        let c1 = processor.getComposedCharacter()
+        #expect(c1 == "\u{110E}")
+
+        processor.rawChar = "o"
+        let s2 = processor.composeBuffer()
+        #expect(s2 == ComposeState.composing)
+        let c2 = processor.getComposedCharacter()
+        #expect(c2 == "추")
+
+        processor.rawChar = "d"
+        let s3 = processor.composeBuffer()
+        #expect(s3 == ComposeState.composing)
+        let c3 = processor.getComposedCharacter()
+        #expect(c3 == "취")
     }
 
     @Test("강")
