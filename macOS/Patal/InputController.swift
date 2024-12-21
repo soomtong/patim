@@ -37,52 +37,62 @@ class InputController: IMKInputController {
             return false
         }
 
-        // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
-        logger.debug("this client: \(client.bundleIdentifier() ?? "")")
-
         if !processor.verifyCombosable(string) {
             return false
         }
 
+        // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
+        logger.debug("클라이언트: \(client.bundleIdentifier() ?? "")")
+        let strategy = processor.getInputStrategy(client: client)
+        logger.debug("전략: \(String(describing: strategy))")
+
         processor.rawChar = string
 
-        let strategy = processor.getInputStrategy(client: client)
         let state = processor.composeBuffer()
         let character = processor.getComposedCharacter()
 
-        // state 에 따라서 조합된거 조합중인거를 구분하고
-        // 선택된 strategy 에 따라서 insert 또는 setMark 를 고르고 조합된 한글 글자를 출력하기
-
-        logger.debug("strategy: \(String(describing: strategy))")
-        logger.debug("state: \(String(describing: state))")
-        logger.debug("character: \(String(describing: character))")
-
-        // 입력 테스트
+        // -- start
         let defaultRange = NSRange(location: NSNotFound, length: 0)
         let selectionRange = NSRange(location: 0, length: 0)
         let replacementRange = NSRange(location: NSNotFound, length: NSNotFound)
         logger.debug(
             "선택범위: \(String(describing: selectionRange)), 교체범위: \(String(describing: replacementRange))"
         )
-
-        client.insertText("강산", replacementRange: defaultRange)
-
-        return true
-
-        // 조합 테스트
-        // let defaultRange = NSRange(location: NSNotFound, length: 0)
-        // let selectionRange = NSRange(location: 0, length: 0)
-        // let replacementRange = NSRange(location: NSNotFound, length: NSNotFound)
-        // logger.debug(
-        //     "선택범위: \(String(describing: selectionRange)), 교체범위: \(String(describing: replacementRange))"
-        // )
-        //
-        // client
-        //     .setMarkedText(
-        //         "강산", selectionRange: defaultRange, replacementRange: defaultRange
-        //     )
-        //
+        // client.insertText("강산", replacementRange: defaultRange)
+        // processor.flush()
         // return true
+        // -- end
+
+        let debug =
+            "검수: \(String(describing: state)) \(String(describing: character))"
+        if character != nil {
+            // logger.debug(debug)
+            // state 와 strategy 로 setMarkedText 와 insertText 를 구분
+            switch (state, strategy) {
+            case (ComposeState.committed, InputStrategy.directInsert):
+                processor.flush()
+                client.insertText(String(character!), replacementRange: defaultRange)
+            case (ComposeState.composing, InputStrategy.directInsert):
+                client.insertText(String(character!), replacementRange: defaultRange)
+            case (ComposeState.committed, InputStrategy.swapMarked):
+                processor.flush()
+                client.insertText(String(character!), replacementRange: defaultRange)
+            case (ComposeState.composing, InputStrategy.swapMarked):
+                client
+                    .setMarkedText(
+                        String(character!),
+                        selectionRange: defaultRange,
+                        replacementRange: replacementRange
+                    )
+            default:
+                processor.flush()
+            }
+
+            return true
+        }
+
+        processor.flush()
+        return false
     }
 
     override func commitComposition(_ sender: Any!) {

@@ -67,25 +67,7 @@ class HangulProcessor {
         logger.debug("입력키 처리 클래스 해제")
     }
 
-    /**
-     조합 가능한 입력인지 검증한다.
-     */
-    func verifyCombosable(_ s: String) -> Bool {
-        logger.debug("입력된 문자: \(String(describing: s))")
-
-        let isValid =
-            hangulLayout.chosungMap.keys.contains(s)
-            || hangulLayout.jungsungMap.keys.contains(s)
-            || hangulLayout.jongsungMap.keys.contains(s)
-
-        if isValid {
-            return true
-        }
-
-        logger.debug("입력된 문자 \(s) 은 초성, 중성, 종성이 아닙니다.")
-        return false
-    }
-
+    /** 예외 케이스 검토 */
     func getInputStrategy(client: IMKTextInput) -> InputStrategy {
         // 클라이언트에 따라서 setMarkedText 를 사용할 것인지 insertText 를 사용할 것인지 판단
         let attributes = client.validAttributesForMarkedText() as? [String] ?? []
@@ -102,6 +84,15 @@ class HangulProcessor {
 
         logger.debug("입력기 처리 방식: 조합 대치")
         return InputStrategy.swapMarked
+    }
+
+    /**
+     조합 가능한 입력인지 검증한다.
+     */
+    func verifyCombosable(_ s: String) -> Bool {
+        return hangulLayout.chosungMap.keys.contains(s)
+            || hangulLayout.jungsungMap.keys.contains(s)
+            || hangulLayout.jongsungMap.keys.contains(s)
     }
 
     /**
@@ -232,7 +223,8 @@ class HangulProcessor {
     func getComposedCharacter() -> Character? {
         logger.debug("조합중 preedit: \(preedit)")
         let hangulComposer = HangulComposer(
-            chosungPoint: preedit.chosung, jungsungPoint: preedit.jungsung,
+            chosungPoint: preedit.chosung,
+            jungsungPoint: preedit.jungsung,
             jongsungPoint: preedit.jongsung
         )
         let composition = hangulComposer?.getSyllable()
@@ -241,9 +233,12 @@ class HangulProcessor {
     }
 
     func flush() {
+        self.rawChar = ""
         self.previous.removeAll()
-        //        self.preedit.removeAll()
-        //        self.commit = ""
+        self.preedit.chosung = nil
+        self.preedit.jungsung = nil
+        self.preedit.jongsung = nil
+        self.state = .none
     }
 
     // func composePreedit() {
