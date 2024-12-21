@@ -80,6 +80,13 @@ struct HangulCompositionTest {
             ) {
                 #expect(composition.getSyllable() == Character("너"))
             }
+            if let composition = HangulComposer(
+                chosungPoint: 초성.쌍디귿,
+                jungsungPoint: 중성.우,
+                jongsungPoint: nil
+            ) {
+                #expect(composition.getSyllable() == Character("뚜"))
+            }
         }
 
         @Test("초성+중성+종성")
@@ -104,10 +111,14 @@ struct HangulCompositionTest {
                 #expect(composition.jungsungPoint == 중성.아)
                 #expect(composition.jongsungPoint == 종성.니은)
             }
-        }
-
-        @Test("초성+중성+종성종성")
-        func chosungAndJungsungAndJongsungJongsung() {
+            if let composition = HangulComposer(
+                chosungPoint: 초성.이응,
+                jungsungPoint: 중성.와,
+                jongsungPoint: 종성.이응
+            ) {
+                #expect(composition.getSyllable() == Character("왕"))
+            }
+            
             if let composition = HangulComposer(
                 chosungPoint: 초성.이응,
                 jungsungPoint: 중성.아,

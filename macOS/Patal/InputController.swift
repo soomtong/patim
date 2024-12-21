@@ -32,12 +32,12 @@ class InputController: IMKInputController {
     }
 
     // 이 입력 방법은 OS 에서 백스페이스, 엔터 등을 처리함. 즉, 완성된 키코드를 제공함.
-    override func inputText(_ string: String!, client sender: Any!) -> Bool {
+    override func inputText(_ rawStr: String!, client sender: Any!) -> Bool {
         guard let client = sender as? IMKTextInput else {
             return false
         }
 
-        if !processor.verifyCombosable(string) {
+        if !processor.verifyCombosable(rawStr) {
             return false
         }
 
@@ -46,10 +46,9 @@ class InputController: IMKInputController {
         let strategy = processor.getInputStrategy(client: client)
         logger.debug("전략: \(String(describing: strategy))")
 
-        processor.rawChar = string
+        processor.rawChar = rawStr
 
         let state = processor.composeBuffer()
-        let character = processor.getComposedCharacter()
 
         // -- start
         let defaultRange = NSRange(location: NSNotFound, length: 0)
@@ -63,24 +62,24 @@ class InputController: IMKInputController {
         // return true
         // -- end
 
-        let debug =
-            "검수: \(String(describing: state)) \(String(describing: character))"
-        if character != nil {
+        if let hangul = processor.getComposed() {
+            let _ =
+                "검수: \(String(describing: state)) \(String(describing: hangul))"
             // logger.debug(debug)
             // state 와 strategy 로 setMarkedText 와 insertText 를 구분
             switch (state, strategy) {
             case (ComposeState.committed, InputStrategy.directInsert):
                 processor.flush()
-                client.insertText(String(character!), replacementRange: defaultRange)
+                client.insertText(hangul, replacementRange: defaultRange)
             case (ComposeState.composing, InputStrategy.directInsert):
-                client.insertText(String(character!), replacementRange: defaultRange)
+                client.insertText(hangul, replacementRange: defaultRange)
             case (ComposeState.committed, InputStrategy.swapMarked):
                 processor.flush()
-                client.insertText(String(character!), replacementRange: defaultRange)
+                client.insertText(hangul, replacementRange: defaultRange)
             case (ComposeState.composing, InputStrategy.swapMarked):
                 client
                     .setMarkedText(
-                        String(character!),
+                        hangul,
                         selectionRange: defaultRange,
                         replacementRange: replacementRange
                     )

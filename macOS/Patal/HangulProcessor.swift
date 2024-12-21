@@ -44,7 +44,6 @@ class HangulProcessor {
 
     var previous: [String]
     var preedit: 글자
-    var commit: Character?
 
     var state: ComposeState = .none
     var hangulStatus: HangulStatus = .none
@@ -60,7 +59,6 @@ class HangulProcessor {
         // previous 를 한글 처리된 문자
         self.preedit = 글자()
         // 조합 종료된 한글
-        self.commit = nil
     }
 
     deinit {
@@ -220,16 +218,19 @@ class HangulProcessor {
         return ComposeState.committed
     }
 
-    func getComposedCharacter() -> Character? {
+    func getComposed() -> String? {
         logger.debug("조합중 preedit: \(preedit)")
         let hangulComposer = HangulComposer(
             chosungPoint: preedit.chosung,
             jungsungPoint: preedit.jungsung,
             jongsungPoint: preedit.jongsung
         )
-        let composition = hangulComposer?.getSyllable()
-        logger.debug("조합됨 composition: \(String(describing: composition))")
-        return composition
+        if let composition = hangulComposer?.getSyllable() {
+            logger.debug("조합됨 composition: \(String(describing: composition))")
+            return String(composition)
+        }
+
+        return nil
     }
 
     func flush() {
