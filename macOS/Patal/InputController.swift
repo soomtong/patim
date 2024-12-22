@@ -45,28 +45,32 @@ class InputController: IMKInputController {
             return false
         }
 
-        // 위치가 여기가 아니어야 함
-        if !processor.verifyCombosable(rawStr) {
-            logger.debug("처리하지 않는 조합 입력: \(String(describing: rawStr))")
-            processor.commit()
-            client.insertText(rawStr, replacementRange: .notFound)
-            return true
-        }
-
         // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
         logger.debug("클라이언트: \(client.bundleIdentifier() ?? "")")
         let strategy = processor.getInputStrategy(client: client)
         logger.debug("전략: \(String(describing: strategy))")
 
+        if !processor.verifyCombosable(rawStr) {
+            logger.debug("처리하지 않는 조합 입력: \(String(describing: rawStr))")
+
+            if let commit = processor.완성 {
+                client.insertText(commit, replacementRange: .notFound)
+            }
+            if let preedit = processor.getComposed() {
+                client.insertText(preedit, replacementRange: .notFound)
+            }
+            processor.flush()
+
+            /// false 를 반환하는 경우는 시스템에서 rawStr 를 처리하고 출력한다
+            return false
+        }
+
         processor.rawChar = rawStr
 
         let state = processor.composeBuffer()
 
-        // let defaultRange = NSRange(location: NSNotFound, length: 0)
-        let replacementRange = NSRange(location: NSNotFound, length: NSNotFound)
-
         if let commit = processor.완성 {
-            client.insertText(commit, replacementRange: replacementRange)
+            client.insertText(commit, replacementRange: .notFound)
             processor.완성 = nil
         }
 
@@ -74,12 +78,11 @@ class InputController: IMKInputController {
             let debug = "검수: \(String(describing: hangul))(\(String(describing: state)))"
             logger.debug(debug)
 
-            let selectionRange = NSRange(location: 0, length: hangul.count)
             client
                 .setMarkedText(
                     hangul,
-                    selectionRange: selectionRange,
-                    replacementRange: replacementRange
+                    selectionRange: NSRange(location: 0, length: hangul.count),
+                    replacementRange: .notFound
                 )
 
             //            switch (state, strategy) {
