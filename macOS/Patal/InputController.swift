@@ -46,20 +46,26 @@ class InputController: IMKInputController {
         }
 
         // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
-        logger.debug("클라이언트: \(client.bundleIdentifier() ?? "")")
         let strategy = processor.getInputStrategy(client: client)
-        logger.debug("전략: \(String(describing: strategy))")
+        if let bundleId = client.bundleIdentifier() {
+            logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
+        }
 
         if !processor.verifyCombosable(rawStr) {
-            logger.debug("처리하지 않는 조합 입력: \(String(describing: rawStr))")
+            let debug =
+                "처리하지 않는 문자: \(String(describing: rawStr)) - \(String(describing: processor.완성)) - \(String(describing: processor.getComposed()))"
+            logger.debug(debug)
 
+            // 남은 문자가 있는 경우 내보내자
             if let commit = processor.완성 {
                 client.insertText(commit, replacementRange: .notFound)
             }
             if let preedit = processor.getComposed() {
-                client.insertText(preedit, replacementRange: .notFound)
+                // todo: preedit 은 완성된 문자가 아니라 화면에 출력 가능한 형태로 보정해야 함
+                let compat = processor.getCompat()
+                client.insertText(compat, replacementRange: .notFound)
             }
-            processor.flush()
+            processor.flushCommit()
 
             /// false 를 반환하는 경우는 시스템에서 rawStr 를 처리하고 출력한다
             return false
@@ -67,7 +73,8 @@ class InputController: IMKInputController {
 
         processor.rawChar = rawStr
 
-        let state = processor.composeBuffer()
+        /// 핵심 조합이 여기에서 이루어짐
+        let nextStatus = processor.composeBuffer()
 
         if let commit = processor.완성 {
             client.insertText(commit, replacementRange: .notFound)
@@ -75,15 +82,12 @@ class InputController: IMKInputController {
         }
 
         if let hangul = processor.getComposed() {
-            let debug = "검수: \(String(describing: hangul))(\(String(describing: state)))"
+            let debug = "검수: \(String(describing: hangul))(\(String(describing: nextStatus)))"
             logger.debug(debug)
 
-            client
-                .setMarkedText(
-                    hangul,
-                    selectionRange: NSRange(location: 0, length: hangul.count),
-                    replacementRange: .notFound
-                )
+            /// setMarkedText 로 교체할 영역
+            let selection = NSRange(location: 0, length: hangul.count)
+            client.setMarkedText(hangul, selectionRange: selection, replacementRange: .notFound)
 
             //            switch (state, strategy) {
             //            case (ComposeState.committed, InputStrategy.directInsert):
@@ -113,7 +117,7 @@ class InputController: IMKInputController {
     }
 
     override func commitComposition(_ sender: Any!) {
-        processor.flush()
+        processor.flushCommit()
     }
 
     //override func handle(_ event: NSEvent, client sender: Any) -> Bool {

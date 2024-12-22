@@ -188,7 +188,7 @@ class HangulProcessor {
             if let 초성코드 = hangulLayout.pickChosung(by: self.rawChar) {
                 print("이전 글자를 commit 해야 함")
                 self.완성 = self.getComposed()
-                self.commit()
+                self.clearPreedit()
 
                 self.preedit.chosung = 초성(rawValue: 초성코드)
                 self.previous.append(self.rawChar)
@@ -229,7 +229,7 @@ class HangulProcessor {
             }
 
             self.완성 = self.getComposed()
-            self.commit()
+            self.clearPreedit()
 
             let _ = self.composeBuffer()
             return ComposeState.committed
@@ -238,7 +238,7 @@ class HangulProcessor {
         print("preedit: \(String(describing: self.preedit))")
         self.완성 = self.getComposed()
         print("commit: \(String(describing: self.완성))")
-        self.commit()
+        self.clearPreedit()
 
         return ComposeState.committed
     }
@@ -250,23 +250,35 @@ class HangulProcessor {
             jongsungPoint: preedit.jongsung
         )
         if let composition = hangulComposer?.getSyllable() {
-            logger.debug("조합됨: \(String(describing: composition)) (\(preedit))")
+            // logger.debug("조합: \(String(describing: composition)) (\(preedit))")
             return String(composition)
         }
 
         return nil
     }
 
-    func commit() {
+    func getCompat() -> String? {
+//        let hangulCompatibility = HangulCompatibility(
+//            chosungPoint: preedit.chosung,
+//            jungsungPoint: preedit.jungsung,
+//            jongsungPoint: preedit.jongsung
+//        )
+//        if let compatibility = hangulCompatibility?.getSyllable() {
+//            return String(compatibility)
+//        }
+        return "호환문자"
+    }
+
+    func clearPreedit() {
         self.preedit.chosung = nil
         self.preedit.jungsung = nil
         self.preedit.jongsung = nil
         self.previous.removeAll()
     }
 
-    func flush() {
+    func flushCommit() {
         self.rawChar = ""
-        self.commit()
+        self.clearPreedit()
         self.완성 = nil
     }
 
