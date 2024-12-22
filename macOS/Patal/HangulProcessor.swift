@@ -257,15 +257,7 @@ class HangulProcessor {
         return nil
     }
 
-    func getCompat() -> String? {
-//        let hangulCompatibility = HangulCompatibility(
-//            chosungPoint: preedit.chosung,
-//            jungsungPoint: preedit.jungsung,
-//            jongsungPoint: preedit.jongsung
-//        )
-//        if let compatibility = hangulCompatibility?.getSyllable() {
-//            return String(compatibility)
-//        }
+    func getCompat(preedit: 글자) -> String? {
         return "호환문자"
     }
 

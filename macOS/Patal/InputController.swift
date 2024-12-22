@@ -52,8 +52,7 @@ class InputController: IMKInputController {
         }
 
         if !processor.verifyCombosable(rawStr) {
-            let debug =
-                "처리하지 않는 문자: \(String(describing: rawStr)) - \(String(describing: processor.완성)) - \(String(describing: processor.getComposed()))"
+            let debug = "처리하지 않는 문자: \(String(describing: rawStr)) - \(String(describing: processor.getComposed()))"
             logger.debug(debug)
 
             // 남은 문자가 있는 경우 내보내자
@@ -62,8 +61,8 @@ class InputController: IMKInputController {
             }
             if let preedit = processor.getComposed() {
                 // todo: preedit 은 완성된 문자가 아니라 화면에 출력 가능한 형태로 보정해야 함
-                let compat = processor.getCompat()
-                client.insertText(compat, replacementRange: .notFound)
+                // let compat = processor.getCompat(preedit)
+                client.insertText(preedit, replacementRange: .notFound)
             }
             processor.flushCommit()
 
