@@ -42,7 +42,7 @@ class HangulProcessor {
 
     let hangulLayout = Han3ShinPcsLayout()
 
-    init(layout: String) {
+    init(layout: Layout) {
         logger.debug("입력키 처리 클래스 초기화: \(layout)")
         self.rawChar = ""
         self.previous = []

@@ -5,8 +5,8 @@
 //  Created by dp on 12/2/24.
 //
 
-import Foundation
 import Carbon
+import Foundation
 
 func getCurrentInputMethodID() -> String? {
     // Get the current input source
@@ -20,6 +20,18 @@ func getCurrentInputMethodID() -> String? {
     }
 
     return nil
+}
+
+func getInputLayoutID(id: String) -> Layout {
+    switch id {
+    case "com.soomtong.inputmethod.shin3-pcs":
+        return Layout.HAN3_SHIN_PCS
+    case "com.soomtong.inputmethod.shin3-p2":
+        return Layout.HAN3_SHIN_P2
+
+    default:
+        return Layout.HAN3_SHIN_PCS
+    }
 }
 
 func getCurrentProjectVersion() -> String? {

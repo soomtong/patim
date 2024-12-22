@@ -7,6 +7,12 @@
 
 import Foundation
 
+/// 지원하는 레이아웃: InfoPlist 파일 참고
+enum Layout: String {
+    case HAN3_SHIN_PCS = "InputmethodHan3ShinPCS"
+    case HAN3_SHIN_P2 = "InputmethodHan3ShinP2"
+}
+
 protocol HangulAutomata {
     func pickChosung(by char: String) -> unichar?
     func pickJungsung(by char: String) -> unichar?

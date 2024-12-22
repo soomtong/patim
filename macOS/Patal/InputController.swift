@@ -12,21 +12,26 @@ import InputMethodKit
 class InputController: IMKInputController {
     let logger = CustomLogger(category: "InputController")
 
-    let processor = HangulProcessor(layout: "InputmethodHan3ShinPCS")
+    let processor: HangulProcessor
+    var inputMethodLayout = Layout.HAN3_SHIN_PCS
 
     override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
+        if let inputMethodID = getCurrentInputMethodID() {
+            inputMethodLayout = getInputLayoutID(id: inputMethodID)
+        }
+        logger.debug("팥알 입력기 자판: \(inputMethodLayout)")
+        self.processor = HangulProcessor(layout: inputMethodLayout)
+
         super.init(server: server, delegate: delegate, client: inputClient)
+
+        if let inputMethodVersion = getCurrentProjectVersion() {
+            logger.debug("팥알 입력기 버전: \(inputMethodVersion)")
+        }
     }
 
     override open func activateServer(_ sender: Any!) {
         super.activateServer(sender)
         logger.debug("입력기 서버 시작")
-        if let inputMethodID = getCurrentInputMethodID() {
-            logger.debug("팥알 입력기 자판: \(inputMethodID)")
-        }
-        if let inputMethodVersion = getCurrentProjectVersion() {
-            logger.debug("팥알 입력기 버전: \(inputMethodVersion)")
-        }
     }
 
     override open func deactivateServer(_ sender: Any!) {
@@ -40,6 +45,7 @@ class InputController: IMKInputController {
             return false
         }
 
+        // 위치가 여기가 아니어야 함
         if !processor.verifyCombosable(rawStr) {
             return false
         }
@@ -53,7 +59,7 @@ class InputController: IMKInputController {
 
         let state = processor.composeBuffer()
 
-        let defaultRange = NSRange(location: NSNotFound, length: 0)
+        // let defaultRange = NSRange(location: NSNotFound, length: 0)
         let replacementRange = NSRange(location: NSNotFound, length: NSNotFound)
 
         if let commit = processor.완성 {
