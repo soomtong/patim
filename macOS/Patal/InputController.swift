@@ -20,7 +20,8 @@ class InputController: IMKInputController {
             inputMethodLayout = getInputLayoutID(id: inputMethodID)
         }
         logger.debug("팥알 입력기 자판: \(inputMethodLayout)")
-        self.processor = HangulProcessor(layout: inputMethodLayout)
+        let layout = bindLayout(layout: inputMethodLayout)
+        self.processor = HangulProcessor(layout: layout)
 
         super.init(server: server, delegate: delegate, client: inputClient)
 

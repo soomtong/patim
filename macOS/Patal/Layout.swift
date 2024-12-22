@@ -13,7 +13,19 @@ enum Layout: String {
     case HAN3_SHIN_P2 = "InputmethodHan3ShinP2"
 }
 
+func bindLayout(layout: Layout) -> HangulAutomata {
+    switch layout {
+    case .HAN3_SHIN_PCS:
+        return Han3ShinPcsLayout()
+    case .HAN3_SHIN_P2:
+        return Han3ShinPcsLayout()
+    }
+}
+
 protocol HangulAutomata {
+    var chosungMap: [String: 초성] { get }
+    var jungsungMap: [String: 중성] { get }
+    var jongsungMap: [String: 종성] { get }
     func pickChosung(by char: String) -> unichar?
     func pickJungsung(by char: String) -> unichar?
     func pickJongsung(by char: String) -> unichar?

@@ -40,13 +40,16 @@ class HangulProcessor {
     /// 조합 종료된 한글
     var 완성: String?
 
-    let hangulLayout = Han3ShinPcsLayout()
+    let hangulLayout: HangulAutomata
 
-    init(layout: Layout) {
+    init(layout: HangulAutomata) {
         logger.debug("입력키 처리 클래스 초기화: \(layout)")
         self.rawChar = ""
         self.previous = []
         self.preedit = 글자()
+
+        // self.hangulLayout = Han3ShinPcsLayout()
+        self.hangulLayout = layout
     }
 
     deinit {
