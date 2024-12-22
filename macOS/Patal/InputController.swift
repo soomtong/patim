@@ -55,12 +55,12 @@ class InputController: IMKInputController {
 
         let defaultRange = NSRange(location: NSNotFound, length: 0)
         let replacementRange = NSRange(location: NSNotFound, length: NSNotFound)
-        
-        if let commit = processor.commit {
+
+        if let commit = processor.완성 {
             client.insertText(commit, replacementRange: replacementRange)
-            processor.commit = nil
+            processor.완성 = nil
         }
-        
+
         if let hangul = processor.getComposed() {
             let debug = "검수: \(String(describing: hangul))(\(String(describing: state)))"
             logger.debug(debug)
@@ -69,34 +69,34 @@ class InputController: IMKInputController {
             client
                 .setMarkedText(
                     hangul,
-                    selectionRange: defaultRange,
+                    selectionRange: selectionRange,
                     replacementRange: replacementRange
                 )
 
-//            switch (state, strategy) {
-//            case (ComposeState.committed, InputStrategy.directInsert):
-//                // committed 가 온다면; insertText 하고 flush 해야 함.
-//                client.insertText(hangul, replacementRange: defaultRange)
-//                processor.flush()
-//            case (ComposeState.composing, InputStrategy.directInsert):
-//            // client.insertText(hangul, replacementRange: defaultRange)
-//            case (ComposeState.committed, InputStrategy.swapMarked):
-//                processor.flush()
-//                client.insertText(hangul, replacementRange: defaultRange)
-//            case (ComposeState.composing, InputStrategy.swapMarked):
-//                client
-//                    .setMarkedText(
-//                        hangul,
-//                        selectionRange: defaultRange,
-//                        replacementRange: replacementRange
-//                    )
-//            default:
-//                processor.flush()
-//            }
+            //            switch (state, strategy) {
+            //            case (ComposeState.committed, InputStrategy.directInsert):
+            //                // committed 가 온다면; insertText 하고 flush 해야 함.
+            //                client.insertText(hangul, replacementRange: defaultRange)
+            //                processor.flush()
+            //            case (ComposeState.composing, InputStrategy.directInsert):
+            //            // client.insertText(hangul, replacementRange: defaultRange)
+            //            case (ComposeState.committed, InputStrategy.swapMarked):
+            //                processor.flush()
+            //                client.insertText(hangul, replacementRange: defaultRange)
+            //            case (ComposeState.composing, InputStrategy.swapMarked):
+            //                client
+            //                    .setMarkedText(
+            //                        hangul,
+            //                        selectionRange: defaultRange,
+            //                        replacementRange: replacementRange
+            //                    )
+            //            default:
+            //                processor.flush()
+            //            }
 
             return true
         }
-        
+
         return false
     }
 

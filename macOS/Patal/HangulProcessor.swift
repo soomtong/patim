@@ -43,7 +43,7 @@ class HangulProcessor {
 
     var previous: [String]
     var preedit: 글자
-    var commit: String?
+    var 완성: String?
 
     let hangulLayout = Han3ShinPcsLayout()
 
@@ -62,22 +62,24 @@ class HangulProcessor {
         logger.debug("입력키 처리 클래스 해제")
     }
 
-    /** 예외 케이스 검토 */
+    /**
+     입력 방식 강제 지정
+     */
     func getInputStrategy(client: IMKTextInput) -> InputStrategy {
         // 클라이언트에 따라서 setMarkedText 를 사용할 것인지 insertText 를 사용할 것인지 판단
         let attributes = client.validAttributesForMarkedText() as? [String] ?? []
-        logger.debug("validAttributesForMarkedText: \(attributes)")
+        // logger.debug("validAttributesForMarkedText: \(attributes)")
 
         // Sok 입력기 참고
         if attributes.contains("NSTextAlternatives")
             || attributes.contains("NSMarkedClauseSegment") && attributes.contains("NSFont")
             || attributes.contains("NSMarkedClauseSegment") && attributes.contains("NSGlyphInfo")
         {
-            logger.debug("입력기 처리 방식: 직결 입력")
+            // logger.debug("입력기 처리 방식: 직결 입력")
             return InputStrategy.directInsert
         }
 
-        logger.debug("입력기 처리 방식: 조합 대치")
+        // logger.debug("입력기 처리 방식: 조합 대치")
         return InputStrategy.swapMarked
     }
 
@@ -161,13 +163,26 @@ class HangulProcessor {
             let 초성코드 = hangulLayout.pickChosung(by: self.previous.joined())
             if 초성코드 != nil {
                 self.preedit.chosung = 초성(rawValue: 초성코드!)
-                self.commit = self.getComposed()
+                self.완성 = self.getComposed()
 
                 return ComposeState.committed
             }
         case (nil, _, nil):
             print("중성이 있는데 또 중성이 온 경우")
         case (_, _, nil):
+            print("받침 없는 글자 이후 다시 초성이?")
+            /* "ㄴ" + "ㅗ" + "ㄹ" -> "노ㄹ" */
+            let 초성코드 = hangulLayout.pickChosung(by: self.rawChar)
+            if 초성코드 != nil {
+                print("이전 글자를 commit 해야 함")
+                self.완성 = self.getComposed()
+                self.commit()
+
+                self.preedit.chosung = 초성(rawValue: 초성코드!)
+
+                return ComposeState.committed
+            }
+
             print("초성과 중성이 있는데 중성이 또 왔다")
             /* "ㅁ" + "ㅗ" + "ㅏ" -> "뫄" */
             self.previous.append(self.rawChar)
@@ -205,9 +220,10 @@ class HangulProcessor {
                 return ComposeState.committed
             }
 
-            print("그 외 나머지는 다음 커밋을 진행해야 하는데??? 지금 있는 previous 를 처리해야 함!")
-            // committed 라면 이전에 받은 글자를 다시 사용해야 함
-            // committed 라면 previous.removeAll 부터 시작해야 함
+            self.완성 = self.getComposed()
+            self.commit()
+
+            let _ = self.composeBuffer()
             return ComposeState.committed
         }
 
@@ -230,13 +246,20 @@ class HangulProcessor {
         return nil
     }
 
+    func commit() {
+        self.previous.removeAll()
+        self.preedit.chosung = nil
+        self.preedit.jungsung = nil
+        self.preedit.jongsung = nil
+    }
+
     func flush() {
         self.rawChar = ""
         self.previous.removeAll()
         self.preedit.chosung = nil
         self.preedit.jungsung = nil
         self.preedit.jongsung = nil
-        self.commit = nil
+        self.완성 = nil
     }
 
     // func convertFromCodepoint() -> String {
