@@ -47,7 +47,10 @@ class InputController: IMKInputController {
 
         // 위치가 여기가 아니어야 함
         if !processor.verifyCombosable(rawStr) {
-            return false
+            logger.debug("처리하지 않는 조합 입력: \(String(describing: rawStr))")
+            processor.commit()
+            client.insertText(rawStr, replacementRange: .notFound)
+            return true
         }
 
         // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
