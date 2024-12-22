@@ -45,6 +45,7 @@ struct Han3ShinPcsLayout: HangulAutomata {
         "w": 중성.야,
         "q": 중성.얘,
         "r": 중성.어,
+        "c": 중성.에,
         "t": 중성.여,
         "s": 중성.예,
         "v": 중성.오,
