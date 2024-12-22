@@ -5,6 +5,7 @@
 //  Created by dp on 12/2/24.
 //
 
+import Foundation
 import Carbon
 
 func getCurrentInputMethodID() -> String? {
@@ -19,6 +20,11 @@ func getCurrentInputMethodID() -> String? {
     }
 
     return nil
+}
+
+func getCurrentProjectVersion() -> String? {
+    // Retrieve the build number from the Info.plist
+    return Bundle.main.infoDictionary?["CFBundleVersion"] as? String
 }
 
 // function returns char: Int map with sequenced number from 0

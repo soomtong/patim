@@ -24,6 +24,9 @@ class InputController: IMKInputController {
         if let inputMethodID = getCurrentInputMethodID() {
             logger.debug("팥알 입력기 자판: \(inputMethodID)")
         }
+        if let inputMethodVersion = getCurrentProjectVersion() {
+            logger.debug("팥알 입력기 버전: \(inputMethodVersion)")
+        }
     }
 
     override open func deactivateServer(_ sender: Any!) {
@@ -50,47 +53,50 @@ class InputController: IMKInputController {
 
         let state = processor.composeBuffer()
 
-        // -- start
         let defaultRange = NSRange(location: NSNotFound, length: 0)
-        let selectionRange = NSRange(location: 0, length: 0)
         let replacementRange = NSRange(location: NSNotFound, length: NSNotFound)
-        logger.debug(
-            "선택범위: \(String(describing: selectionRange)), 교체범위: \(String(describing: replacementRange))"
-        )
-        // client.insertText("강산", replacementRange: defaultRange)
-        // processor.flush()
-        // return true
-        // -- end
-
+        
+        if let commit = processor.commit {
+            client.insertText(commit, replacementRange: replacementRange)
+            processor.commit = nil
+        }
+        
         if let hangul = processor.getComposed() {
-            let _ =
-                "검수: \(String(describing: state)) \(String(describing: hangul))"
-            // logger.debug(debug)
-            // state 와 strategy 로 setMarkedText 와 insertText 를 구분
-            switch (state, strategy) {
-            case (ComposeState.committed, InputStrategy.directInsert):
-                processor.flush()
-                client.insertText(hangul, replacementRange: defaultRange)
-            case (ComposeState.composing, InputStrategy.directInsert):
-                client.insertText(hangul, replacementRange: defaultRange)
-            case (ComposeState.committed, InputStrategy.swapMarked):
-                processor.flush()
-                client.insertText(hangul, replacementRange: defaultRange)
-            case (ComposeState.composing, InputStrategy.swapMarked):
-                client
-                    .setMarkedText(
-                        hangul,
-                        selectionRange: defaultRange,
-                        replacementRange: replacementRange
-                    )
-            default:
-                processor.flush()
-            }
+            let debug = "검수: \(String(describing: hangul))(\(String(describing: state)))"
+            logger.debug(debug)
+
+            let selectionRange = NSRange(location: 0, length: hangul.count)
+            client
+                .setMarkedText(
+                    hangul,
+                    selectionRange: defaultRange,
+                    replacementRange: replacementRange
+                )
+
+//            switch (state, strategy) {
+//            case (ComposeState.committed, InputStrategy.directInsert):
+//                // committed 가 온다면; insertText 하고 flush 해야 함.
+//                client.insertText(hangul, replacementRange: defaultRange)
+//                processor.flush()
+//            case (ComposeState.composing, InputStrategy.directInsert):
+//            // client.insertText(hangul, replacementRange: defaultRange)
+//            case (ComposeState.committed, InputStrategy.swapMarked):
+//                processor.flush()
+//                client.insertText(hangul, replacementRange: defaultRange)
+//            case (ComposeState.composing, InputStrategy.swapMarked):
+//                client
+//                    .setMarkedText(
+//                        hangul,
+//                        selectionRange: defaultRange,
+//                        replacementRange: replacementRange
+//                    )
+//            default:
+//                processor.flush()
+//            }
 
             return true
         }
-
-        processor.flush()
+        
         return false
     }
 

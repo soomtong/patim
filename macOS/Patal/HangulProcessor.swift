@@ -40,13 +40,10 @@ class HangulProcessor {
     let logger = CustomLogger(category: "InputTextKey")
 
     var rawChar: String
-    var composedHangulChar: Character?
 
     var previous: [String]
     var preedit: 글자
-
-    var state: ComposeState = .none
-    var hangulStatus: HangulStatus = .none
+    var commit: String?
 
     let hangulLayout = Han3ShinPcsLayout()
 
@@ -98,8 +95,8 @@ class HangulProcessor {
      previous=raw char 조합, preedit=조합중인 한글, commit=조합된 한글
      */
     func composeBuffer() -> ComposeState {
-        logger.debug("- 입력: \(self.rawChar)")
         logger.debug("- 이전: \(self.previous) 프리에딧: \(String(describing: self.preedit))")
+        logger.debug("- 입력: \(self.rawChar)")
 
         let status = (self.preedit.chosung, self.preedit.jungsung, self.preedit.jongsung)
         switch status {
@@ -164,6 +161,7 @@ class HangulProcessor {
             let 초성코드 = hangulLayout.pickChosung(by: self.previous.joined())
             if 초성코드 != nil {
                 self.preedit.chosung = 초성(rawValue: 초성코드!)
+                self.commit = self.getComposed()
 
                 return ComposeState.committed
             }
@@ -219,14 +217,13 @@ class HangulProcessor {
     }
 
     func getComposed() -> String? {
-        logger.debug("조합중 preedit: \(preedit)")
         let hangulComposer = HangulComposer(
             chosungPoint: preedit.chosung,
             jungsungPoint: preedit.jungsung,
             jongsungPoint: preedit.jongsung
         )
         if let composition = hangulComposer?.getSyllable() {
-            logger.debug("조합됨 composition: \(String(describing: composition))")
+            logger.debug("조합됨: \(String(describing: composition)) (\(preedit))")
             return String(composition)
         }
 
@@ -239,22 +236,8 @@ class HangulProcessor {
         self.preedit.chosung = nil
         self.preedit.jungsung = nil
         self.preedit.jongsung = nil
-        self.state = .none
+        self.commit = nil
     }
-
-    // func composePreedit() {
-    //     if self.preedit.count > 0 {
-    //         self.commit = self.convertFromCodepoint()
-    //         logger.debug("조합 된 글자: \(self.commit)")
-    //
-    //         if self.state == .committed || self.state == .none {
-    //             self.preedit = []
-    //             self.preedit.removeAll()
-    //             self.hangulStatus = .none
-    //         }
-    //     }
-    //     logger.debug("조합 결과: \(self.commit)")
-    // }
 
     // func convertFromCodepoint() -> String {
     //     var result: [unichar] = []
