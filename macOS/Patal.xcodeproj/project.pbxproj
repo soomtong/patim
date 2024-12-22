@@ -76,6 +76,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		E258567E2D182D6C006FD5E7 /* Layouts */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Layouts; sourceTree = "<group>"; };
 		E289CD4D2CE9CD3D00E309D8 /* PatalTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = PatalTests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -139,6 +140,7 @@
 				E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */,
 				464092A92B92EDA800F5D81D /* HangulProcessor.swift */,
 				E2972D022CDF8C11001278E3 /* Layout.swift */,
+				E258567E2D182D6C006FD5E7 /* Layouts */,
 				E258567C2D18134A006FD5E7 /* Extention.swift */,
 				E284B61A2CFDF4F20009DE1C /* Util.swift */,
 				46E67F5226EC5506005EC052 /* Assets.xcassets */,
@@ -179,6 +181,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				E258567E2D182D6C006FD5E7 /* Layouts */,
 			);
 			name = Patal;
 			productName = Patal;
