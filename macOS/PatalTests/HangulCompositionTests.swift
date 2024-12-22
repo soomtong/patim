@@ -47,6 +47,21 @@ struct HangulCompositionTest {
             }
         }
 
+        @Test("홀소리")
+        func vowelTest() {
+            if let composition = HangulComposer(
+                chosungPoint: nil,
+                jungsungPoint: 중성.아,
+                jongsungPoint: nil
+            ) {
+                let 자소_ㅏ: Character = "\u{1161}"
+                #expect(composition.getSyllable() == 자소_ㅏ)
+                #expect(composition.chosungPoint == nil)
+                #expect(composition.jungsungPoint == 중성.아)
+                #expect(composition.jongsungPoint == nil)
+            }
+        }
+
         @Test("초성+중성")
         func chosungAndJungsung() {
             if let composition = HangulComposer(
@@ -118,7 +133,7 @@ struct HangulCompositionTest {
             ) {
                 #expect(composition.getSyllable() == Character("왕"))
             }
-            
+
             if let composition = HangulComposer(
                 chosungPoint: 초성.이응,
                 jungsungPoint: 중성.아,
