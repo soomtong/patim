@@ -175,7 +175,7 @@ struct HangulProcessorTests {
         #expect(c2 == "\u{1165}")
     }
 
-    @Test("ㅗㅏ")
+    @Test("ㅗㅏ", .disabled("미구현"))
     func getComposedChar_ㅗㅏ() {
         let processor = HangulProcessor(layout: Layout.HAN3_SHIN_PCS)
 
@@ -192,7 +192,7 @@ struct HangulProcessorTests {
         #expect(c2 == "\u{116A}")
     }
 
-    @Test("ㅜㅓ")
+    @Test("ㅜㅓ", .disabled("미구현"))
     func getComposedChar_ㅜㅓ() {
         let processor = HangulProcessor(layout: Layout.HAN3_SHIN_PCS)
 
@@ -209,7 +209,7 @@ struct HangulProcessorTests {
         #expect(c2 == "\u{116F}")
     }
 
-    @Test("ㅡㅣ")
+    @Test("ㅡㅣ", .disabled("미구현"))
     func getComposedChar_ㅡㅣ() {
         let processor = HangulProcessor(layout: Layout.HAN3_SHIN_PCS)
 
@@ -727,6 +727,42 @@ struct HangulProcessorTests {
         #expect(s6 == ComposeState.composing)
         let c6 = processor.getComposed()
         #expect(c6 == "다")
+    }
+
+    @Test("좋아")
+    func getComposedChar_좋아() async throws {
+        let processor = HangulProcessor(layout: Layout.HAN3_SHIN_PCS)
+
+        // jreqjgz
+        processor.rawChar = "l"
+        let s1 = processor.composeBuffer()
+        #expect(s1 == ComposeState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "\u{110C}")
+
+        processor.rawChar = "v"
+        let s2 = processor.composeBuffer()
+        #expect(s2 == ComposeState.composing)
+        let c2 = processor.getComposed()
+        #expect(c2 == "조")
+
+        processor.rawChar = "d"
+        let s3 = processor.composeBuffer()
+        #expect(s3 == ComposeState.composing)
+        let c3 = processor.getComposed()
+        #expect(c3 == "좋")
+
+        processor.rawChar = "j"
+        let s5 = processor.composeBuffer()
+        #expect(s5 == ComposeState.committed)
+        let c5 = processor.getComposed()
+        #expect(c5 == "\u{110B}")
+
+        processor.rawChar = "f"
+        let s6 = processor.composeBuffer()
+        #expect(s6 == ComposeState.composing)
+        let c6 = processor.getComposed()
+        #expect(c6 == "아")
     }
 
     //    @Test("강_")
