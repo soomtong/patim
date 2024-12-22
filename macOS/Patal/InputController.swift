@@ -12,6 +12,7 @@ import InputMethodKit
 class InputController: IMKInputController {
     let logger = CustomLogger(category: "InputController")
 
+    // 클라이언트 하나 당 하나의 입력기 레이아웃 인스턴스가 사용됨
     let processor: HangulProcessor
     var inputMethodLayout = Layout.HAN3_SHIN_PCS
 
@@ -20,6 +21,8 @@ class InputController: IMKInputController {
             inputMethodLayout = getInputLayoutID(id: inputMethodID)
         }
         logger.debug("팥알 입력기 자판: \(inputMethodLayout)")
+
+        // 클래스 생성이 하나의 인스턴스에서 이루어지기 때문에 여러개의 Patal 입력기를 동시에 사용할 수 없음.
         let layout = bindLayout(layout: inputMethodLayout)
         self.processor = HangulProcessor(layout: layout)
 
@@ -32,12 +35,12 @@ class InputController: IMKInputController {
 
     override open func activateServer(_ sender: Any!) {
         super.activateServer(sender)
-        logger.debug("입력기 서버 시작")
+        logger.debug("입력기 서버 시작: \(inputMethodLayout)")
     }
 
     override open func deactivateServer(_ sender: Any!) {
         super.deactivateServer(sender)
-        logger.debug("입력기 서버 중단")
+        logger.debug("입력기 서버 중단: \(inputMethodLayout)")
     }
 
     // 이 입력 방법은 OS 에서 백스페이스, 엔터 등을 처리함. 즉, 완성된 키코드를 제공함.
@@ -53,7 +56,7 @@ class InputController: IMKInputController {
         }
 
         if !processor.verifyCombosable(rawStr) {
-            let debug = "처리하지 않는 문자: \(String(describing: rawStr)) - \(String(describing: processor.getComposed()))"
+            let debug = "처리 불가: \(String(describing: rawStr))"
             logger.debug(debug)
 
             // 남은 문자가 있는 경우 내보내자

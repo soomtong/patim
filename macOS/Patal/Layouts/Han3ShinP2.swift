@@ -1,5 +1,5 @@
 //
-//  Han3ShinPCS.swift
+//  Han3ShinP2.swift
 //  Patal
 //
 //  Created by dp on 12/22/24.
@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// enum Layout 의 bindLayout 조합기 이름과 같아야 합니다.
 struct Han3ShinP2Layout: HangulAutomata {
     let chosungMap: [String: 초성] = [
         "k": 초성.기역,
