@@ -5,5 +5,5 @@
   Created by TemplarAssassin on 2022/03/13.
   
 */
-InputmethodHan3ShinP2 = "한글 신세벌식 P2";
-InputmethodHan3ShinPCS = "한글 신세벌식 PCS";
+InputmethodHan3ShinP2 = "한글 신세벌식";
+InputmethodHan3ShinPCS = "한글 신세벌식 CS";

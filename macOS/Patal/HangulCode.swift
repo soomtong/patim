@@ -73,6 +73,10 @@ enum 중성: unichar {
     case 으 = 0x1173
     case 의 = 0x1174
     case 이 = 0x1175
+    case 아래아 = 0x119E
+    case 아래어 = 0x119F
+    case 아래우 = 0x11A0
+    case 아래애 = 0x11A1
 }
 
 enum 종성: unichar {
