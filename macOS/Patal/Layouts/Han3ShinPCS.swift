@@ -7,6 +7,11 @@
 
 import Foundation
 
+/** 자판 배열 소개
+ 50% 미만 배열은 우측 새끼손가락으로 누르는 키가 없는 경우가 있음
+ 그런 키보드를 위한 배열을 구성
+ */
+
 /// enum Layout 의 bindLayout 조합기 이름과 같아야 합니다.
 struct Han3ShinPcsLayout: HangulAutomata {
     let chosungMap: [String: 초성] = [
@@ -112,5 +117,19 @@ struct Han3ShinPcsLayout: HangulAutomata {
         "F": 종성.피읖,
         "d": 종성.히흫,
         "D": 종성.히흫,
+    ]
+
+    let nonSyllableMap: [String: String] = [
+        "Y": "{",
+        "U": "}",
+        "I": "\'",
+        "O": "\"",
+        "P": ";",
+        "H": "[",
+        "J": "]",
+        "K": ",",
+        "L": ".",
+        "N": "(",
+        "M": ")",
     ]
 }

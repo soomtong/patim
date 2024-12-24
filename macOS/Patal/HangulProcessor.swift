@@ -75,7 +75,15 @@ class HangulProcessor {
         return InputStrategy.swapMarked
     }
 
-    /// 조합 가능한 입력인지 검증한다.
+    /// 처리 가능한 입력인지 검증한다.
+    func verifyProcessable(_ s: String) -> Bool {
+        return hangulLayout.chosungMap.keys.contains(s)
+            || hangulLayout.jungsungMap.keys.contains(s)
+            || hangulLayout.jongsungMap.keys.contains(s)
+            || hangulLayout.nonSyllableMap.keys.contains(s)
+    }
+
+    /// 한글 조합 가능한 입력인지 검증한다.
     func verifyCombosable(_ s: String) -> Bool {
         return hangulLayout.chosungMap.keys.contains(s)
             || hangulLayout.jungsungMap.keys.contains(s)
@@ -84,7 +92,7 @@ class HangulProcessor {
 
     /// 조합 가능한 문자가 들어온다. 다시 검수할 필요는 없음. 겹자음/겹모음이 있을 수 있기 때문에 previous 를 기준으로 운영.
     /// previous=raw char 조합, preedit=조합중인 한글, commit=조합된 한글
-    func composeBuffer() -> ComposeState {
+    func 한글조합() -> ComposeState {
         logger.debug("- 이전: \(self.previous) 프리에딧: \(String(describing: self.preedit))")
         logger.debug("- 입력: \(self.rawChar)")
 
@@ -228,22 +236,20 @@ class HangulProcessor {
             if let 복합종성코드 = hangulLayout.pickJongsung(by: self.previous.joined()) {
                 self.preedit.jongsung = 종성(rawValue: 복합종성코드)
 
-                return ComposeState.committed
+                return ComposeState.composing
             }
 
             self.완성 = self.getComposed()
             self.clearPreedit()
 
-            let _ = self.composeBuffer()
+            let _ = self.한글조합()
             return ComposeState.committed
         }
 
-        print("preedit: \(String(describing: self.preedit))")
         self.완성 = self.getComposed()
-        print("commit: \(String(describing: self.완성))")
         self.clearPreedit()
 
-        return ComposeState.committed
+        return ComposeState.none
     }
 
     func getComposed() -> String? {
@@ -262,6 +268,16 @@ class HangulProcessor {
 
     func getCompat(preedit: 글자) -> String? {
         return "호환문자"
+    }
+
+    /// 한글이 아닌 문자가 들어오는 경우
+    func getConverted() -> String? {
+        logger.debug("비한글 조합: \(self.rawChar)")
+        if let nonSyllable = self.hangulLayout.pickNonSyllable(by: self.rawChar) {
+            return nonSyllable
+        }
+
+        return nil
     }
 
     func clearPreedit() {

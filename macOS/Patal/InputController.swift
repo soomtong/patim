@@ -55,19 +55,22 @@ class InputController: IMKInputController {
             logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
         }
 
-        if !processor.verifyCombosable(rawStr) {
+        if !processor.verifyProcessable(rawStr) {
             let debug = "처리 불가: \(String(describing: rawStr))"
             logger.debug(debug)
 
             // 남은 문자가 있는 경우 내보내자
             if let commit = processor.완성 {
+                logger.debug("남은 완성 글자: \(String(describing: commit))")
                 client.insertText(commit, replacementRange: .notFound)
             }
             if let preedit = processor.getComposed() {
                 // todo: preedit 은 완성된 문자가 아니라 화면에 출력 가능한 형태로 보정해야 함
                 // let compat = processor.getCompat(preedit)
+                logger.debug("조합 중인 글자: \(String(describing: preedit))")
                 client.insertText(preedit, replacementRange: .notFound)
             }
+
             processor.flushCommit()
 
             /// false 를 반환하는 경우는 시스템에서 rawStr 를 처리하고 출력한다
@@ -76,8 +79,23 @@ class InputController: IMKInputController {
 
         processor.rawChar = rawStr
 
-        /// 핵심 조합이 여기에서 이루어짐
-        let nextStatus = processor.composeBuffer()
+        /// 비 한글 처리 먼저 진행
+        if !processor.verifyCombosable(rawStr) {
+            if let preedit = processor.getComposed() {
+                client.insertText(preedit, replacementRange: .notFound)
+            }
+            if let nonSyllable = processor.getConverted() {
+                client.insertText(nonSyllable, replacementRange: .notFound)
+            }
+
+            processor.flushCommit()
+
+            return true
+        }
+
+        /// 한글의 핵심 조합이 여기에서 이루어짐
+        let nextStatus = processor.한글조합()
+        logger.debug("상태: \(String(describing: nextStatus))")
 
         if let commit = processor.완성 {
             client.insertText(commit, replacementRange: .notFound)
@@ -91,27 +109,6 @@ class InputController: IMKInputController {
             /// setMarkedText 로 교체할 영역
             let selection = NSRange(location: 0, length: hangul.count)
             client.setMarkedText(hangul, selectionRange: selection, replacementRange: .notFound)
-
-            //            switch (state, strategy) {
-            //            case (ComposeState.committed, InputStrategy.directInsert):
-            //                // committed 가 온다면; insertText 하고 flush 해야 함.
-            //                client.insertText(hangul, replacementRange: defaultRange)
-            //                processor.flush()
-            //            case (ComposeState.composing, InputStrategy.directInsert):
-            //            // client.insertText(hangul, replacementRange: defaultRange)
-            //            case (ComposeState.committed, InputStrategy.swapMarked):
-            //                processor.flush()
-            //                client.insertText(hangul, replacementRange: defaultRange)
-            //            case (ComposeState.composing, InputStrategy.swapMarked):
-            //                client
-            //                    .setMarkedText(
-            //                        hangul,
-            //                        selectionRange: defaultRange,
-            //                        replacementRange: replacementRange
-            //                    )
-            //            default:
-            //                processor.flush()
-            //            }
 
             return true
         }

@@ -26,9 +26,11 @@ protocol HangulAutomata {
     var chosungMap: [String: 초성] { get }
     var jungsungMap: [String: 중성] { get }
     var jongsungMap: [String: 종성] { get }
+    var nonSyllableMap: [String: String] { get }
     func pickChosung(by char: String) -> unichar?
     func pickJungsung(by char: String) -> unichar?
     func pickJongsung(by char: String) -> unichar?
+    func pickNonSyllable(by char: String) -> String?
 }
 
 extension HangulAutomata {
@@ -54,5 +56,13 @@ extension HangulAutomata {
         }
 
         return jongsung.rawValue
+    }
+
+    func pickNonSyllable(by char: String) -> String? {
+        guard let nonSyllable = self.nonSyllableMap[char] else {
+            return nil
+        }
+
+        return nonSyllable
     }
 }
