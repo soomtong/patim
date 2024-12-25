@@ -26,6 +26,10 @@ enum 모음: unichar {
     // ...
 }
 
+enum 그외: unichar {
+    case 채움문자 = 0x3164
+}
+
 enum 초성: unichar {
     case 기역 = 0x1100
     case 쌍기역 = 0x1101

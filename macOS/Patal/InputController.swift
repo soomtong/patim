@@ -113,6 +113,13 @@ class InputController: IMKInputController {
             return true
         }
 
+        if processor.previous.count > 0 {
+            let selection = NSRange(location: 0, length: 0)
+            client.setMarkedText(그외.채움문자, selectionRange: selection, replacementRange: .notFound)
+
+            return true
+        }
+
         return false
     }
 

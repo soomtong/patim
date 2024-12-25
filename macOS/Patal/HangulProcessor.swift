@@ -162,6 +162,14 @@ class HangulProcessor {
                 return ComposeState.composing
             }
 
+            /// "ᅡ" + "ᆻ" -> 채움문자 (완성 낱자를 구할 수 없어서 필요가 없는 조건인데 모아치기를 구성해보면???)
+            print("종성이 초성보다 먼저 올수도 있지!")
+            if let 종성코드 = hangulLayout.pickJongsung(by: self.rawChar) {
+                self.preedit.jongsung = 종성(rawValue: 종성코드)
+
+                return ComposeState.composing
+            }
+
             /// "ㅗ" + "ㅏ" -> "ㅗㅏ"
             print("중성이 있는데 또 중성이 온 경우")
             self.previous.append(self.rawChar)
@@ -187,6 +195,21 @@ class HangulProcessor {
                 return ComposeState.composing
             }
 
+            /// 여기까지 왔다!
+            if let 초성코드 = hangulLayout.pickChosung(by: self.rawChar) {
+                self.preedit.chosung = 초성(rawValue: 초성코드)
+
+                return ComposeState.composing
+            }
+
+            /// "ᆻ" + "ᅡ" + "ᄋ" -> "았"
+            if let 중성코드 = hangulLayout.pickJungsung(by: self.rawChar) {
+                self.preedit.jungsung = 중성(rawValue: 중성코드)
+
+                return ComposeState.composing
+            }
+
+            /// 이건 새 글자가 된다!
             if let 종성코드 = hangulLayout.pickJongsung(by: self.rawChar) {
                 self.preedit.jongsung = 종성(rawValue: 종성코드)
                 self.완성 = self.getComposed()
@@ -227,6 +250,20 @@ class HangulProcessor {
 
                 return ComposeState.composing
             }
+        case (nil, _, _):
+            print("초성이 마지막에 붙는 경우?")
+            /// "ᆼ" + "ᅳ" + "ᆨ" -> "윽"
+            if let 초성코드 = hangulLayout.pickChosung(by: self.rawChar) {
+                self.preedit.chosung = 초성(rawValue: 초성코드)
+
+                return ComposeState.composing
+            }
+
+            self.완성 = String(UnicodeScalar(그외.채움문자.rawValue)!)
+            self.clearPreedit()
+
+            let _ = self.한글조합()
+            return ComposeState.committed
         case (_, _, _):
             print("초성, 중성, 종성이 있는데?")
             print("겹자음 종성이 있는 경우만 처리")
