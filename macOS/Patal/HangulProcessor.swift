@@ -48,7 +48,6 @@ class HangulProcessor {
         self.previous = []
         self.preedit = 글자()
 
-        // self.hangulLayout = Han3ShinPcsLayout()
         self.hangulLayout = layout
     }
 
@@ -147,9 +146,9 @@ class HangulProcessor {
 
             /// "ㄱ" + "ㄱ" -> "ㄲ"
             print("아니면 이제는 새로운 초성이 온 거임 \(self.rawChar)")
-            if let 초성코드 = hangulLayout.pickChosung(by: self.rawChar) {
-                self.preedit.chosung = 초성(rawValue: 초성코드)
+            if let 새초성코드 = hangulLayout.pickChosung(by: self.rawChar) {
                 self.완성 = self.getComposed()
+                self.preedit.chosung = 초성(rawValue: 새초성코드)
 
                 return ComposeState.committed
             }
@@ -163,11 +162,14 @@ class HangulProcessor {
             }
 
             /// "ᅡ" + "ᆻ" -> 채움문자 (완성 낱자를 구할 수 없어서 필요가 없는 조건인데 모아치기를 구성해보면???)
-            print("종성이 초성보다 먼저 올수도 있지!")
-            if let 종성코드 = hangulLayout.pickJongsung(by: self.rawChar) {
-                self.preedit.jongsung = 종성(rawValue: 종성코드)
+            print("종성이 초성보다 먼저 올수도 있지! 하지만 이건 공세벌만 가능해")
+            /// 공세벌식 자판의 경우 모아치기를 사용할 수 있다!
+            if hangulLayout.can모아치기 {
+                if let 종성코드 = hangulLayout.pickJongsung(by: self.rawChar) {
+                    self.preedit.jongsung = 종성(rawValue: 종성코드)
 
-                return ComposeState.composing
+                    return ComposeState.composing
+                }
             }
 
             /// "ㅗ" + "ㅏ" -> "ㅗㅏ"
@@ -179,9 +181,9 @@ class HangulProcessor {
                 return ComposeState.composing
             }
 
-            if let 중성코드 = hangulLayout.pickJungsung(by: self.rawChar) {
-                self.preedit.jungsung = 중성(rawValue: 중성코드)
+            if let 새중성코드 = hangulLayout.pickJungsung(by: self.rawChar) {
                 self.완성 = self.getComposed()
+                self.preedit.jungsung = 중성(rawValue: 새중성코드)
 
                 return ComposeState.committed
             }
@@ -210,9 +212,9 @@ class HangulProcessor {
             }
 
             /// 이건 새 글자가 된다!
-            if let 종성코드 = hangulLayout.pickJongsung(by: self.rawChar) {
-                self.preedit.jongsung = 종성(rawValue: 종성코드)
+            if let 새종성코드 = hangulLayout.pickJongsung(by: self.rawChar) {
                 self.완성 = self.getComposed()
+                self.preedit.jongsung = 종성(rawValue: 새종성코드)
 
                 return ComposeState.committed
             }

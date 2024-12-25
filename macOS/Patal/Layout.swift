@@ -29,6 +29,7 @@ func bindLayout(layout: Layout) -> HangulAutomata {
 }
 
 protocol HangulAutomata {
+    var can모아치기: Bool { get }
     var chosungMap: [String: 초성] { get }
     var jungsungMap: [String: 중성] { get }
     var jongsungMap: [String: 종성] { get }
