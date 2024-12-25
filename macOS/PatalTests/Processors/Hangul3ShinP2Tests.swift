@@ -1,17 +1,17 @@
 //
-//  KeyProcessorTests.swift
+//  Hangul3ShinP2Tests.swift
 //  PatalTests
 //
-//  Created by dp on 11/23/24.
+//  Created by dp on 12/25/24.
 //
 
 import Testing
 
 @testable import Patal
 
-@Suite("신세벌 PCS 자판 테스트", .serialized)
-struct HangulProcessorTests {
-    let layout = bindLayout(layout: .HAN3_SHIN_PCS)
+@Suite("신세벌 P2 자판 테스트", .serialized)
+struct Hangul3ShinP2Tests {
+    let layout = bindLayout(layout: .HAN3_SHIN_P2)
 
     @Test("유효한 문자만 받기")
     func setKey() {
@@ -76,9 +76,9 @@ struct HangulProcessorTests {
 
         processor.rawChar = "k"
         let s3 = processor.한글조합()
-        #expect(s3 == ComposeState.composing)
+        #expect(s3 == ComposeState.committed)
         let c3 = processor.getComposed()
-        #expect(c3 == "\u{110F}")
+        #expect(c3 == "\u{1100}")
     }
 
     @Test("ㄴㄷ")
@@ -119,17 +119,17 @@ struct HangulProcessorTests {
     func getComposedChar_ㅋㅋ() {
         let processor = HangulProcessor(layout: layout)
 
-        processor.rawChar = "."
+        processor.rawChar = "/"
         let s1 = processor.한글조합()
         #expect(s1 == ComposeState.composing)
         let c1 = processor.getComposed()
         #expect(c1 == "\u{110F}")
 
-        processor.rawChar = "."
+        processor.rawChar = "/"
         let s2 = processor.한글조합()
-        #expect(s2 == ComposeState.committed)
+        #expect(s2 == ComposeState.composing)
         let c2 = processor.getComposed()
-        #expect(c2 == "\u{110F}")
+        #expect(c2 == "코")
     }
 
     @Test("ㅎㅎ")
@@ -450,7 +450,7 @@ struct HangulProcessorTests {
         let c1 = processor.getComposed()
         #expect(c1 == "\u{1106}")
 
-        processor.rawChar = "p"
+        processor.rawChar = "/"
         let s2 = processor.한글조합()
         #expect(s2 == ComposeState.composing)
         let c2 = processor.getComposed()
