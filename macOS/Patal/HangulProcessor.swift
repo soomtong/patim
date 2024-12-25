@@ -162,7 +162,7 @@ class HangulProcessor {
             }
 
             /// "ᅡ" + "ᆻ" -> 채움문자 (완성 낱자를 구할 수 없어서 필요가 없는 조건인데 모아치기를 구성해보면???)
-            print("종성이 초성보다 먼저 올수도 있지! 하지만 이건 공세벌만 가능해")
+            print("종성이 초성보다 먼저 올수도 있지! 하지만 이건 공세벌만 가능해: \(hangulLayout.can모아치기)")
             /// 공세벌식 자판의 경우 모아치기를 사용할 수 있다!
             if hangulLayout.can모아치기 {
                 if let 종성코드 = hangulLayout.pickJongsung(by: self.rawChar) {
