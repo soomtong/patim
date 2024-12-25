@@ -24,6 +24,8 @@ func getCurrentInputMethodID() -> String? {
 
 func getInputLayoutID(id: String) -> Layout {
     switch id {
+    case "com.soomtong.inputmethod.3-p2":
+        return Layout.HAN3_P2
     case "com.soomtong.inputmethod.3-p3":
         return Layout.HAN3_P3
     case "com.soomtong.inputmethod.shin3-p2":

@@ -6,6 +6,7 @@
   
 */
 
-InputmethodHan3P3 = "3-Set Korean P3";
-InputmethodHan3ShinP2 = "3-Set Korean Shin P2";
-InputmethodHan3ShinPCS = "3-Set Korean Shin PCS";
+InputmethodHan3P2 = "Korean 3-P2";
+InputmethodHan3P3 = "Korean 3-P3";
+InputmethodHan3ShinP2 = "Korean Shin 3-P";
+InputmethodHan3ShinPCS = "Korean Shin 3-PCS";

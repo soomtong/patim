@@ -6,6 +6,7 @@
   
 */
 
-InputmethodHan3P3 = "한글 공세벌식";
-InputmethodHan3ShinP2 = "한글 신세벌식";
-InputmethodHan3ShinPCS = "한글 신세벌식 CS";
+InputmethodHan3P2 = "한글 세벌식 P2";
+InputmethodHan3P3 = "한글 세벌식 P3";
+InputmethodHan3ShinP2 = "한글 신세벌식 P";
+InputmethodHan3ShinPCS = "한글 신세벌식 PCS";

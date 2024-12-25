@@ -24,6 +24,34 @@
 	<dict>
 		<key>tsInputModeListKey</key>
 		<dict>
+			<key>InputmethodHan3P2</key>
+			<dict>
+				<key>TISIconIsTemplate</key>
+				<true/>
+				<key>TISIconLabels</key>
+				<dict>
+					<key>Primary</key>
+					<string>팥</string>
+				</dict>
+				<key>TISInputSourceID</key>
+				<string>com.soomtong.inputmethod.3-p2</string>
+				<key>TISIntendedLanguage</key>
+				<string>ko</string>
+				<key>tsInputModeAlternateMenuIconFileKey</key>
+				<string>han3-shin-p2.png</string>
+				<key>tsInputModeDefaultStateKey</key>
+				<true/>
+				<key>tsInputModeIsVisibleKey</key>
+				<true/>
+				<key>tsInputModeMenuIconFileKey</key>
+				<string>han3-shin-p2.png</string>
+				<key>tsInputModePaletteIconFileKey</key>
+				<string>han3-shin-p2.png</string>
+				<key>tsInputModePrimaryInScriptKey</key>
+				<true/>
+				<key>tsInputModeScriptKey</key>
+				<string>smKorean</string>
+			</dict>
 			<key>InputmethodHan3P3</key>
 			<dict>
 				<key>TISIconIsTemplate</key>
@@ -111,6 +139,7 @@
 		</dict>
 		<key>tsVisibleInputModeOrderedArrayKey</key>
 		<array>
+			<string>InputmethodHan3P2</string>
 			<string>InputmethodHan3P3</string>
 			<string>InputmethodHan3ShinP2</string>
 			<string>InputmethodHan3ShinPCS</string>
