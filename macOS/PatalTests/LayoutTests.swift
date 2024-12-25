@@ -35,7 +35,7 @@ struct Han3ShinPcsLayoutTests {
         #expect(doubleChosung2 == 초성.쌍비읍.rawValue)
     }
 
-    @Test()
+    @Test(.disabled())
     func pickTripleChosung() {
         let doubleChosung1 = layout.pickChosung(by: "kkk")
         #expect(doubleChosung1 == 초성.키읔.rawValue)

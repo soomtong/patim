@@ -9,7 +9,7 @@ import Foundation
 import InputMethodKit
 
 /// 조합 처리 후 결과를 담고 있음; 처리 과정의 상태는 preedit 의 상태를 판단하면 됨
-enum ComposeState {
+enum CommitState {
     case none
     case composing
     case committed
@@ -91,7 +91,7 @@ class HangulProcessor {
 
     /// 조합 가능한 문자가 들어온다. 다시 검수할 필요는 없음. 겹자음/겹모음이 있을 수 있기 때문에 previous 를 기준으로 운영.
     /// previous=raw char 조합, preedit=조합중인 한글, commit=조합된 한글
-    func 한글조합() -> ComposeState {
+    func 한글조합() -> CommitState {
         logger.debug("- 이전: \(self.previous) 프리에딧: \(String(describing: self.preedit))")
         logger.debug("- 입력: \(self.rawChar)")
 
@@ -104,7 +104,7 @@ class HangulProcessor {
                 self.preedit.chosung = 초성(rawValue: 초성코드)
                 self.previous.append(self.rawChar)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
 
             /// "" -> "ㅏ"
@@ -113,7 +113,7 @@ class HangulProcessor {
                 self.preedit.jungsung = 중성(rawValue: 중성코드)
                 self.previous.append(self.rawChar)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
 
             /// "" -> "ㄴ"
@@ -122,7 +122,7 @@ class HangulProcessor {
                 self.preedit.jongsung = 종성(rawValue: 종성코드)
                 self.previous.append(self.rawChar)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
         case (_, nil, nil):
             /// "ㄱ" + "ㅏ" -> "가"
@@ -132,7 +132,7 @@ class HangulProcessor {
                 self.previous.removeAll()
                 self.previous.append(self.rawChar)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
 
             /// "ㄱ" -> "ㄲ", "ㄱ" -> "ㄱㄴ", "ㄲ" -> "ㅋ"
@@ -141,7 +141,7 @@ class HangulProcessor {
             if let 복합초성코드 = hangulLayout.pickChosung(by: self.previous.joined()) {
                 self.preedit.chosung = 초성(rawValue: 복합초성코드)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
 
             /// "ㄱ" + "ㄱ" -> "ㄲ"
@@ -150,7 +150,7 @@ class HangulProcessor {
                 self.완성 = self.getComposed()
                 self.preedit.chosung = 초성(rawValue: 새초성코드)
 
-                return ComposeState.committed
+                return CommitState.committed
             }
         case (nil, _, nil):
             /// "ㅏ" + "ㅇ" -> "아"
@@ -158,7 +158,7 @@ class HangulProcessor {
             if let 초성코드 = hangulLayout.pickChosung(by: self.rawChar) {
                 self.preedit.chosung = 초성(rawValue: 초성코드)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
 
             /// "ᅡ" + "ᆻ" -> 채움문자 (완성 낱자를 구할 수 없어서 필요가 없는 조건인데 모아치기를 구성해보면???)
@@ -168,7 +168,7 @@ class HangulProcessor {
                 if let 종성코드 = hangulLayout.pickJongsung(by: self.rawChar) {
                     self.preedit.jongsung = 종성(rawValue: 종성코드)
 
-                    return ComposeState.composing
+                    return CommitState.composing
                 }
             }
 
@@ -178,14 +178,14 @@ class HangulProcessor {
             if let 복합중성코드 = hangulLayout.pickJungsung(by: self.previous.joined()) {
                 self.preedit.jungsung = 중성(rawValue: 복합중성코드)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
 
             if let 새중성코드 = hangulLayout.pickJungsung(by: self.rawChar) {
                 self.완성 = self.getComposed()
                 self.preedit.jungsung = 중성(rawValue: 새중성코드)
 
-                return ComposeState.committed
+                return CommitState.committed
             }
         case (nil, nil, _):
             /// "ㄹ" + "ㄱ" -> "ㄺ"
@@ -194,21 +194,21 @@ class HangulProcessor {
             if let 복합종성코드 = hangulLayout.pickJongsung(by: self.previous.joined()) {
                 self.preedit.jongsung = 종성(rawValue: 복합종성코드)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
 
             /// 여기까지 왔다!
             if let 초성코드 = hangulLayout.pickChosung(by: self.rawChar) {
                 self.preedit.chosung = 초성(rawValue: 초성코드)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
 
             /// "ᆻ" + "ᅡ" + "ᄋ" -> "았"
             if let 중성코드 = hangulLayout.pickJungsung(by: self.rawChar) {
                 self.preedit.jungsung = 중성(rawValue: 중성코드)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
 
             /// 이건 새 글자가 된다!
@@ -216,7 +216,7 @@ class HangulProcessor {
                 self.완성 = self.getComposed()
                 self.preedit.jongsung = 종성(rawValue: 새종성코드)
 
-                return ComposeState.committed
+                return CommitState.committed
             }
         case (_, _, nil):
             print("받침 없는 글자 이후 다시 초성이?")
@@ -229,7 +229,7 @@ class HangulProcessor {
                 self.preedit.chosung = 초성(rawValue: 초성코드)
                 self.previous.append(self.rawChar)
 
-                return ComposeState.committed
+                return CommitState.committed
             }
 
             print("초성과 중성이 있는데 중성이 또 왔다")
@@ -239,7 +239,7 @@ class HangulProcessor {
             if let 복합중성코드 = hangulLayout.pickJungsung(by: self.previous.joined()) {
                 self.preedit.jungsung = 중성(rawValue: 복합중성코드)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
 
             print("종성이 왔다면!")
@@ -250,7 +250,7 @@ class HangulProcessor {
             if let 종성코드 = hangulLayout.pickJongsung(by: self.previous.joined()) {
                 self.preedit.jongsung = 종성(rawValue: 종성코드)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
         case (nil, _, _):
             print("초성이 마지막에 붙는 경우?")
@@ -258,14 +258,14 @@ class HangulProcessor {
             if let 초성코드 = hangulLayout.pickChosung(by: self.rawChar) {
                 self.preedit.chosung = 초성(rawValue: 초성코드)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
 
             self.완성 = String(UnicodeScalar(그외.채움문자.rawValue)!)
             self.clearPreedit()
 
             let _ = self.한글조합()
-            return ComposeState.committed
+            return CommitState.committed
         case (_, _, _):
             print("초성, 중성, 종성이 있는데?")
             print("겹자음 종성이 있는 경우만 처리")
@@ -275,20 +275,20 @@ class HangulProcessor {
             if let 복합종성코드 = hangulLayout.pickJongsung(by: self.previous.joined()) {
                 self.preedit.jongsung = 종성(rawValue: 복합종성코드)
 
-                return ComposeState.composing
+                return CommitState.composing
             }
 
             self.완성 = self.getComposed()
             self.clearPreedit()
 
             let _ = self.한글조합()
-            return ComposeState.committed
+            return CommitState.committed
         }
 
         self.완성 = self.getComposed()
         self.clearPreedit()
 
-        return ComposeState.none
+        return CommitState.none
     }
 
     func getComposed() -> String? {
