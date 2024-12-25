@@ -19,7 +19,6 @@ struct Han3ShinPcsLayout: HangulAutomata {
     let chosungMap: [String: 초성] = [
         "k": 초성.기역,
         "kk": 초성.쌍기역,
-        "kkk": 초성.키읔,
         "h": 초성.니은,
         "u": 초성.디귿,
         "uu": 초성.쌍디귿,
@@ -61,6 +60,8 @@ struct Han3ShinPcsLayout: HangulAutomata {
         "od": 중성.위,
         "a": 중성.유,
         "g": 중성.으,
+        "i": 중성.으,
+        "id": 중성.의,
         "z": 중성.의,
         "d": 중성.이,
     ]
