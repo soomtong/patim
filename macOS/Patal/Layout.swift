@@ -9,16 +9,19 @@ import Foundation
 
 /// 지원하는 레이아웃: InfoPlist 파일 참고
 enum Layout: String {
-    case HAN3_SHIN_PCS = "InputmethodHan3ShinPCS"
+    case HAN3_P3 = "InputmethodHan3P3"
     case HAN3_SHIN_P2 = "InputmethodHan3ShinP2"
+    case HAN3_SHIN_PCS = "InputmethodHan3ShinPCS"
 }
 
 func bindLayout(layout: Layout) -> HangulAutomata {
     switch layout {
-    case .HAN3_SHIN_PCS:
-        return Han3ShinPcsLayout()
+    case .HAN3_P3:
+        return Han3P3Layout()
     case .HAN3_SHIN_P2:
         return Han3ShinP2Layout()
+    case .HAN3_SHIN_PCS:
+        return Han3ShinPcsLayout()
     }
 }
 

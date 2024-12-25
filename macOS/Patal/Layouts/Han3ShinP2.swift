@@ -8,6 +8,7 @@
 import Foundation
 
 /** 자판 배열 소개
+ 신세벌식 P 자판 https://pat.im/1110
  옛한글 조합은 추가개발이 필요함
  */
 
