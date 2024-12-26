@@ -67,3 +67,14 @@
       └─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
 </pre>
 </details>
+
+## 참고
+
+다음과 같은 프로젝트와 문서를 참고하였습니다.
+
+- [구름 입력기](https://github.com/gureum/gureum)
+- [나빌 입력기](https://github.com/navilera/NavilIMEforMac)
+- [속 입력기](https://github.com/kiding/SokIM)
+- [azooKey 입력기](https://github.com/ensan-hcl/azooKey-Desktop)
+- [글걸이](https://pat.im/category/한글%20자판)
+- [한글과 유니코드](https://gist.github.com/soomtong/b51861a440e0bfdc58008deb8078d465)
