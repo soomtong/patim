@@ -14,7 +14,8 @@ import Foundation
 
 /// enum Layout 의 bindLayout 조합기 이름과 같아야 합니다.
 struct Han3ShinP2Layout: HangulAutomata {
-    let can모아치기: Bool = false
+    let defaultTraits: [LayoutTrait] = [LayoutTrait.아래아]
+    var traits: [LayoutTrait] = []
 
     let chosungMap: [String: 초성] = [
         "k": 초성.기역,

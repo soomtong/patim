@@ -28,8 +28,15 @@ func bindLayout(layout: Layout) -> HangulAutomata {
     }
 }
 
+enum LayoutTrait {
+    case 모아치기
+    case 아래아
+    case 화살표
+}
+
 protocol HangulAutomata {
-    var can모아치기: Bool { get }
+    var defaultTraits: [LayoutTrait] { get }
+    var traits: [LayoutTrait] { get set }
     var chosungMap: [String: 초성] { get }
     var jungsungMap: [String: 중성] { get }
     var jongsungMap: [String: 종성] { get }
@@ -41,6 +48,18 @@ protocol HangulAutomata {
 }
 
 extension HangulAutomata {
+    var can모아치기: Bool {
+        return self.traits.contains(LayoutTrait.모아치기)
+    }
+
+    var has화살표: Bool {
+        return self.traits.contains(LayoutTrait.화살표)
+    }
+
+    var has아래아: Bool {
+        return self.traits.contains(LayoutTrait.아래아)
+    }
+
     func pickChosung(by char: String) -> unichar? {
         guard let chosung = self.chosungMap[char] else {
             return nil

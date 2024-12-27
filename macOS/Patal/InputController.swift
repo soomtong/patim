@@ -26,6 +26,9 @@ class InputController: IMKInputController {
         let layout = bindLayout(layout: inputMethodLayout)
         self.processor = HangulProcessor(layout: layout)
 
+        // UI 에서 옵션을 변경할 수 있음
+        self.processor.setLayoutTraits(traits: [LayoutTrait.화살표])
+
         super.init(server: server, delegate: delegate, client: inputClient)
 
         if let inputMethodVersion = getCurrentProjectVersion() {

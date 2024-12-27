@@ -14,7 +14,8 @@ import Foundation
 
 /// enum Layout 의 bindLayout 조합기 이름과 같아야 합니다.
 struct Han3ShinPcsLayout: HangulAutomata {
-    let can모아치기: Bool = false
+    let defaultTraits: [LayoutTrait] = [LayoutTrait.화살표]
+    var traits: [LayoutTrait] = []
 
     let chosungMap: [String: 초성] = [
         "k": 초성.기역,
@@ -128,4 +129,23 @@ struct Han3ShinPcsLayout: HangulAutomata {
         "N": "(",
         "M": ")",
     ]
+
+    let nonSyllableMapWith쉬운화살표: [String: String] = [
+        "N": "<",
+        "M": ">",
+    ]
+
+    func pickNonSyllable(by char: String) -> String? {
+        if has화살표 {
+            if let nonSyllable = self.nonSyllableMapWith쉬운화살표[char] {
+                return nonSyllable
+            }
+        }
+
+        guard let nonSyllable = self.nonSyllableMap[char] else {
+            return nil
+        }
+
+        return nonSyllable
+    }
 }
