@@ -9,6 +9,9 @@ Pods
 build/
 UserInterfaceState.xcuserstate
 
+# Products
+dist/
+
 # Junk files on Mac OS X
 *.DS_Store
 *.playground
