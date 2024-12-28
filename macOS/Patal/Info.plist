@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>LSHasLocalizedDisplayName</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -168,7 +170,7 @@
 	<key>TISIconIsTemplate</key>
 	<true/>
 	<key>TISInputSourceID</key>
-	<string>com.soomtong.inputmethod.ko</string>
+	<string>com.soomtong.inputmethod.shin3-p2</string>
 	<key>tsInputMethodCharacterRepertoireKey</key>
 	<array>
 		<string>Hang</string>
