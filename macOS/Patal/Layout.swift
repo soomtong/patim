@@ -28,14 +28,14 @@ func bindLayout(layout: Layout) -> HangulAutomata {
     }
 }
 
-enum LayoutTrait {
+enum LayoutTrait: String {
     case 모아치기
     case 아래아
     case 화살표
 }
 
 protocol HangulAutomata {
-    var defaultTraits: [LayoutTrait] { get }
+    var availableTraits: [LayoutTrait] { get }
     var traits: [LayoutTrait] { get set }
     var chosungMap: [String: 초성] { get }
     var jungsungMap: [String: 중성] { get }

@@ -8,6 +8,15 @@
 import Carbon
 import Foundation
 
+func keepUserTraits(traitKey: String, traitValue: String) {
+    UserDefaults.standard.set(traitValue, forKey: traitKey)
+    UserDefaults.standard.synchronize()
+}
+
+func retrieveUserTraits(traitKey: String) -> String? {
+    return UserDefaults.standard.string(forKey: traitKey)
+}
+
 func getCurrentInputMethodID() -> String? {
     // Get the current input source
     guard let inputSource = TISCopyCurrentKeyboardInputSource()?.takeUnretainedValue() else {

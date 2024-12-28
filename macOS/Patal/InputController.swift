@@ -13,8 +13,9 @@ class InputController: IMKInputController {
     let logger = CustomLogger(category: "InputController")
 
     // 클라이언트 하나 당 하나의 입력기 레이아웃 인스턴스가 사용됨
+    let inputMethodLayout: Layout
+    let optionMenu: OptionMenu
     let processor: HangulProcessor
-    var inputMethodLayout: Layout
 
     override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
         guard let inputMethodID = getCurrentInputMethodID() else {
@@ -30,11 +31,16 @@ class InputController: IMKInputController {
 
         // UI 에서 옵션을 변경할 수 있음
         self.processor.setLayoutTraits(traits: [LayoutTrait.화살표])
+        self.optionMenu = OptionMenu(layout: self.processor.hangulLayout)
 
         super.init(server: server, delegate: delegate, client: inputClient)
 
         if let inputMethodVersion = getCurrentProjectVersion() {
             logger.debug("팥알 입력기 버전: \(inputMethodVersion)")
+        }
+        let traitKey = "PatalInputMethod:LayoutOption:\(inputMethodLayout)"
+        if let traits = retrieveUserTraits(traitKey: traitKey) {
+            logger.debug("특성 옵션: \(traits)")
         }
     }
 
@@ -46,6 +52,42 @@ class InputController: IMKInputController {
     override open func deactivateServer(_ sender: Any!) {
         super.deactivateServer(sender)
         logger.debug("입력기 서버 중단: \(inputMethodLayout)")
+    }
+
+    override open func menu() -> NSMenu! {
+        return self.optionMenu.menu
+    }
+
+    @objc func changeLayoutOption(_ sender: Any?) {
+        guard let optionItem = sender as? [String: Any] else {
+            return
+        }
+
+        for (key, value) in optionItem {
+            print([key: value])
+        }
+
+        logger.debug("현재 선택된 옵션: \(self.processor.hangulLayout.traits)")
+        if let traitMenuItem = optionItem["IMKCommandMenuItem"] as? NSMenuItem {
+            if let trait = LayoutTrait(rawValue: traitMenuItem.title) {
+                if self.processor.hangulLayout.traits.contains(trait) {
+                    //logger.debug("선택한 \(traitMenuItem.title) 트레잇을 제거함")
+                    let newTraits = self.processor.hangulLayout.traits.filter { $0 != trait }
+                    self.processor.setLayoutTraits(traits: newTraits)
+                    traitMenuItem.state = NSControl.StateValue.off
+                } else {
+                    //logger.debug("\(traitMenuItem.title) 트레잇을 추가함")
+                    let newTraits = [trait]
+                    self.processor.setLayoutTraits(traits: newTraits)
+                    traitMenuItem.state = NSControl.StateValue.on
+                }
+
+                let traitKey = "PatalInputMethod:LayoutOption:\(inputMethodLayout)"
+                let traiteValue = self.processor.hangulLayout.traits.map({ $0.rawValue }).joined(
+                    separator: ",")
+                keepUserTraits(traitKey: traitKey, traitValue: traiteValue)
+            }
+        }
     }
 
     // 이 입력 방법은 OS 에서 백스페이스, 엔터 등을 처리함. 즉, 완성된 키코드를 제공함.
