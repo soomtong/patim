@@ -14,12 +14,14 @@ class InputController: IMKInputController {
 
     // 클라이언트 하나 당 하나의 입력기 레이아웃 인스턴스가 사용됨
     let processor: HangulProcessor
-    var inputMethodLayout = Layout.HAN3_SHIN_PCS
+    var inputMethodLayout: Layout
 
     override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
-        if let inputMethodID = getCurrentInputMethodID() {
-            inputMethodLayout = getInputLayoutID(id: inputMethodID)
+        guard let inputMethodID = getCurrentInputMethodID() else {
+            return nil
         }
+
+        inputMethodLayout = getInputLayoutID(id: inputMethodID)
         logger.debug("팥알 입력기 자판: \(inputMethodLayout)")
 
         // 클래스 생성이 하나의 인스턴스에서 이루어지기 때문에 여러개의 Patal 입력기를 동시에 사용할 수 없음.
