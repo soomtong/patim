@@ -167,6 +167,6 @@ struct HangulComposer {
             return Character(UnicodeScalar(codePoint)!)
         }
 
-        return Character(UnicodeScalar(그외.채움문자.hashValue)!)
+        return Character(UnicodeScalar(그외.대체문자.hashValue)!)
     }
 }

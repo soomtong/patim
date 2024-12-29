@@ -133,9 +133,10 @@ class InputController: IMKInputController {
             return true
         }
 
+        /// 조합이 불가능한 경우 대체 문자를 제공
         if processor.previous.count > 0 {
             let selection = NSRange(location: 0, length: 0)
-            client.setMarkedText(그외.채움문자, selectionRange: selection, replacementRange: .notFound)
+            client.setMarkedText(그외.대체문자, selectionRange: selection, replacementRange: .notFound)
 
             return true
         }

@@ -171,7 +171,7 @@ class HangulProcessor {
                 return CommitState.composing
             }
 
-            /// "ᅡ" + "ᆻ" -> 채움문자 (완성 낱자를 구할 수 없어서 필요가 없는 조건인데 모아치기를 구성해보면???)
+            /// "ᅡ" + "ᆻ" -> 대체 문자 (완성 낱자를 구할 수 없어서 필요가 없는 조건인데 모아치기를 구성해보면???)
             print("종성이 초성보다 먼저 올수도 있지! 하지만 이건 공세벌만 가능해: \(hangulLayout.can모아치기)")
             /// 공세벌식 자판의 경우 모아치기를 사용할 수 있다!
             if hangulLayout.can모아치기 {
@@ -278,7 +278,7 @@ class HangulProcessor {
                 return CommitState.composing
             }
 
-            self.완성 = String(UnicodeScalar(그외.채움문자.rawValue)!)
+            self.완성 = String(UnicodeScalar(그외.대체문자.rawValue)!)
             self.clearPreedit()
 
             let _ = self.한글조합()
