@@ -25,6 +25,7 @@
 		46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7E26EC5CFA005EC052 /* han3-P2.png */; };
 		46E67F8226EC5CFA005EC052 /* icon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7F26EC5CFA005EC052 /* icon.tiff */; };
 		E224DEE42D2024B900808927 /* OptionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E224DEE32D2024B900808927 /* OptionMenu.swift */; };
+		E24856192D20F0A300AC78AF /* PatalInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24856182D20F0A300AC78AF /* PatalInputController.swift */; };
 		E258567D2D18134A006FD5E7 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = E258567C2D18134A006FD5E7 /* Extention.swift */; };
 		E284B61B2CFDF4F20009DE1C /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = E284B61A2CFDF4F20009DE1C /* Util.swift */; };
 		E2972D032CDF8C18001278E3 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2972D022CDF8C11001278E3 /* Layout.swift */; };
@@ -67,6 +68,7 @@
 		46E67F7E26EC5CFA005EC052 /* han3-P2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-P2.png"; sourceTree = "<group>"; };
 		46E67F7F26EC5CFA005EC052 /* icon.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = icon.tiff; sourceTree = "<group>"; };
 		E224DEE32D2024B900808927 /* OptionMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionMenu.swift; sourceTree = "<group>"; };
+		E24856182D20F0A300AC78AF /* PatalInputController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatalInputController.swift; sourceTree = "<group>"; };
 		E258567C2D18134A006FD5E7 /* Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extention.swift; sourceTree = "<group>"; };
 		E284B61A2CFDF4F20009DE1C /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		E289CD4C2CE9CD3D00E309D8 /* PatalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PatalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -135,6 +137,7 @@
 				469C537E2B91E1C200446511 /* Logger.swift */,
 				46E67F5026EC5505005EC052 /* AppDelegate.swift */,
 				134356FF27DDFF850074E691 /* InputController.swift */,
+				E24856182D20F0A300AC78AF /* PatalInputController.swift */,
 				E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */,
 				E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */,
 				464092A92B92EDA800F5D81D /* HangulProcessor.swift */,
@@ -294,6 +297,7 @@
 				46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */,
 				469C537F2B91E1C200446511 /* Logger.swift in Sources */,
 				464092AA2B92EDA800F5D81D /* HangulProcessor.swift in Sources */,
+				E24856192D20F0A300AC78AF /* PatalInputController.swift in Sources */,
 				E2972D032CDF8C18001278E3 /* Layout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

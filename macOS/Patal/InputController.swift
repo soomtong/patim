@@ -57,23 +57,6 @@ class InputController: IMKInputController {
         return self.optionMenu.menu
     }
 
-    @objc func changeLayoutOption(_ sender: Any?) {
-        guard let optionItem = sender as? [String: Any] else {
-            return
-        }
-        //for (key, value) in optionItem { print([key: value]) }
-        if let traitMenuItem = optionItem["IMKCommandMenuItem"] as? NSMenuItem {
-            if let trait = LayoutTrait(rawValue: traitMenuItem.title) {
-                let traitValue = toggleLayoutTrait(
-                    trait: trait, for: traitMenuItem,
-                    in: &self.processor.hangulLayout)
-
-                let traitKey = buildTraitKey(layout: inputMethodLayout)
-                keepUserTraits(traitKey: traitKey, traitValue: traitValue)
-            }
-        }
-    }
-
     // 이 입력 방법은 OS 에서 백스페이스, 엔터 등을 처리함. 즉, 완성된 키코드를 제공함.
     @MainActor
     override func inputText(_ rawStr: String!, client sender: Any!) -> Bool {
