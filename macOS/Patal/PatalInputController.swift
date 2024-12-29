@@ -26,4 +26,25 @@ extension InputController {
             }
         }
     }
+
+    func loadActiveOptions(traitKey: String) -> [LayoutTrait] {
+        if let dump = retrieveUserTraits(traitKey: traitKey) {
+            logger.debug("저장된 특성 옵션: \(dump)")
+            let loadedTraits = dump.split(separator: ",")
+            if loadedTraits.count < 1 || loadedTraits.isEmpty {
+                return []
+            }
+            var traits: [LayoutTrait] = []
+            loadedTraits.forEach { label in
+                if let trait = LayoutTrait(
+                    rawValue: label.trimmingCharacters(in: .whitespacesAndNewlines))
+                {
+                    traits.append(trait)
+                }
+            }
+            return traits
+        } else {
+            return self.processor.hangulLayout.availableTraits
+        }
+    }
 }

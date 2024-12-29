@@ -35,10 +35,8 @@ class InputController: IMKInputController {
         if let inputMethodVersion = getCurrentProjectVersion() {
             logger.debug("팥알 입력기 버전: \(inputMethodVersion)")
         }
-        let traitKey = "PatalInputMethod:LayoutOption:\(inputMethodLayout)"
-        if let traits = retrieveUserTraits(traitKey: traitKey) {
-            logger.debug("특성 옵션: \(traits)")
-        }
+        let traitKey = buildTraitKey(layout: inputMethodLayout)
+        self.processor.hangulLayout.traits = loadActiveOptions(traitKey: traitKey)
     }
 
     @MainActor

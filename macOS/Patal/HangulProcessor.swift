@@ -51,12 +51,6 @@ class HangulProcessor {
         self.preedit = 글자()
 
         self.hangulLayout = layout
-        // 유저 세션에 저장된 옵션이 있으면 붙이기
-        // 없으면 레이아웃의 기본 트레잇을 옵션으로 구성
-        // self.layoutTraits = self.hangulLayout.availableTraits
-        // UI 에서 값을 받기 전에 기본으로 구성 setLayoutTraits 를 통해 변경할 수 있음
-        // self.hangulLayout.traits = self.layoutTraits
-        self.hangulLayout.traits = self.hangulLayout.availableTraits
     }
 
     deinit {
