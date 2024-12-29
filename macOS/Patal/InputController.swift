@@ -8,7 +8,7 @@
 import Foundation
 import InputMethodKit
 
-@objc(PatInputController)
+@objc(PatIMKController)
 class InputController: IMKInputController {
     let logger = CustomLogger(category: "InputController")
 
@@ -44,11 +44,13 @@ class InputController: IMKInputController {
         }
     }
 
+    @MainActor
     override open func activateServer(_ sender: Any!) {
         super.activateServer(sender)
         logger.debug("입력기 서버 시작: \(inputMethodLayout)")
     }
 
+    @MainActor
     override open func deactivateServer(_ sender: Any!) {
         super.deactivateServer(sender)
         logger.debug("입력기 서버 중단: \(inputMethodLayout)")
@@ -82,7 +84,7 @@ class InputController: IMKInputController {
                     traitMenuItem.state = NSControl.StateValue.on
                 }
 
-                let traitKey = "PatalInputMethod:LayoutOption:\(inputMethodLayout)"
+                let traitKey = buildTraitKey(layout: inputMethodLayout)
                 let traiteValue = self.processor.hangulLayout.traits.map({ $0.rawValue }).joined(
                     separator: ",")
                 keepUserTraits(traitKey: traitKey, traitValue: traiteValue)
@@ -91,6 +93,7 @@ class InputController: IMKInputController {
     }
 
     // 이 입력 방법은 OS 에서 백스페이스, 엔터 등을 처리함. 즉, 완성된 키코드를 제공함.
+    @MainActor
     override func inputText(_ rawStr: String!, client sender: Any!) -> Bool {
         guard let client = sender as? IMKTextInput else {
             return false

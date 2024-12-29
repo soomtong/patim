@@ -14,7 +14,7 @@ class OptionMenu {
     var menu: NSMenu
 
     init(layout: HangulAutomata) {
-        self.menu = NSMenu()
+        self.menu = NSMenu(title: "PatalLayoutMenu")
         logger.debug("자판의 모든 옵션: \(layout.availableTraits)")
 
         for title in layout.availableTraits {

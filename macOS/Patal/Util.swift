@@ -17,6 +17,10 @@ func retrieveUserTraits(traitKey: String) -> String? {
     return UserDefaults.standard.string(forKey: traitKey)
 }
 
+func buildTraitKey(layout: Layout) -> String {
+    return "LayoutOption." + layout.rawValue
+}
+
 func getCurrentInputMethodID() -> String? {
     // Get the current input source
     guard let inputSource = TISCopyCurrentKeyboardInputSource()?.takeUnretainedValue() else {

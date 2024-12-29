@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSHasLocalizedDisplayName</key>
-	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -147,30 +145,30 @@
 			<string>InputmethodHan3ShinPCS</string>
 		</array>
 	</dict>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
 	<key>InputMethodConnectionName</key>
-	<string>PatInputMethod_1_Connection</string>
+	<string>PatalInputMethod_Connection</string>
 	<key>InputMethodServerControllerClass</key>
-	<string>PatInputController</string>
-	<key>InputMethodServerDelegateClass</key>
-	<string>PatInputController</string>
+	<string>PatIMKController</string>
 	<key>LSBackgroundOnly</key>
 	<true/>
+	<key>LSHasLocalizedDisplayName</key>
+	<true/>
+	<key>LSMinimumSystemVersion</key>
+	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>LSUIElement</key>
 	<string>1</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
-	<key>LSMinimumSystemVersion</key>
-	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
 	<key>TICapsLockLanguageSwitchCapable</key>
 	<true/>
 	<key>TISCapsLockResetOnModeSwitch</key>
 	<true/>
 	<key>TISIconIsTemplate</key>
 	<true/>
-	<key>TISInputSourceID</key>
-	<string>com.soomtong.inputmethod.shin3-p2</string>
+	<key>TISIntendedLanguage</key>
+	<string>ko</string>
 	<key>tsInputMethodCharacterRepertoireKey</key>
 	<array>
 		<string>Hang</string>

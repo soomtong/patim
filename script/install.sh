@@ -2,10 +2,7 @@
 set -e
 
 APP="/Users/$USER/Library/Input Methods/Patal.app"
-echo "Patal process is killing"
-echo ""
-
-killall Patal || true
+echo "Installing Patal to $APP"
 
 sleep 1
 
@@ -18,3 +15,9 @@ sleep 1
 
 mv ./build/Release/Patal.app "$APP"
 popd
+
+echo ""
+echo "Killing Patal process..."
+
+sleep 1
+killall Patal || true

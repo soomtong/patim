@@ -1,4 +1,4 @@
-# Makefile for PatInputMethod
+# Makefile for PatalInputMethod
 
 # Variables
 SCRIPT_DIR = ./script
