@@ -15,7 +15,6 @@
 		461A815A2B49B030005E7725 /* han3-shin-p2.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81562B49B030005E7725 /* han3-shin-p2.png */; };
 		461A815B2B49B030005E7725 /* han3-shin-pcs.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81572B49B030005E7725 /* han3-shin-pcs.png */; };
 		461A815C2B49B030005E7725 /* han3-shin-p2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81582B49B030005E7725 /* han3-shin-p2@2x.png */; };
-		461F6A4126ECCD2400573DB1 /* NotificationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461F6A4026ECCD2400573DB1 /* NotificationContent.swift */; };
 		462EBD172B3F3DF400BD94B2 /* Korean.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 462EBD162B3F3DF400BD94B2 /* Korean.tiff */; };
 		464092AA2B92EDA800F5D81D /* HangulProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464092A92B92EDA800F5D81D /* HangulProcessor.swift */; };
 		469C537F2B91E1C200446511 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469C537E2B91E1C200446511 /* Logger.swift */; };
@@ -52,7 +51,6 @@
 		461A81562B49B030005E7725 /* han3-shin-p2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2.png"; sourceTree = "<group>"; };
 		461A81572B49B030005E7725 /* han3-shin-pcs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-pcs.png"; sourceTree = "<group>"; };
 		461A81582B49B030005E7725 /* han3-shin-p2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2@2x.png"; sourceTree = "<group>"; };
-		461F6A4026ECCD2400573DB1 /* NotificationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationContent.swift; sourceTree = "<group>"; };
 		462EBD162B3F3DF400BD94B2 /* Korean.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Korean.tiff; sourceTree = "<group>"; };
 		464092A92B92EDA800F5D81D /* HangulProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulProcessor.swift; sourceTree = "<group>"; };
 		469C537E2B91E1C200446511 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -136,7 +134,6 @@
 			children = (
 				469C537E2B91E1C200446511 /* Logger.swift */,
 				46E67F5026EC5505005EC052 /* AppDelegate.swift */,
-				461F6A4026ECCD2400573DB1 /* NotificationContent.swift */,
 				134356FF27DDFF850074E691 /* InputController.swift */,
 				E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */,
 				E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */,
@@ -291,7 +288,6 @@
 				E299CA4F2D008F2F00E2FD0D /* HangulComposer.swift in Sources */,
 				E224DEE42D2024B900808927 /* OptionMenu.swift in Sources */,
 				1343570027DDFF850074E691 /* InputController.swift in Sources */,
-				461F6A4126ECCD2400573DB1 /* NotificationContent.swift in Sources */,
 				E2B1644B2CDFAFD4003FCE85 /* HangulCode.swift in Sources */,
 				E258567D2D18134A006FD5E7 /* Extention.swift in Sources */,
 				E284B61B2CFDF4F20009DE1C /* Util.swift in Sources */,

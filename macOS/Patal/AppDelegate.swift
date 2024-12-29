@@ -7,7 +7,6 @@
 
 import Cocoa
 import InputMethodKit
-import UserNotifications
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -16,7 +15,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var server: IMKServer?
 
-    let notificationCenter = UNUserNotificationCenter.current()
     let logger = CustomLogger(category: "AppDelegate")
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -26,74 +24,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             name: bundle.infoDictionary?["InputMethodConnectionName"] as? String,
             bundleIdentifier: bundle.bundleIdentifier)
 
-        logger.debug(
-            "팥알 입력기 활성화 \(String(describing: bundle.bundleIdentifier)) \(String(describing: bundle.infoDictionary?["InputMethodConnectionName"]))"
-        )
-
+        logger.debug("팥알 입력기 서비스 등록: \(String(describing: bundle.bundleIdentifier))")
         if let inputMethodID = getCurrentInputMethodID() {
-            logger.debug("입력기 서버 자판: \(inputMethodID)")
-        }
-
-        // load notification handler
-        UNUserNotificationCenter.current().delegate = self
-
-        registerNotificationHandler()
-
-        let bundleVersion = bundle.infoDictionary?["CFBundleVersion"] as? String ?? ""
-        let message = "빌드 넘버: \(bundleVersion)"
-        let notificationContent = NotificationContent(title: "팥알입력기", body: message)
-
-        notificationCenter.getNotificationSettings { (settings) in
-            if settings.authorizationStatus == .authorized {
-                self.pushNotification(from: notificationContent)
-            }
+            logger.debug("자판 정보: \(inputMethodID)")
         }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
         logger.debug("팥알 입력기 비활성화")
-    }
-}
-
-extension AppDelegate: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(
-        _ center: UNUserNotificationCenter, willPresent notification: UNNotification,
-        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) ->
-            Void
-    ) {
-        return completionHandler([.sound])
-    }
-
-    func registerNotificationHandler() {
-        notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) {
-            (granted, error) in
-            print("requested notification")
-
-            if granted {
-                print("notification granted")
-            } else if !granted {
-                print("notification refused")
-            } else {
-                print(error?.localizedDescription as Any)
-            }
-        }
-    }
-
-    func pushNotification(from: NotificationContent) {
-        let notificationContent = UNMutableNotificationContent()
-        notificationContent.title = from.title
-        notificationContent.body = from.body
-        notificationContent.categoryIdentifier = "alarm"
-        notificationContent.sound = UNNotificationSound.default
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-
-        let request1 = UNNotificationRequest(
-            identifier: UUID().uuidString, content: notificationContent, trigger: trigger)
-        notificationCenter.add(request1) { (error) in
-            if error != nil {
-                print(error?.localizedDescription as Any)
-            }
-        }
     }
 }
