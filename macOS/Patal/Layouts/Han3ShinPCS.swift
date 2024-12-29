@@ -131,8 +131,8 @@ struct Han3ShinPcsLayout: HangulAutomata {
     ]
 
     let nonSyllableMapWith쉬운화살표: [String: String] = [
-        "N": "<",
-        "M": ">",
+        "N": "←",
+        "M": "→",
     ]
 
     func pickNonSyllable(by char: String) -> String? {

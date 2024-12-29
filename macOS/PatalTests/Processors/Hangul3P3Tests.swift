@@ -11,11 +11,12 @@ import Testing
 
 @Suite("공세벌 P3 자판 테스트", .serialized)
 struct Hangul3P3Tests {
-    let layout = bindLayout(layout: .HAN3_P3)
+    let layout = createLayoutInstance(name: LayoutName.HAN3_P3)
     var processor: HangulProcessor!
 
     init() {
         processor = HangulProcessor(layout: layout)
+        processor.hangulLayout.traits = layout.availableTraits
     }
 
     @Test("유효한 문자만 받기")

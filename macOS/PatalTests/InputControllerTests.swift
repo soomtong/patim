@@ -22,26 +22,26 @@ struct InputControllerTests {
         inputController = InputController(server: mockServer, delegate: nil, client: mockClient)
     }
 
-    @Test("Activate Server")
+    @MainActor @Test("Activate Server")
     func testActivateServer() {
         inputController.activateServer(nil)
         // Add assertions to verify the server activation if needed
     }
 
-    @Test("Deactivate Server")
+    @MainActor @Test("Deactivate Server")
     func testDeactivateServer() {
         inputController.deactivateServer(nil)
         // Add assertions to verify the server deactivation if needed
     }
 
-    @Test("Input Text - Processable Character")
+    @MainActor @Test("Input Text - Processable Character")
     func testInputTextProcessable() {
         let result = inputController.inputText("k", client: mockClient)
         #expect(result == true)
         // Add assertions to verify the behavior when a processable character is input
     }
 
-    @Test("Input Text - Non-Processable Character")
+    @MainActor @Test("Input Text - Non-Processable Character")
     func testInputTextNonProcessable() {
         let result = inputController.inputText("!", client: mockClient)
         #expect(result == false)

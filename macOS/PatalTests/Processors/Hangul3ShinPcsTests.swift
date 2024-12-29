@@ -11,7 +11,7 @@ import Testing
 
 @Suite("신세벌 PCS 자판 테스트", .serialized)
 struct Hangul3ShinPcsTests {
-    let layout = bindLayout(layout: .HAN3_SHIN_PCS)
+    let layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
     var processor: HangulProcessor!
 
     init() {
@@ -25,6 +25,35 @@ struct Hangul3ShinPcsTests {
 
         r1 = processor.verifyCombosable("!")
         #expect(r1 == false)
+    }
+
+    @Test("쉬운 화살표")
+    func 화살표() {
+        processor.rawChar = "M"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.none)
+        let c1 = processor.getConverted()
+        #expect(c1 == ")")
+
+        processor.rawChar = "N"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.none)
+        let c2 = processor.getConverted()
+        #expect(c2 == "(")
+
+        processor.hangulLayout.traits = processor.hangulLayout.availableTraits
+
+        processor.rawChar = "N"
+        let s3 = processor.한글조합()
+        #expect(s3 == CommitState.none)
+        let c3 = processor.getConverted()
+        #expect(c3 == "←")
+
+        processor.rawChar = "M"
+        let s4 = processor.한글조합()
+        #expect(s4 == CommitState.none)
+        let c4 = processor.getConverted()
+        #expect(c4 == "→")
     }
 
     @Test("ㄲ")

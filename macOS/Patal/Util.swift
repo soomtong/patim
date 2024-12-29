@@ -17,8 +17,8 @@ func retrieveUserTraits(traitKey: String) -> String? {
     return UserDefaults.standard.string(forKey: traitKey)
 }
 
-func buildTraitKey(layout: Layout) -> String {
-    return "LayoutOption." + layout.rawValue
+func buildTraitKey(name: LayoutName) -> String {
+    return "LayoutOption." + name.rawValue
 }
 
 func getCurrentInputMethodID() -> String? {
@@ -35,19 +35,19 @@ func getCurrentInputMethodID() -> String? {
     return nil
 }
 
-func getInputLayoutID(id: String) -> Layout {
+func getInputLayoutID(id: String) -> LayoutName {
     switch id {
     case "com.soomtong.inputmethod.3-p2":
-        return Layout.HAN3_P2
+        return LayoutName.HAN3_P2
     case "com.soomtong.inputmethod.3-p3":
-        return Layout.HAN3_P3
+        return LayoutName.HAN3_P3
     case "com.soomtong.inputmethod.shin3-p2":
-        return Layout.HAN3_SHIN_P2
+        return LayoutName.HAN3_SHIN_P2
     case "com.soomtong.inputmethod.shin3-pcs":
-        return Layout.HAN3_SHIN_PCS
+        return LayoutName.HAN3_SHIN_PCS
 
     default:
-        return Layout.HAN3_SHIN_PCS
+        return LayoutName.HAN3_SHIN_PCS
     }
 }
 

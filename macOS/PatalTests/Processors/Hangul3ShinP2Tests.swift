@@ -11,7 +11,7 @@ import Testing
 
 @Suite("신세벌 P2 자판 테스트", .serialized)
 struct Hangul3ShinP2Tests {
-    let layout = bindLayout(layout: .HAN3_SHIN_P2)
+    let layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_P2)
     var processor: HangulProcessor!
 
     init() {

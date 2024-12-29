@@ -13,30 +13,31 @@ class InputController: IMKInputController {
     let logger = CustomLogger(category: "InputController")
 
     // 클라이언트 하나 당 하나의 입력기 레이아웃 인스턴스가 사용됨
-    let inputMethodLayout: Layout
+    let layoutName: LayoutName
     let optionMenu: OptionMenu
     let processor: HangulProcessor
 
+    // 클래스 생성이 하나의 인스턴스에서 이루어지기 때문에 여러개의 Patal 입력기를 동시에 사용할 수 없음.
     override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
         guard let inputMethodID = getCurrentInputMethodID() else {
             return nil
         }
 
-        inputMethodLayout = getInputLayoutID(id: inputMethodID)
-        logger.debug("팥알 입력기 자판: \(inputMethodLayout)")
+        layoutName = getInputLayoutID(id: inputMethodID)
+        logger.debug("팥알 입력기 자판: \(layoutName)")
 
-        let traitKey = buildTraitKey(layout: inputMethodLayout)
-        // 클래스 생성이 하나의 인스턴스에서 이루어지기 때문에 여러개의 Patal 입력기를 동시에 사용할 수 없음.
-        let hangulLayout = bindLayout(layout: inputMethodLayout)
+        let traitKey = buildTraitKey(name: layoutName)
+        let hangulLayout = createLayoutInstance(name: layoutName)
         self.processor = HangulProcessor(layout: hangulLayout)
-
-        self.optionMenu = OptionMenu(layout: self.processor.hangulLayout)
+        logger.debug("팥알 입력기 처리기: \(processor)")
 
         if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
             self.processor.hangulLayout.traits = loadedTraits
         } else {
             self.processor.hangulLayout.traits = self.processor.hangulLayout.availableTraits
         }
+        
+        self.optionMenu = OptionMenu(layout: self.processor.hangulLayout)
 
         super.init(server: server, delegate: delegate, client: inputClient)
 
@@ -48,13 +49,13 @@ class InputController: IMKInputController {
     @MainActor
     override open func activateServer(_ sender: Any!) {
         super.activateServer(sender)
-        logger.debug("입력기 서버 시작: \(inputMethodLayout)")
+        logger.debug("입력기 서버 시작: \(layoutName)")
     }
 
     @MainActor
     override open func deactivateServer(_ sender: Any!) {
         super.deactivateServer(sender)
-        logger.debug("입력기 서버 중단: \(inputMethodLayout)")
+        logger.debug("입력기 서버 중단: \(layoutName)")
     }
 
     override open func menu() -> NSMenu! {

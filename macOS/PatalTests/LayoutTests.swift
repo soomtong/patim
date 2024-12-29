@@ -11,7 +11,7 @@ import Testing
 
 @Suite("신세벌 커스텀 레이아웃 테스트", .serialized)
 struct Han3ShinPcsLayoutTests {
-    let layout = Han3ShinPcsLayout()
+    var layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
     let 초성기역 = String(
         utf16CodeUnits: [초성.기역.rawValue],
         count: [초성.기역.rawValue].count
@@ -84,5 +84,28 @@ struct Han3ShinPcsLayoutTests {
 
         let doubleJongsung4 = layout.pickJongsung(by: "x")
         #expect(doubleJongsung4 == 종성.쌍시옷.rawValue)
+    }
+
+    @Suite("레이아웃 특성 테스트", .serialized)
+    struct LayoutTraitTests {
+        var layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
+        var processor: HangulProcessor!
+
+        init() {
+            layout.traits.append(LayoutTrait.화살표)
+            processor = HangulProcessor(layout: layout)
+        }
+
+        @Test("초기 옵션")
+        func loadTraits() {
+            #expect(self.processor.hangulLayout.has화살표 == true)
+        }
+
+        @Test("전체 특성 목록")
+        func availableTraits() {
+            let traits = layout.availableTraits
+            #expect(traits.count > 0)
+            #expect(traits.contains(LayoutTrait.화살표))
+        }
     }
 }

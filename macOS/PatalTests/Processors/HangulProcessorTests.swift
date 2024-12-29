@@ -11,7 +11,7 @@ import Testing
 
 @Suite("입력기 처리 테스트", .serialized)
 struct HangulProcessorTests {
-    let layout = bindLayout(layout: .HAN3_SHIN_PCS)
+    let layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
     var processor: HangulProcessor!
 
     init() {

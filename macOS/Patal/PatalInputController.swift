@@ -17,7 +17,7 @@ extension InputController {
         //for (key, value) in optionItem { print([key: value]) }
         if let traitMenuItem = optionItem["IMKCommandMenuItem"] as? NSMenuItem {
             if let trait = LayoutTrait(rawValue: traitMenuItem.title) {
-                let traitKey = buildTraitKey(layout: inputMethodLayout)
+                let traitKey = buildTraitKey(name: layoutName)
                 let traitValue = toggleLayoutTrait(
                     trait: trait, for: traitMenuItem,
                     in: &self.processor.hangulLayout)
@@ -31,16 +31,14 @@ extension InputController {
 
 func loadActiveOptions(traitKey: String) -> [LayoutTrait]? {
     if let dump = retrieveUserTraits(traitKey: traitKey) {
-        logger.debug("저장된 특성 옵션: \(dump)")
         let loadedTraits = dump.split(separator: ",")
         if loadedTraits.count < 1 || loadedTraits.isEmpty {
             return []
         }
         var traits: [LayoutTrait] = []
         loadedTraits.forEach { label in
-            if let trait = LayoutTrait(
-                rawValue: label.trimmingCharacters(in: .whitespacesAndNewlines))
-            {
+            let trimmed = label.trimmingCharacters(in: .whitespacesAndNewlines)
+            if let trait = LayoutTrait(rawValue: trimmed) {
                 traits.append(trait)
             }
         }
