@@ -28,9 +28,6 @@ class InputController: IMKInputController {
         // 클래스 생성이 하나의 인스턴스에서 이루어지기 때문에 여러개의 Patal 입력기를 동시에 사용할 수 없음.
         let layout = bindLayout(layout: inputMethodLayout)
         self.processor = HangulProcessor(layout: layout)
-
-        // UI 에서 옵션을 변경할 수 있음
-        self.processor.setLayoutTraits(traits: [LayoutTrait.화살표])
         self.optionMenu = OptionMenu(layout: self.processor.hangulLayout)
 
         super.init(server: server, delegate: delegate, client: inputClient)
@@ -64,30 +61,15 @@ class InputController: IMKInputController {
         guard let optionItem = sender as? [String: Any] else {
             return
         }
-
-        for (key, value) in optionItem {
-            print([key: value])
-        }
-
-        logger.debug("현재 선택된 옵션: \(self.processor.hangulLayout.traits)")
+        //for (key, value) in optionItem { print([key: value]) }
         if let traitMenuItem = optionItem["IMKCommandMenuItem"] as? NSMenuItem {
             if let trait = LayoutTrait(rawValue: traitMenuItem.title) {
-                if self.processor.hangulLayout.traits.contains(trait) {
-                    //logger.debug("선택한 \(traitMenuItem.title) 트레잇을 제거함")
-                    let newTraits = self.processor.hangulLayout.traits.filter { $0 != trait }
-                    self.processor.setLayoutTraits(traits: newTraits)
-                    traitMenuItem.state = NSControl.StateValue.off
-                } else {
-                    //logger.debug("\(traitMenuItem.title) 트레잇을 추가함")
-                    let newTraits = [trait]
-                    self.processor.setLayoutTraits(traits: newTraits)
-                    traitMenuItem.state = NSControl.StateValue.on
-                }
+                let traitValue = toggleLayoutTrait(
+                    trait: trait, for: traitMenuItem,
+                    in: &self.processor.hangulLayout)
 
                 let traitKey = buildTraitKey(layout: inputMethodLayout)
-                let traiteValue = self.processor.hangulLayout.traits.map({ $0.rawValue }).joined(
-                    separator: ",")
-                keepUserTraits(traitKey: traitKey, traitValue: traiteValue)
+                keepUserTraits(traitKey: traitKey, traitValue: traitValue)
             }
         }
     }

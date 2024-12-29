@@ -5,6 +5,7 @@
 //  Created by dp on 11/9/24.
 //
 
+import AppKit
 import Foundation
 
 /// 지원하는 레이아웃: InfoPlist 파일 참고
@@ -32,6 +33,22 @@ enum LayoutTrait: String {
     case 모아치기
     case 아래아
     case 화살표
+}
+
+func toggleLayoutTrait(
+    trait: LayoutTrait, for menuItem: NSMenuItem, in layout: inout HangulAutomata
+) -> String {
+    if layout.traits.contains(trait) {
+        layout.traits.remove(at: layout.traits.firstIndex(of: trait)!)
+        menuItem.state = NSControl.StateValue.off
+    } else {
+        layout.traits.append(trait)
+        menuItem.state = NSControl.StateValue.on
+    }
+    let traiteValue = layout.traits.map({ $0.rawValue }).joined(
+        separator: ",")
+
+    return traiteValue
 }
 
 protocol HangulAutomata {
