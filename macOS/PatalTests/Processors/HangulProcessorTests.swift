@@ -37,12 +37,12 @@ struct HangulProcessorTests {
         processor.rawChar = "k"
         var state = processor.한글조합()
         #expect(state == CommitState.composing)
-        #expect(processor.getComposed() == "\u{1100}")  // ᄀ
+        #expect(processor.getComposed() == "ㄱ")  // ᄀ
 
         processor.rawChar = "k"
         state = processor.한글조합()
         #expect(state == CommitState.composing)
-        #expect(processor.getComposed() == "\u{1101}")  // ᄁ
+        #expect(processor.getComposed() == "ㄲ")  // ᄁ
 
         processor.rawChar = "f"
         state = processor.한글조합()

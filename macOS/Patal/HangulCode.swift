@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// 한글 호환 자모 코드; 첫/가/끝 자소와 호환되는 닿소리/홀소리/채움문자
 enum 자음: unichar {
     case 채움 = 0x115F
     // 현대 닿소리
@@ -14,7 +15,32 @@ enum 자음: unichar {
     case 쌍기역 = 0x3132
     case 기역시옷 = 0x3133
     case 니은 = 0x3134
-    // ...
+    case 니은지읒 = 0x3135
+    case 니은히읗 = 0x3136
+    case 디귿 = 0x3137
+    case 쌍디귿 = 0x3138
+    case 리을 = 0x3139
+    case 리을기역 = 0x313A
+    case 리을미음 = 0x313B
+    case 리을비읍 = 0x313C
+    case 리을시옷 = 0x313D
+    case 리을티긑 = 0x313E
+    case 리을피읖 = 0x313F
+    case 리을히읗 = 0x3140
+    case 미음 = 0x3141
+    case 비읍 = 0x3142
+    case 쌍비읍 = 0x3143
+    case 비읍시옷 = 0x3144
+    case 시옷 = 0x3145
+    case 쌍시옷 = 0x3146
+    case 이응 = 0x3147
+    case 지읒 = 0x3148
+    case 쌍지읒 = 0x3149
+    case 치읓 = 0x314A
+    case 키읔 = 0x314B
+    case 티긑 = 0x314C
+    case 피읖 = 0x314D
+    case 히읗 = 0x314E
 }
 
 enum 모음: unichar {
@@ -23,7 +49,24 @@ enum 모음: unichar {
     case 아 = 0x314F
     case 애 = 0x3150
     case 야 = 0x3151
-    // ...
+    case 얘 = 0x3152
+    case 어 = 0x3153
+    case 에 = 0x3154
+    case 여 = 0x3155
+    case 예 = 0x3156
+    case 오 = 0x3157
+    case 와 = 0x3158
+    case 왜 = 0x3159
+    case 외 = 0x315A
+    case 요 = 0x315B
+    case 우 = 0x315C
+    case 워 = 0x315D
+    case 웨 = 0x315E
+    case 위 = 0x315F
+    case 유 = 0x3160
+    case 으 = 0x3161
+    case 의 = 0x3162
+    case 이 = 0x3163
 }
 
 enum 그외: unichar {
@@ -108,7 +151,7 @@ enum 종성: unichar {
     case 이응 = 0x11BC
     case 지읒 = 0x11BD
     case 치읓 = 0x11BE
-    case 키엌 = 0x11BF
+    case 키읔 = 0x11BF
     case 티긑 = 0x11C0
     case 피읖 = 0x11C1
     case 히흫 = 0x11C2

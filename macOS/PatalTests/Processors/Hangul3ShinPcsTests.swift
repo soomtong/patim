@@ -62,13 +62,13 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1100}")
+        #expect(c1 == "ㄱ")
 
         processor.rawChar = "k"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.composing)
         let c2 = processor.getComposed()
-        #expect(c2 == "\u{1101}")
+        #expect(c2 == "ㄲ")
     }
 
     @Test("ㄱㄴ")
@@ -77,13 +77,13 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1100}")
+        #expect(c1 == "ㄱ")
 
         processor.rawChar = "h"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.committed)
         let c2 = processor.getComposed()
-        #expect(c2 == "\u{1102}")
+        #expect(c2 == "ㄴ")
     }
 
     @Test("ㄱㄱㄱ")
@@ -92,19 +92,19 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1100}")
+        #expect(c1 == "ㄱ")
 
         processor.rawChar = "k"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.composing)
         let c2 = processor.getComposed()
-        #expect(c2 == "ᄁ")
+        #expect(c2 == "ㄲ")
 
         processor.rawChar = "k"
         let s3 = processor.한글조합()
         #expect(s3 == CommitState.committed)
         let c3 = processor.getComposed()
-        #expect(c3 == "\u{1100}")
+        #expect(c3 == "ㄱ")
     }
 
     @Test("ㄴㄷ")
@@ -113,13 +113,13 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1102}")
+        #expect(c1 == "ㄴ")
 
         processor.rawChar = "u"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.committed)
         let c2 = processor.getComposed()
-        #expect(c2 == "\u{1103}")
+        #expect(c2 == "ㄷ")
     }
 
     @Test("ㄸ")
@@ -128,13 +128,13 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1103}")
+        #expect(c1 == "ㄷ")
 
         processor.rawChar = "u"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.composing)
         let c2 = processor.getComposed()
-        #expect(c2 == "\u{1104}")
+        #expect(c2 == "ㄸ")
     }
 
     @Test("ㅋㅋ")
@@ -143,13 +143,13 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{110F}")
+        #expect(c1 == "ㅋ")
 
         processor.rawChar = "."
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.committed)
         let c2 = processor.getComposed()
-        #expect(c2 == "\u{110F}")
+        #expect(c2 == "ㅋ")
     }
 
     @Test("ㅎㅎ")
@@ -158,13 +158,13 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1112}")
+        #expect(c1 == "ㅎ")
 
         processor.rawChar = "m"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.committed)
         let c2 = processor.getComposed()
-        #expect(c2 == "\u{1112}")
+        #expect(c2 == "ㅎ")
     }
 
     @Test("ㅏ")
@@ -173,7 +173,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1161}")
+        #expect(c1 == "ㅏ")
     }
 
     @Test("ㅏᅡ")
@@ -182,13 +182,13 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1161}")
+        #expect(c1 == "ㅏ")
 
         processor.rawChar = "f"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.committed)
         let c2 = processor.getComposed()
-        #expect(c2 == "\u{1161}")
+        #expect(c2 == "ㅏ")
     }
 
     @Test("ㅏㅓ")
@@ -197,13 +197,13 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1161}")
+        #expect(c1 == "ㅏ")
 
         processor.rawChar = "r"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.committed)
         let c2 = processor.getComposed()
-        #expect(c2 == "\u{1165}")
+        #expect(c2 == "ㅓ")
     }
 
     @Test("ㅗㅏ")
@@ -212,13 +212,13 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1169}")
+        #expect(c1 == "ㅗ")
 
         processor.rawChar = "f"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.committed)
         let c2 = processor.getComposed()
-        #expect(c2 == "\u{1161}")
+        #expect(c2 == "ㅏ")
     }
 
     @Test("ㅜㅓ")
@@ -227,13 +227,13 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{116E}")
+        #expect(c1 == "ㅜ")
 
         processor.rawChar = "r"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.committed)
         let c2 = processor.getComposed()
-        #expect(c2 == "\u{1165}")
+        #expect(c2 == "ㅓ")
     }
 
     @Test("ㅡㅣ")
@@ -242,13 +242,13 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1173}")
+        #expect(c1 == "ㅡ")
 
         processor.rawChar = "d"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.committed)
         let c2 = processor.getComposed()
-        #expect(c2 == "\u{1175}")
+        #expect(c2 == "ㅣ")
     }
 
     @Test("아")
@@ -257,7 +257,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1161}")
+        #expect(c1 == "ㅏ")
 
         processor.rawChar = "j"
         let s2 = processor.한글조합()
@@ -272,7 +272,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{11A8}")
+        #expect(c1 == "ㄱ")
     }
 
     @Test("ㄴ")
@@ -281,7 +281,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{11AB}")
+        #expect(c1 == "ㄴ")
     }
 
     @Test("ㄺ")
@@ -290,13 +290,13 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{11AF}")
+        #expect(c1 == "ㄹ")
 
         processor.rawChar = "C"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.composing)
         let c2 = processor.getComposed()
-        #expect(c2 == "\u{11B0}")
+        #expect(c2 == "ㄺ")
     }
 
     @Test("ㅄ")
@@ -305,7 +305,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{11AB}")
+        #expect(c1 == "ㄴ")
     }
 
     @Test("가")
@@ -316,7 +316,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "ᄀ")
+        #expect(c1 == "ㄱ")
 
         r1 = processor.verifyCombosable("f")
         #expect(r1 == true)
@@ -335,7 +335,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "ᄂ")
+        #expect(c1 == "ㄴ")
 
         r1 = processor.verifyCombosable("r")
         #expect(r1 == true)
@@ -352,13 +352,13 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "ᄀ")
+        #expect(c1 == "ㄱ")
 
         processor.rawChar = "k"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.composing)
         let c2 = processor.getComposed()
-        #expect(c2 == "ᄁ")
+        #expect(c2 == "ㄲ")
 
         processor.rawChar = "f"
         let s3 = processor.한글조합()
@@ -373,7 +373,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{110B}")
+        #expect(c1 == "ㅇ")
 
         processor.rawChar = "i"
         let s2 = processor.한글조합()
@@ -394,7 +394,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{110B}")
+        #expect(c1 == "ㅇ")
 
         processor.rawChar = "z"
         let s2 = processor.한글조합()
@@ -409,7 +409,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1106}")
+        #expect(c1 == "ㅁ")
 
         processor.rawChar = "e"
         let s2 = processor.한글조합()
@@ -424,7 +424,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1102}")
+        #expect(c1 == "ㄴ")
 
         processor.rawChar = "v"
         let s2 = processor.한글조합()
@@ -436,7 +436,7 @@ struct Hangul3ShinPcsTests {
         let s3 = processor.한글조합()
         #expect(s3 == CommitState.committed)
         let c3 = processor.getComposed()
-        #expect(c3 == "\u{1105}")
+        #expect(c3 == "ㄹ")
 
         processor.rawChar = "e"
         let s4 = processor.한글조합()
@@ -451,7 +451,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1106}")
+        #expect(c1 == "ㅁ")
 
         processor.rawChar = "p"
         let s2 = processor.한글조합()
@@ -472,7 +472,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{110E}")
+        #expect(c1 == "ㅊ")
 
         processor.rawChar = "o"
         let s2 = processor.한글조합()
@@ -495,7 +495,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "ᄀ")
+        #expect(c1 == "ㄱ")
 
         r1 = processor.verifyCombosable("f")
         #expect(r1 == true)
@@ -520,7 +520,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "ᄀ")
+        #expect(c1 == "ㄱ")
 
         processor.rawChar = "v"
         let s2 = processor.한글조합()
@@ -538,7 +538,7 @@ struct Hangul3ShinPcsTests {
         let s4 = processor.한글조합()
         #expect(s4 == CommitState.committed)
         let c4 = processor.getComposed()
-        #expect(c4 == "\u{1107}")
+        #expect(c4 == "ㅂ")
 
         processor.rawChar = "b"
         let s5 = processor.한글조합()
@@ -556,7 +556,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1107}")
+        #expect(c1 == "ㅂ")
 
         r1 = processor.verifyCombosable("f")
         #expect(r1 == true)
@@ -588,7 +588,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1109}")
+        #expect(c1 == "ㅅ")
 
         processor.rawChar = "c"
         let s2 = processor.한글조합()
@@ -600,7 +600,7 @@ struct Hangul3ShinPcsTests {
         let s3 = processor.한글조합()
         #expect(s3 == CommitState.committed)
         let c3 = processor.getComposed()
-        #expect(c3 == "\u{1109}")
+        #expect(c3 == "ㅅ")
 
         processor.rawChar = "f"
         let s4 = processor.한글조합()
@@ -622,7 +622,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1109}")
+        #expect(c1 == "ㅅ")
 
         processor.rawChar = "r"
         let s2 = processor.한글조합()
@@ -634,13 +634,13 @@ struct Hangul3ShinPcsTests {
         let s3 = processor.한글조합()
         #expect(s3 == CommitState.committed)
         let c3 = processor.getComposed()
-        #expect(c3 == "\u{110C}")
+        #expect(c3 == "ㅈ")
 
         processor.rawChar = "l"
         let s4 = processor.한글조합()
         #expect(s4 == CommitState.composing)
         let c4 = processor.getComposed()
-        #expect(c4 == "\u{110D}")
+        #expect(c4 == "ㅉ")
 
         processor.rawChar = "v"
         let s5 = processor.한글조합()
@@ -662,7 +662,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{1112}")
+        #expect(c1 == "ㅎ")
 
         processor.rawChar = "f"
         let s2 = processor.한글조합()
@@ -680,13 +680,13 @@ struct Hangul3ShinPcsTests {
         let s4 = processor.한글조합()
         #expect(s4 == CommitState.committed)
         let c4 = processor.getComposed()
-        #expect(c4 == "\u{1103}")
+        #expect(c4 == "ㄷ")
 
         processor.rawChar = "u"
         let s5 = processor.한글조합()
         #expect(s5 == CommitState.composing)
         let c5 = processor.getComposed()
-        #expect(c5 == "\u{1104}")
+        #expect(c5 == "ㄸ")
 
         processor.rawChar = "e"
         let s6 = processor.한글조합()
@@ -702,7 +702,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{110B}")
+        #expect(c1 == "ㅇ")
 
         processor.rawChar = "r"
         let s2 = processor.한글조합()
@@ -726,7 +726,7 @@ struct Hangul3ShinPcsTests {
         let s5 = processor.한글조합()
         #expect(s5 == CommitState.committed)
         let c5 = processor.getComposed()
-        #expect(c5 == "\u{1103}")
+        #expect(c5 == "ㄷ")
 
         processor.rawChar = "f"
         let s6 = processor.한글조합()
@@ -742,7 +742,7 @@ struct Hangul3ShinPcsTests {
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
         let c1 = processor.getComposed()
-        #expect(c1 == "\u{110C}")
+        #expect(c1 == "ㅈ")
 
         processor.rawChar = "v"
         let s2 = processor.한글조합()
@@ -760,7 +760,7 @@ struct Hangul3ShinPcsTests {
         let s5 = processor.한글조합()
         #expect(s5 == CommitState.committed)
         let c5 = processor.getComposed()
-        #expect(c5 == "\u{110B}")
+        #expect(c5 == "ㅇ")
 
         processor.rawChar = "f"
         let s6 = processor.한글조합()
