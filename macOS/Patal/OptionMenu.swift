@@ -15,15 +15,15 @@ class OptionMenu {
 
     init(layout: HangulAutomata) {
         self.menu = NSMenu(title: "PatalLayoutMenu")
-        logger.debug("자판의 모든 옵션: \(layout.availableTraits)")
+        logger.debug("자판의 모든 옵션: \(layout.availableTraits), 현재 선택된 옵션: \(layout.traits)")
 
-        for title in layout.availableTraits {
+        for trait in layout.availableTraits {
             let item = NSMenuItem()
-            item.title = title.rawValue
-            item.tag = title.hashValue
+            item.title = trait.rawValue
+            item.tag = trait.hashValue
             item.action = #selector(InputController.changeLayoutOption(_:))
             item.isEnabled = true
-            if layout.traits.contains(title) {
+            if layout.traits.contains(trait) {
                 item.state = NSControl.StateValue.on
             } else {
                 item.state = NSControl.StateValue.off
@@ -32,9 +32,5 @@ class OptionMenu {
         }
 
         self.menu.autoenablesItems = true
-    }
-
-    func getLayoutOptions(layout: Layout) -> [LayoutTrait] {
-        return [LayoutTrait.화살표]
     }
 }

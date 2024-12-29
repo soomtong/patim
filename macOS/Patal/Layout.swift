@@ -35,14 +35,19 @@ enum LayoutTrait: String {
     case 화살표
 }
 
+let logger = CustomLogger(category: "Layout")
+/// 자판의 변경된 옵션을 반영
 func toggleLayoutTrait(
     trait: LayoutTrait, for menuItem: NSMenuItem, in layout: inout HangulAutomata
 ) -> String {
+
     if layout.traits.contains(trait) {
         layout.traits.remove(at: layout.traits.firstIndex(of: trait)!)
+        logger.debug("특성 제거 \(trait.rawValue), \(layout.traits)")
         menuItem.state = NSControl.StateValue.off
     } else {
         layout.traits.append(trait)
+        logger.debug("특성 추가 \(trait.rawValue), \(layout.traits)")
         menuItem.state = NSControl.StateValue.on
     }
     let traiteValue = layout.traits.map({ $0.rawValue }).joined(

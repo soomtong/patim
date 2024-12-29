@@ -25,18 +25,24 @@ class InputController: IMKInputController {
         inputMethodLayout = getInputLayoutID(id: inputMethodID)
         logger.debug("팥알 입력기 자판: \(inputMethodLayout)")
 
+        let traitKey = buildTraitKey(layout: inputMethodLayout)
         // 클래스 생성이 하나의 인스턴스에서 이루어지기 때문에 여러개의 Patal 입력기를 동시에 사용할 수 없음.
-        let layout = bindLayout(layout: inputMethodLayout)
-        self.processor = HangulProcessor(layout: layout)
+        let hangulLayout = bindLayout(layout: inputMethodLayout)
+        self.processor = HangulProcessor(layout: hangulLayout)
+
         self.optionMenu = OptionMenu(layout: self.processor.hangulLayout)
+
+        if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
+            self.processor.hangulLayout.traits = loadedTraits
+        } else {
+            self.processor.hangulLayout.traits = self.processor.hangulLayout.availableTraits
+        }
 
         super.init(server: server, delegate: delegate, client: inputClient)
 
         if let inputMethodVersion = getCurrentProjectVersion() {
             logger.debug("팥알 입력기 버전: \(inputMethodVersion)")
         }
-        let traitKey = buildTraitKey(layout: inputMethodLayout)
-        self.processor.hangulLayout.traits = loadActiveOptions(traitKey: traitKey)
     }
 
     @MainActor

@@ -41,11 +41,9 @@ class HangulProcessor {
     var 완성: String?
 
     var hangulLayout: HangulAutomata
-    /// 자판의 특정 기능 정보: UI 에서 제공됨
-    // var layoutTraits: [LayoutTrait]
 
     init(layout: HangulAutomata) {
-        logger.debug("입력키 처리 클래스 초기화: \(layout.availableTraits)")
+        logger.debug("입력키 처리 클래스 초기화: \(layout.traits)")
         self.rawChar = ""
         self.previous = []
         self.preedit = 글자()
@@ -55,10 +53,6 @@ class HangulProcessor {
 
     deinit {
         logger.debug("입력키 처리 클래스 해제")
-    }
-
-    func setLayoutTraits(traits: [LayoutTrait]) {
-        self.hangulLayout.traits = traits
     }
 
     /// 입력 방식 강제 지정
