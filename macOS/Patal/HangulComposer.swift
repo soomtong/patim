@@ -92,6 +92,15 @@ struct HangulComposer {
             self.jungsungPoint = jungsungPoint
             self.jongsungPoint = jongsungPoint
 
+        // 아니 모아치기할 수 있지 않을까?
+        case (let chosungPoint?, nil, let jongsungPoint?)
+        where chosungMapOffset[chosungPoint] != nil && jongsungMapOffset[jongsungPoint] != nil:
+            self.chosungPoint = chosungPoint
+            self.jongsungPoint = jongsungPoint
+        case (nil, let jungsungPoint?, let jongsungPoint?)
+        where jungsungMapOffset[jungsungPoint] != nil && jongsungMapOffset[jongsungPoint] != nil:
+            self.jungsungPoint = jungsungPoint
+            self.jongsungPoint = jongsungPoint
         default:
             return nil
         }
@@ -133,8 +142,14 @@ struct HangulComposer {
             }
 
             return Character(UnicodeScalar(hangulUnicodeOffset + offset)!)
-        default:
-            return nil
+        // 미완성 낱자
+        case (let chosung?, nil, let jongsung?):
+            print("조합 중...일까? 중성이 와야해...")
+            return Character(UnicodeScalar(그외.대체문자.rawValue)!)
+
+        case (nil, let jungsung?, let jongsung?):
+            print("조합 중...일까? 초성이 와야해...")
+            return Character(UnicodeScalar(그외.대체문자.rawValue)!)
         }
     }
 

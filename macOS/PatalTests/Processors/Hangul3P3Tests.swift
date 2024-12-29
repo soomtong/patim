@@ -55,6 +55,13 @@ struct Hangul3P3Tests {
         #expect(d9 == "9")
     }
 
+    @Test("모아치기")
+    func availableTraits() {
+        print(processor.hangulLayout.availableTraits)
+        print(processor.hangulLayout.traits)
+        #expect(processor.hangulLayout.traits.contains(LayoutTrait.모아치기) == true)
+    }
+
     @Test("ㄲ")
     func getComposedChar_ㄲ() {
         processor.rawChar = "k"

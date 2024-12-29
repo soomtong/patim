@@ -16,6 +16,7 @@ struct Hangul3ShinP2Tests {
 
     init() {
         processor = HangulProcessor(layout: layout)
+        processor.hangulLayout.traits = layout.availableTraits
     }
 
     @Test("유효한 문자만 받기")

@@ -135,6 +135,16 @@ class HangulProcessor {
                 return CommitState.composing
             }
 
+            /// "ㄱ" + "ㅇ" -> 대체문자
+            print("종성이 온다고?")
+            if let 종성코드 = hangulLayout.pickJongsung(by: self.rawChar) {
+                self.preedit.jongsung = 종성(rawValue: 종성코드)
+                self.previous.removeAll()
+                self.previous.append(self.rawChar)
+
+                return CommitState.composing
+            }
+
             /// "ㄱ" -> "ㄲ", "ㄱ" -> "ㄱㄴ", "ㄲ" -> "ㅋ"
             print("초성이 있는데 또 초성이 온 경우, 또는 연타해서 다른 글자를 만들 경우")
             self.previous.append(self.rawChar)
@@ -217,6 +227,13 @@ class HangulProcessor {
                 self.preedit.jongsung = 종성(rawValue: 새종성코드)
 
                 return CommitState.committed
+            }
+        case (_, nil, _):
+            print("중성아 모아치기 하자!")
+            if let 중성코드 = hangulLayout.pickJungsung(by: self.rawChar) {
+                self.preedit.jungsung = 중성(rawValue: 중성코드)
+
+                return CommitState.composing
             }
         case (_, _, nil):
             print("받침 없는 글자 이후 다시 초성이?")

@@ -71,6 +71,7 @@ enum 모음: unichar {
 
 enum 그외: unichar {
     case 채움문자 = 0x3164
+    case 대체문자 = 0xFFFD // �
 }
 
 enum 초성: unichar {
