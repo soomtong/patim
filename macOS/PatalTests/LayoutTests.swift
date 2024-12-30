@@ -92,7 +92,7 @@ struct Han3ShinPcsLayoutTests {
         var processor: HangulProcessor!
 
         init() {
-            layout.traits.append(LayoutTrait.화살표)
+            layout.traits.insert(LayoutTrait.화살표)
             processor = HangulProcessor(layout: layout)
         }
 

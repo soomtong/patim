@@ -182,8 +182,27 @@ struct Hangul3P2Tests {
         #expect(c1 == "ㅏ")
     }
 
-    @Test("ㅏㅍ")
-    func getComposedChar_ㅏㅍ() {
+    @Test("ㅏㅏ")
+    func getComposedChar_ㅏㅏ() {
+        processor.hangulLayout.traits.removeAll()
+
+        processor.rawChar = "f"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㅏ")
+
+        processor.rawChar = "f"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.committed)
+        let c2 = processor.getComposed()
+        #expect(c2 == "ㅏ")
+    }
+
+    @Test("ㅏㅍ - 모아치기")
+    func getComposedChar_ㅏㅍ_모아치기() {
+        processor.hangulLayout.traits.insert(LayoutTrait.모아치기)
+
         processor.rawChar = "f"
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
@@ -200,8 +219,27 @@ struct Hangul3P2Tests {
         #expect(e2 == 1)
     }
 
-    @Test("ㅏㅌ")
+    @Test("ㅏㅓ")
+    func getComposedChar_ㅏㅓ() {
+        processor.hangulLayout.traits.removeAll()
+
+        processor.rawChar = "f"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㅏ")
+
+        processor.rawChar = "r"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.committed)
+        let c2 = processor.getComposed()
+        #expect(c2 == "ㅓ")
+    }
+
+    @Test("ㅏㅌ - 모아치기")
     func getComposedChar_ㅏㅌ() {
+        processor.hangulLayout.traits.insert(LayoutTrait.모아치기)
+
         processor.rawChar = "f"
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
@@ -212,12 +250,16 @@ struct Hangul3P2Tests {
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.composing)
         // 중성과 종성이 조합 중인 상태
+        let c2 = processor.getComposed()
+        #expect(c2 == "�")
         let e2 = processor.previous.count
         #expect(e2 == 1)
     }
 
-    @Test("ㅗᄒ")
-    func getComposedChar_ㅗᄒ() {
+    @Test("ㅗㅏ")
+    func getComposedChar_ㅗㅏ() {
+        processor.hangulLayout.traits.removeAll()
+
         processor.rawChar = "/"
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
@@ -227,13 +269,34 @@ struct Hangul3P2Tests {
         processor.rawChar = "f"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.composing)
+        let c2 = processor.getComposed()
+        #expect(c2 == "ㅘ")
+    }
+
+    @Test("ㅗᄒ - 모아치기")
+    func getComposedChar_ㅗᄒ() {
+        processor.hangulLayout.traits.insert(LayoutTrait.모아치기)
+
+        processor.rawChar = "/"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㅗ")
+
+        processor.rawChar = "f"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.composing)
+        let c2 = processor.getComposed()
+        #expect(c2 == "�")
         #expect(processor.preedit.chosung == nil)
         #expect(processor.preedit.jungsung?.rawValue == 0x1169)
         #expect(processor.preedit.jongsung?.rawValue == 0x11C1)
     }
 
-    @Test("ㅜᄎ")
-    func getComposedChar_ㅜᄎ() {
+    @Test("ㅜㅓ")
+    func getComposedChar_ㅜㅓ() {
+        processor.hangulLayout.traits.removeAll()
+
         processor.rawChar = "9"
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
@@ -243,13 +306,51 @@ struct Hangul3P2Tests {
         processor.rawChar = "r"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.composing)
+        let c2 = processor.getComposed()
+        #expect(c2 == "ㅝ")
+    }
+
+    @Test("ㅜᄎ - 모아치기")
+    func getComposedChar_ㅜᄎ() {
+        processor.hangulLayout.traits.insert(LayoutTrait.모아치기)
+
+        processor.rawChar = "9"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㅜ")
+
+        processor.rawChar = "r"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.composing)
+        let c2 = processor.getComposed()
+        #expect(c2 == "�")
         #expect(processor.preedit.chosung == nil)
         #expect(processor.preedit.jungsung?.rawValue == 0x116E)
         #expect(processor.preedit.jongsung?.rawValue == 0x11BE)
     }
 
-    @Test("ㅡᄒ")
+    @Test("ㅡㅣ")
+    func getComposedChar_ㅡㅣ() {
+        processor.hangulLayout.traits.removeAll()
+
+        processor.rawChar = "g"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㅡ")
+
+        processor.rawChar = "d"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.committed)
+        let c2 = processor.getComposed()
+        #expect(c2 == "ㅣ")
+    }
+
+    @Test("ㅡᄒ - 모아치기")
     func getComposedChar_ㅡᄒ() {
+        processor.hangulLayout.traits.insert(LayoutTrait.모아치기)
+
         processor.rawChar = "g"
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
@@ -259,6 +360,8 @@ struct Hangul3P2Tests {
         processor.rawChar = "d"
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.composing)
+        let c2 = processor.getComposed()
+        #expect(c2 == "�")
         #expect(processor.preedit.chosung == nil)
         #expect(processor.preedit.jungsung?.rawValue == 0x1173)
         #expect(processor.preedit.jongsung?.rawValue == 0x11C2)
@@ -266,6 +369,8 @@ struct Hangul3P2Tests {
 
     @Test("ㅡㅎ")
     func getComposedChar_ㅡㅎ() {
+        processor.hangulLayout.traits.removeAll()
+
         processor.rawChar = "g"
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)
@@ -279,8 +384,50 @@ struct Hangul3P2Tests {
         #expect(c2 == "흐")
     }
 
-    @Test("ㅡㅎㅇ")
-    func getComposedChar_ㅡㅎㅇ() {
+    @Test("ㅡㅎ - 모아치기")
+    func getComposedChar_흐() {
+        processor.hangulLayout.traits.insert(LayoutTrait.모아치기)
+
+        processor.rawChar = "g"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㅡ")
+
+        processor.rawChar = "m"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.composing)
+        let c2 = processor.getComposed()
+        #expect(c2 == "흐")
+    }
+
+    @Test("ㅡㅇㅎ")
+    func getComposedChar_ㅡㅇㅎ() {
+        processor.hangulLayout.traits.removeAll()
+
+        processor.rawChar = "g"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㅡ")
+
+        processor.rawChar = "a"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.committed)
+        let c2 = processor.getComposed()
+        #expect(c2 == "ㅇ")
+
+        processor.rawChar = "m"
+        let s3 = processor.한글조합()
+        #expect(s3 == CommitState.committed)
+        let c3 = processor.getComposed()
+        #expect(c3 == "ㅎ")
+    }
+
+    @Test("ㅡㅎㅇ - 모아치기")
+    func getComposedChar_흐ㅇ() {
+        processor.hangulLayout.traits.insert(LayoutTrait.모아치기)
+
         processor.rawChar = "g"
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)

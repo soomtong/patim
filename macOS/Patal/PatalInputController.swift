@@ -29,17 +29,17 @@ extension InputController {
 
 }
 
-func loadActiveOptions(traitKey: String) -> [LayoutTrait]? {
+func loadActiveOptions(traitKey: String) -> Set<LayoutTrait>? {
     if let dump = retrieveUserTraits(traitKey: traitKey) {
         let loadedTraits = dump.split(separator: ",")
         if loadedTraits.count < 1 || loadedTraits.isEmpty {
             return []
         }
-        var traits: [LayoutTrait] = []
+        var traits: Set<LayoutTrait> = []
         loadedTraits.forEach { label in
             let trimmed = label.trimmingCharacters(in: .whitespacesAndNewlines)
             if let trait = LayoutTrait(rawValue: trimmed) {
-                traits.append(trait)
+                traits.insert(trait)
             }
         }
         return traits

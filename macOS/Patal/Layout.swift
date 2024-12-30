@@ -46,7 +46,7 @@ func toggleLayoutTrait(
         logger.debug("특성 제거 \(trait.rawValue), \(layout.traits)")
         menuItem.state = NSControl.StateValue.off
     } else {
-        layout.traits.append(trait)
+        layout.traits.insert(trait)
         logger.debug("특성 추가 \(trait.rawValue), \(layout.traits)")
         menuItem.state = NSControl.StateValue.on
     }
@@ -57,8 +57,8 @@ func toggleLayoutTrait(
 }
 
 protocol HangulAutomata {
-    var availableTraits: [LayoutTrait] { get }
-    var traits: [LayoutTrait] { get set }
+    var availableTraits: Set<LayoutTrait> { get }
+    var traits: Set<LayoutTrait> { get set }
     var chosungMap: [String: 초성] { get }
     var jungsungMap: [String: 중성] { get }
     var jongsungMap: [String: 종성] { get }

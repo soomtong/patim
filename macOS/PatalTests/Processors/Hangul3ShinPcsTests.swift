@@ -263,7 +263,32 @@ struct Hangul3ShinPcsTests {
     }
 
     @Test("ㅇㅡㅎ")
-    func getComposedChar_ㅇㅡㅎ() {
+    func getComposedChar_ㅇ흐() {
+        processor.hangulLayout.traits.removeAll()
+
+        processor.rawChar = "A"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㅇ")
+
+        processor.rawChar = "m"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.committed)
+        let c2 = processor.getComposed()
+        #expect(c2 == "ㅎ")
+
+        processor.rawChar = "g"
+        let s3 = processor.한글조합()
+        #expect(s3 == CommitState.composing)
+        let c3 = processor.getComposed()
+        #expect(c3 == "흐")
+    }
+
+    @Test("ㅇㅡㅎ - 모아치기")
+    func getComposedChar_으흥() {
+        processor.hangulLayout.traits.insert(LayoutTrait.모아치기)
+
         processor.rawChar = "A"
         let s1 = processor.한글조합()
         #expect(s1 == CommitState.composing)

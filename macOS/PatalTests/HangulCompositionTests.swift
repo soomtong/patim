@@ -27,7 +27,7 @@ struct HangulCompositionTest {
                 jungsungPoint: nil,
                 jongsungPoint: nil
             ) {
-                let 자소_ㄱ: Character = "\u{1100}"
+                let _: Character = "\u{1100}"
                 let 호환_ㄱ: Character = "ㄱ"
                 #expect(composition.getSyllable() == 호환_ㄱ)
                 #expect(composition.chosungPoint == 초성.기역)
@@ -40,7 +40,7 @@ struct HangulCompositionTest {
                 jungsungPoint: nil,
                 jongsungPoint: nil
             ) {
-                let 자소_ㅎ: Character = "\u{1112}"
+                let _: Character = "\u{1112}"
                 let 호환_ㅎ: Character = "ㅎ"
                 #expect(composition.getSyllable() == 호환_ㅎ)
                 #expect(composition.chosungPoint == 초성.히읗)
@@ -56,7 +56,7 @@ struct HangulCompositionTest {
                 jungsungPoint: 중성.아,
                 jongsungPoint: nil
             ) {
-                let 자소_ㅏ: Character = "\u{1161}"
+                let _: Character = "\u{1161}"
                 let 호환_ㅏ: Character = "ㅏ"
                 #expect(composition.getSyllable() == 호환_ㅏ)
                 #expect(composition.chosungPoint == nil)
