@@ -36,6 +36,7 @@ enum LayoutTrait: String {
 }
 
 let logger = CustomLogger(category: "Layout")
+
 /// 자판의 변경된 옵션을 반영
 func toggleLayoutTrait(
     trait: LayoutTrait, for menuItem: NSMenuItem, in layout: inout HangulAutomata
@@ -56,6 +57,7 @@ func toggleLayoutTrait(
     return traiteValue
 }
 
+/// 한글 자판 프로토콜
 protocol HangulAutomata {
     var availableTraits: Set<LayoutTrait> { get }
     var traits: Set<LayoutTrait> { get set }
@@ -71,19 +73,19 @@ protocol HangulAutomata {
 
 extension HangulAutomata {
     var can모아치기: Bool {
-        return self.traits.contains(LayoutTrait.모아치기)
+        return traits.contains(LayoutTrait.모아치기)
     }
 
     var has화살표: Bool {
-        return self.traits.contains(LayoutTrait.화살표)
+        return traits.contains(LayoutTrait.화살표)
     }
 
     var has아래아: Bool {
-        return self.traits.contains(LayoutTrait.아래아)
+        return traits.contains(LayoutTrait.아래아)
     }
 
     func pickChosung(by char: String) -> unichar? {
-        guard let chosung = self.chosungMap[char] else {
+        guard let chosung = chosungMap[char] else {
             return nil
         }
 
@@ -91,7 +93,7 @@ extension HangulAutomata {
     }
 
     func pickJungsung(by char: String) -> unichar? {
-        guard let jungsung = self.jungsungMap[char] else {
+        guard let jungsung = jungsungMap[char] else {
             return nil
         }
 
@@ -99,7 +101,7 @@ extension HangulAutomata {
     }
 
     func pickJongsung(by char: String) -> unichar? {
-        guard let jongsung = self.jongsungMap[char] else {
+        guard let jongsung = jongsungMap[char] else {
             return nil
         }
 
@@ -107,7 +109,7 @@ extension HangulAutomata {
     }
 
     func pickNonSyllable(by char: String) -> String? {
-        guard let nonSyllable = self.nonSyllableMap[char] else {
+        guard let nonSyllable = nonSyllableMap[char] else {
             return nil
         }
 

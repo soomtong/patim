@@ -9,12 +9,12 @@ import Cocoa
 import Foundation
 
 class OptionMenu {
-    let logger = CustomLogger(category: "OptionMenu")
+    internal let logger = CustomLogger(category: "OptionMenu")
 
     var menu: NSMenu
 
     init(layout: HangulAutomata) {
-        self.menu = NSMenu(title: "PatalLayoutMenu")
+        menu = NSMenu(title: "PatalLayoutMenu")
         logger.debug("자판의 모든 옵션: \(layout.availableTraits), 현재 선택된 옵션: \(layout.traits)")
 
         for trait in layout.availableTraits {
@@ -28,9 +28,10 @@ class OptionMenu {
             } else {
                 item.state = NSControl.StateValue.off
             }
-            self.menu.addItem(item)
+
+            menu.addItem(item)
         }
 
-        self.menu.autoenablesItems = true
+        menu.autoenablesItems = true
     }
 }

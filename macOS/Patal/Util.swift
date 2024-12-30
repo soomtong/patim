@@ -8,6 +8,25 @@
 import Carbon
 import Foundation
 
+func loadActiveOptions(traitKey: String) -> Set<LayoutTrait>? {
+    if let dump = retrieveUserTraits(traitKey: traitKey) {
+        let loadedTraits = dump.split(separator: ",")
+        if loadedTraits.count < 1 || loadedTraits.isEmpty {
+            return []
+        }
+        var traits: Set<LayoutTrait> = []
+        loadedTraits.forEach { label in
+            let trimmed = label.trimmingCharacters(in: .whitespacesAndNewlines)
+            if let trait = LayoutTrait(rawValue: trimmed) {
+                traits.insert(trait)
+            }
+        }
+        return traits
+    } else {
+        return nil
+    }
+}
+
 func keepUserTraits(traitKey: String, traitValue: String) {
     UserDefaults.standard.set(traitValue, forKey: traitKey)
     UserDefaults.standard.synchronize()

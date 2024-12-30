@@ -20,30 +20,11 @@ extension InputController {
                 let traitKey = buildTraitKey(name: layoutName)
                 let traitValue = toggleLayoutTrait(
                     trait: trait, for: traitMenuItem,
-                    in: &self.processor.hangulLayout)
+                    in: &processor.hangulLayout)
 
                 keepUserTraits(traitKey: traitKey, traitValue: traitValue)
             }
         }
     }
 
-}
-
-func loadActiveOptions(traitKey: String) -> Set<LayoutTrait>? {
-    if let dump = retrieveUserTraits(traitKey: traitKey) {
-        let loadedTraits = dump.split(separator: ",")
-        if loadedTraits.count < 1 || loadedTraits.isEmpty {
-            return []
-        }
-        var traits: Set<LayoutTrait> = []
-        loadedTraits.forEach { label in
-            let trimmed = label.trimmingCharacters(in: .whitespacesAndNewlines)
-            if let trait = LayoutTrait(rawValue: trimmed) {
-                traits.insert(trait)
-            }
-        }
-        return traits
-    } else {
-        return nil
-    }
 }

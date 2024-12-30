@@ -9,13 +9,14 @@ import Foundation
 import os
 
 class CustomLogger {
-    let debugLogger: Logger
+    private let debugLogger: Logger
 
     init(category: String) {
         debugLogger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: category)
     }
 
     func debug(_ message: String = "") {
+        // 프로덕션 배포하는 경우에는 false 로 전환하여 빌드
         let isDebug = true
         if isDebug {
             debugLogger.debug("\(message, privacy: .public)")

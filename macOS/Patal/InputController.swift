@@ -10,11 +10,12 @@ import InputMethodKit
 
 @objc(PatIMKController)
 class InputController: IMKInputController {
-    let logger = CustomLogger(category: "InputController")
+    internal let logger = CustomLogger(category: "InputController")
 
     // 클라이언트 하나 당 하나의 입력기 레이아웃 인스턴스가 사용됨
-    let layoutName: LayoutName
-    let optionMenu: OptionMenu
+    internal let layoutName: LayoutName
+    internal let optionMenu: OptionMenu
+
     let processor: HangulProcessor
 
     // 클래스 생성이 하나의 인스턴스에서 이루어지기 때문에 여러개의 Patal 입력기를 동시에 사용할 수 없음.
@@ -28,16 +29,16 @@ class InputController: IMKInputController {
 
         let traitKey = buildTraitKey(name: layoutName)
         let hangulLayout = createLayoutInstance(name: layoutName)
-        self.processor = HangulProcessor(layout: hangulLayout)
+        processor = HangulProcessor(layout: hangulLayout)
         logger.debug("팥알 입력기 처리기: \(processor)")
 
         if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
-            self.processor.hangulLayout.traits = loadedTraits
+            processor.hangulLayout.traits = loadedTraits
         } else {
-            self.processor.hangulLayout.traits = self.processor.hangulLayout.availableTraits
+            processor.hangulLayout.traits = processor.hangulLayout.availableTraits
         }
-        
-        self.optionMenu = OptionMenu(layout: self.processor.hangulLayout)
+
+        optionMenu = OptionMenu(layout: processor.hangulLayout)
 
         super.init(server: server, delegate: delegate, client: inputClient)
 
@@ -59,7 +60,7 @@ class InputController: IMKInputController {
     }
 
     override open func menu() -> NSMenu! {
-        return self.optionMenu.menu
+        return optionMenu.menu
     }
 
     // 이 입력 방법은 OS 에서 백스페이스, 엔터 등을 처리함. 즉, 완성된 키코드를 제공함.

@@ -137,12 +137,12 @@ struct Han3ShinPcsLayout: HangulAutomata {
 
     func pickNonSyllable(by char: String) -> String? {
         if has화살표 {
-            if let nonSyllable = self.nonSyllableMapWith쉬운화살표[char] {
+            if let nonSyllable = nonSyllableMapWith쉬운화살표[char] {
                 return nonSyllable
             }
         }
 
-        guard let nonSyllable = self.nonSyllableMap[char] else {
+        guard let nonSyllable = nonSyllableMap[char] else {
             return nil
         }
 

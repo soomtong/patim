@@ -30,9 +30,9 @@ struct HangulCompositionTest {
                 let _: Character = "\u{1100}"
                 let 호환_ㄱ: Character = "ㄱ"
                 #expect(composition.getSyllable() == 호환_ㄱ)
-                #expect(composition.chosungPoint == 초성.기역)
-                #expect(composition.jungsungPoint == nil)
-                #expect(composition.jongsungPoint == nil)
+                #expect(composition.chosungCode == 초성.기역)
+                #expect(composition.jungsungCode == nil)
+                #expect(composition.jongsungCode == nil)
             }
 
             if let composition = HangulComposer(
@@ -43,9 +43,9 @@ struct HangulCompositionTest {
                 let _: Character = "\u{1112}"
                 let 호환_ㅎ: Character = "ㅎ"
                 #expect(composition.getSyllable() == 호환_ㅎ)
-                #expect(composition.chosungPoint == 초성.히읗)
-                #expect(composition.jungsungPoint == nil)
-                #expect(composition.jongsungPoint == nil)
+                #expect(composition.chosungCode == 초성.히읗)
+                #expect(composition.jungsungCode == nil)
+                #expect(composition.jongsungCode == nil)
             }
         }
 
@@ -59,9 +59,9 @@ struct HangulCompositionTest {
                 let _: Character = "\u{1161}"
                 let 호환_ㅏ: Character = "ㅏ"
                 #expect(composition.getSyllable() == 호환_ㅏ)
-                #expect(composition.chosungPoint == nil)
-                #expect(composition.jungsungPoint == 중성.아)
-                #expect(composition.jongsungPoint == nil)
+                #expect(composition.chosungCode == nil)
+                #expect(composition.jungsungCode == 중성.아)
+                #expect(composition.jongsungCode == nil)
             }
         }
 
@@ -73,9 +73,9 @@ struct HangulCompositionTest {
                 jongsungPoint: nil
             ) {
                 #expect(composition.getSyllable() == Character("가"))
-                #expect(composition.chosungPoint == 초성.기역)
-                #expect(composition.jungsungPoint == 중성.아)
-                #expect(composition.jongsungPoint == nil)
+                #expect(composition.chosungCode == 초성.기역)
+                #expect(composition.jungsungCode == 중성.아)
+                #expect(composition.jongsungCode == nil)
             }
             if let composition = HangulComposer(
                 chosungPoint: 초성.기역,
@@ -115,9 +115,9 @@ struct HangulCompositionTest {
                 jongsungPoint: 종성.이응
             ) {
                 #expect(composition.getSyllable() == Character("강"))
-                #expect(composition.chosungPoint == 초성.기역)
-                #expect(composition.jungsungPoint == 중성.아)
-                #expect(composition.jongsungPoint == 종성.이응)
+                #expect(composition.chosungCode == 초성.기역)
+                #expect(composition.jungsungCode == 중성.아)
+                #expect(composition.jongsungCode == 종성.이응)
             }
             if let composition = HangulComposer(
                 chosungPoint: 초성.시옷,
@@ -125,9 +125,9 @@ struct HangulCompositionTest {
                 jongsungPoint: 종성.니은
             ) {
                 #expect(composition.getSyllable() == Character("산"))
-                #expect(composition.chosungPoint == 초성.시옷)
-                #expect(composition.jungsungPoint == 중성.아)
-                #expect(composition.jongsungPoint == 종성.니은)
+                #expect(composition.chosungCode == 초성.시옷)
+                #expect(composition.jungsungCode == 중성.아)
+                #expect(composition.jongsungCode == 종성.니은)
             }
             if let composition = HangulComposer(
                 chosungPoint: 초성.이응,
@@ -143,9 +143,9 @@ struct HangulCompositionTest {
                 jongsungPoint: 종성.리을미음
             ) {
                 #expect(composition.getSyllable() == Character("앎"))
-                #expect(composition.chosungPoint == 초성.이응)
-                #expect(composition.jungsungPoint == 중성.아)
-                #expect(composition.jongsungPoint == 종성.리을미음)
+                #expect(composition.chosungCode == 초성.이응)
+                #expect(composition.jungsungCode == 중성.아)
+                #expect(composition.jongsungCode == 종성.리을미음)
             }
         }
     }

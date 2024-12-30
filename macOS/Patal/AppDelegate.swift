@@ -15,7 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var server: IMKServer?
 
-    let logger = CustomLogger(category: "AppDelegate")
+    internal let logger = CustomLogger(category: "AppDelegate")
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // load input method server
