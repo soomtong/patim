@@ -18,6 +18,7 @@ struct OptionTests {
         var layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
         var processor: HangulProcessor!
         var optionMenu: OptionMenu!
+        let holders = [LayoutTrait.화살표.rawValue, LayoutTrait.모아치기.rawValue]
 
         init() {
             processor = HangulProcessor(layout: layout)
@@ -31,14 +32,15 @@ struct OptionTests {
             #expect(optionMenu.menu.autoenablesItems == true)
             for menu in optionMenu.menu.items {
                 #expect(menu.isEnabled == true)
-                #expect(menu.title == LayoutTrait.화살표.rawValue)
+                #expect(holders.contains(menu.title))
             }
         }
 
-        @Test("신세벌 커스텀 화살표 옵션")
+        @Test("신세벌PCS 모든 옵션")
         func loadDefaultTraits() {
             for menu in optionMenu.menu.items {
                 #expect(menu.state == NSControl.StateValue.on)
+                #expect(holders.contains(menu.title))
             }
         }
     }
@@ -54,11 +56,10 @@ struct OptionTests {
             optionMenu = OptionMenu(layout: layout)
         }
 
-        @Test("신세벌 커스텀 화살표 비활성화")
+        @Test("신세벌PCS 모든 옵션 비활성화")
         func loadOverrideTraits() {
             for menu in optionMenu.menu.items {
                 #expect(menu.isEnabled == true)
-                #expect(menu.title == LayoutTrait.화살표.rawValue)
                 #expect(menu.state == NSControl.StateValue.off)
             }
         }

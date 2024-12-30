@@ -143,11 +143,11 @@ struct HangulComposer {
 
             return Character(UnicodeScalar(hangulUnicodeOffset + offset)!)
         // 미완성 낱자
-        case (let chosung?, nil, let jongsung?):
+        case (_, nil, _):
             print("조합 중...일까? 중성이 와야해...")
             return Character(UnicodeScalar(그외.대체문자.rawValue)!)
 
-        case (nil, let jungsung?, let jongsung?):
+        case (nil, _, _):
             print("조합 중...일까? 초성이 와야해...")
             return Character(UnicodeScalar(그외.대체문자.rawValue)!)
         }

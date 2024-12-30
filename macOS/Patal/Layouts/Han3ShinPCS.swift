@@ -12,7 +12,7 @@ import Foundation
  그런 키보드를 위한 배열을 구성
  */
 
-/// enum Layout 의 bindLayout 조합기 이름과 같아야 합니다.
+/// enum LayoutName 의 createLayoutInstance 조합기 이름과 같아야 합니다.
 struct Han3ShinPcsLayout: HangulAutomata {
     let availableTraits: [LayoutTrait] = [LayoutTrait.화살표, LayoutTrait.모아치기]
     var traits: [LayoutTrait] = []

@@ -11,7 +11,7 @@ import Foundation
  갈마들이 공세벌식 자판 3-P 자판안 https://pat.im/1128
  */
 
-/// enum Layout 의 bindLayout 조합기 이름과 같아야 합니다.
+/// enum LayoutName 의 createLayoutInstance 조합기 이름과 같아야 합니다.
 struct Han3P2Layout: HangulAutomata {
     let availableTraits: [LayoutTrait] = [LayoutTrait.모아치기]
     var traits: [LayoutTrait] = []

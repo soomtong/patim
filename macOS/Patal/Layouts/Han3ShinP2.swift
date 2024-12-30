@@ -12,7 +12,7 @@ import Foundation
  옛한글 조합은 추가개발이 필요함
  */
 
-/// enum Layout 의 bindLayout 조합기 이름과 같아야 합니다.
+/// enum LayoutName 의 createLayoutInstance 조합기 이름과 같아야 합니다.
 struct Han3ShinP2Layout: HangulAutomata {
     let availableTraits: [LayoutTrait] = [LayoutTrait.아래아]
     var traits: [LayoutTrait] = []
