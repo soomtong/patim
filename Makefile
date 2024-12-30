@@ -7,21 +7,40 @@ DIST_DIR = ./dist
 PKG = PatalInputMethod.pkg
 APP_ROOT = /Library/Input\ Methods/Patal.app
 APP_USER = /Users/$(USER)/Library/Input\ Methods/Patal.app
+SCHEME = Patal
 
 # Default target
 .DEFAULT_GOAL := help
 
-.PHONY: all format install package distribute clean build kill remove remove-root remove-user list help
+.PHONY: all format install package distribute clean build kill remove remove-root remove-user list help test test-verbose
 
 all: format install package distribute
+
+test:
+	@echo "Running tests..."
+	@cd $(SRC_DIR) && xcodebuild test \
+		-scheme $(SCHEME) \
+		-destination 'platform=macOS' \
+		| xcpretty
+
+test-verbose:
+	@echo "Running tests with verbose output..."
+	@cd $(SRC_DIR) && xcodebuild test \
+		-scheme $(SCHEME) \
+		-destination 'platform=macOS' \
+		-verbose
 
 format:
 	@echo "Running format script..."
 	@cd $(SCRIPT_DIR) && sh format.sh
 
-build:
+build-verbose:
 	@echo "Building the project..."
 	@cd $(SRC_DIR) && xcodebuild -verbose -scheme Patal -configuration Release build
+
+build:
+	@echo "Building the project..."
+	@cd $(SRC_DIR) && xcodebuild -verbose -scheme Patal -configuration Release build | xcpretty
 
 install:
 	@echo "Running install script..."
@@ -75,4 +94,6 @@ help:
 	@echo "  remove-root - Remove the root Patal app"
 	@echo "  remove-user - Remove the user Patal app"
 	@echo "  list        - List the contents of the dist directory"
+	@echo "  test        - Run tests with pretty formatting"
+	@echo "  test-verbose- Run tests with verbose output"
 	@echo "  help        - Show this help message"
