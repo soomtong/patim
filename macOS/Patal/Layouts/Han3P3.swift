@@ -13,7 +13,7 @@ import Foundation
 
 /// enum LayoutName 의 createLayoutInstance 조합기 이름과 같아야 합니다.
 struct Han3P3Layout: HangulAutomata {
-    let availableTraits: Set<LayoutTrait> = [LayoutTrait.모아치기]
+    let availableTraits: Set<LayoutTrait> = [LayoutTrait.모아치기, LayoutTrait.두줄숫자]
     var traits: Set<LayoutTrait> = []
 
     let chosungMap: [String: 초성] = [
@@ -119,4 +119,36 @@ struct Han3P3Layout: HangulAutomata {
         "<": "2",
         ">": "3",
     ]
+
+    let nonSyllableMapWith두줄숫자: [String: String] = [
+        "Y": "5",
+        "U": "6",
+        "I": "7",
+        "O": "8",
+        "P": "9",
+        "G": ":",
+        "H": "0",
+        "J": "1",
+        "K": "2",
+        "L": "3",
+        ":": "4",
+        "\"": "/",
+        "B": ";",
+        "N": "\'",
+        "M": "\"",
+    ]
+
+    func pickNonSyllable(by char: String) -> String? {
+        if has두줄숫자 {
+            if let nonSyllable = nonSyllableMapWith두줄숫자[char] {
+                return nonSyllable
+            }
+        }
+
+        guard let nonSyllable = nonSyllableMap[char] else {
+            return nil
+        }
+
+        return nonSyllable
+    }
 }

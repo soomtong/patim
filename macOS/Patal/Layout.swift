@@ -10,16 +10,14 @@ import Foundation
 
 /// 지원하는 레이아웃: InfoPlist 파일 참고
 enum LayoutName: String {
-    case HAN3_P2 = "InputmethodHan3P2"
     case HAN3_P3 = "InputmethodHan3P3"
     case HAN3_SHIN_P2 = "InputmethodHan3ShinP2"
     case HAN3_SHIN_PCS = "InputmethodHan3ShinPCS"
 }
 
+/// 자판 생성 핵심 코드
 func createLayoutInstance(name: LayoutName) -> HangulAutomata {
     switch name {
-    case .HAN3_P2:
-        return Han3P2Layout()
     case .HAN3_P3:
         return Han3P3Layout()
     case .HAN3_SHIN_P2:
@@ -33,6 +31,7 @@ enum LayoutTrait: String {
     case 모아치기
     case 아래아
     case 화살표
+    case 두줄숫자
 }
 
 let logger = CustomLogger(category: "Layout")
@@ -82,6 +81,10 @@ extension HangulAutomata {
 
     var has아래아: Bool {
         return traits.contains(LayoutTrait.아래아)
+    }
+
+    var has두줄숫자: Bool {
+        return traits.contains(LayoutTrait.두줄숫자)
     }
 
     func pickChosung(by char: String) -> unichar? {

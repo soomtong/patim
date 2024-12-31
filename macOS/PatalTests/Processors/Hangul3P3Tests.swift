@@ -9,7 +9,7 @@ import Testing
 
 @testable import Patal
 
-@Suite("공세벌 P3 자판 테스트", .serialized)
+@Suite("공세벌 P 자판 테스트", .serialized)
 struct Hangul3P3Tests {
     let layout = createLayoutInstance(name: LayoutName.HAN3_P3)
     var processor: HangulProcessor!
@@ -28,8 +28,10 @@ struct Hangul3P3Tests {
         #expect(r1 == false)
     }
 
-    @Test("숫자")
-    func getComposedChar_숫자() {
+    @Test("세줄숫자")
+    func getComposedChar_세줄숫자() {
+        processor.hangulLayout.traits.removeAll()
+
         processor.rawChar = "N"
         let s0 = processor.한글조합()
         #expect(s0 == CommitState.none)
@@ -47,6 +49,35 @@ struct Hangul3P3Tests {
         #expect(d1 == "1")
 
         processor.rawChar = "O"
+        let s9 = processor.한글조합()
+        #expect(s9 == CommitState.none)
+        let c9 = processor.getComposed()
+        #expect(c9 == nil)
+        let d9 = processor.getConverted()
+        #expect(d9 == "9")
+    }
+
+    @Test("두줄숫자")
+    func getComposedChar_두줄숫자() {
+        processor.hangulLayout.traits.insert(LayoutTrait.두줄숫자)
+
+        processor.rawChar = "H"
+        let s0 = processor.한글조합()
+        #expect(s0 == CommitState.none)
+        let c0 = processor.getComposed()
+        #expect(c0 == nil)
+        let d0 = processor.getConverted()
+        #expect(d0 == "0")
+
+        processor.rawChar = "J"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.none)
+        let c1 = processor.getComposed()
+        #expect(c1 == nil)
+        let d1 = processor.getConverted()
+        #expect(d1 == "1")
+
+        processor.rawChar = "P"
         let s9 = processor.한글조합()
         #expect(s9 == CommitState.none)
         let c9 = processor.getComposed()

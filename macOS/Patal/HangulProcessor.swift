@@ -29,6 +29,7 @@ struct 글자 {
 
 class HangulProcessor {
     internal let logger = CustomLogger(category: "InputTextKey")
+    let layoutName: String
 
     /// OS 에서 제공하는 문자
     var rawChar: String
@@ -43,16 +44,17 @@ class HangulProcessor {
     var hangulLayout: HangulAutomata
 
     init(layout: HangulAutomata) {
-        logger.debug("입력키 처리 클래스 초기화: \(layout.traits)")
+        layoutName = String(describing: type(of: layout))
         rawChar = ""
         previous = []
         preedit = 글자()
 
         hangulLayout = layout
+        logger.debug("입력키 처리 클래스 초기화: \(layoutName)")
     }
 
     deinit {
-        logger.debug("입력키 처리 클래스 해제")
+        logger.debug("입력키 처리 클래스 해제: \(layoutName)")
     }
 
     /// 입력 방식 강제 지정

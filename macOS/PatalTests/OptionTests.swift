@@ -30,6 +30,7 @@ struct OptionTests {
         @Test("기본 세팅")
         func basicSetting() {
             #expect(optionMenu.menu.autoenablesItems == true)
+            #expect(optionMenu.menu.numberOfItems == holders.count)
             for menu in optionMenu.menu.items {
                 #expect(menu.isEnabled == true)
                 #expect(holders.contains(menu.title))
