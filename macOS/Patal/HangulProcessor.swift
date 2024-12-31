@@ -91,6 +91,7 @@ class HangulProcessor {
 
     /// 조합 가능한 문자가 들어온다. 다시 검수할 필요는 없음. 겹자음/겹모음이 있을 수 있기 때문에 previous 를 기준으로 운영.
     /// previous=raw char 조합, preedit=조합중인 한글, commit=조합된 한글
+    /// todo: return (previous, preedit, commitState) 튜플로 개선
     func 한글조합() -> CommitState {
         logger.debug("- 이전: \(previous) 프리에딧: \(String(describing: preedit))")
         logger.debug("- 입력: \(rawChar)")
@@ -174,7 +175,7 @@ class HangulProcessor {
             }
 
             /// "ᅡ" + "ᆻ" -> 대체 문자 (완성 낱자를 구할 수 없어서 필요가 없는 조건인데 모아치기를 구성해보면???)
-            print("종성이 초성보다 먼저 올수도 있지! 하지만 이건 공세벌만 가능해: \(hangulLayout.can모아치기)")
+            print("종성이 먼저 올수도 있지! 이건 중성/종성 나뉜 공세벌만 가능해: \(hangulLayout.can모아치기)")
             /// 공세벌식 자판의 경우 모아치기를 사용할 수 있다!
             if hangulLayout.can모아치기 {
                 if let 종성코드 = hangulLayout.pickJongsung(by: rawChar) {
@@ -337,21 +338,44 @@ class HangulProcessor {
     }
 
     func getComposed() -> String? {
-        let hangulComposer = HangulComposer(
+        if let hangulComposer = HangulComposer(
             chosungPoint: preedit.chosung,
             jungsungPoint: preedit.jungsung,
             jongsungPoint: preedit.jongsung
-        )
-        if let composition = hangulComposer?.getSyllable() {
-            // logger.debug("조합: \(String(describing: composition)) (\(preedit))")
-            return String(composition)
+        ) {
+            if let char = hangulComposer.getSyllable() {
+                return String(char)
+            }
+        }
+        // 현대한글 조합을 못하면 옛한글 시도
+        if let char = getComposedAlternative(preedit: preedit) {
+            return String(char)
         }
 
         return nil
     }
 
-    func getCompat(preedit: 글자) -> String? {
-        return "호환문자"
+    func getComposedAlternative(preedit: 글자) -> Character? {
+        var unicodeScalars = String.UnicodeScalarView()
+
+        if let codePoint = preedit.chosung {
+            let scala = UnicodeScalar(codePoint.rawValue)!
+            unicodeScalars.append(UnicodeScalar(scala))
+        }
+        if let codePoint = preedit.jungsung {
+            let scala = UnicodeScalar(codePoint.rawValue)!
+            unicodeScalars.append(UnicodeScalar(scala))
+        }
+        if let codePoint = preedit.jongsung {
+            let scala = UnicodeScalar(codePoint.rawValue)!
+            unicodeScalars.append(UnicodeScalar(scala))
+        }
+
+        if unicodeScalars.count > 0 {
+            return Character(UnicodeScalarType(unicodeScalars))
+        }
+
+        return nil
     }
 
     /// 한글이 아닌 문자가 들어오는 경우

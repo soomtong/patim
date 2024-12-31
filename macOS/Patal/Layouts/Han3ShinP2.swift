@@ -64,16 +64,19 @@ struct Han3ShinP2Layout: HangulAutomata {
         "i": 중성.으,
         "id": 중성.의,
         "d": 중성.이,
-        /* 임시로 붙임 */
+        /* 아래아 대신 사용함 */
         "z": 중성.의,
-        /*
-         * 옛한글 조합이 추가로 필요함
+        "p": 중성.오,
+        "pf": 중성.와,
+        "pe": 중성.왜,
+        "pd": 중성.외,
+    ]
+    let jungsungMapWith아래아: [String: 중성] = [
         "z": 중성.아래아,
         "p": 중성.아래아,
         "pr": 중성.아래어,
         "pb": 중성.아래우,
         "pd": 중성.아래애,
-         */
     ]
 
     let jongsungMap: [String: 종성] = [
@@ -137,4 +140,18 @@ struct Han3ShinP2Layout: HangulAutomata {
         "N": "―",
         "M": "…",
     ]
+
+    func pickJungsung(by char: String) -> unichar? {
+        if has아래아 {
+            if let jungsung = jungsungMapWith아래아[char] {
+                return jungsung.rawValue
+            }
+        }
+
+        guard let jungsung = jungsungMap[char] else {
+            return nil
+        }
+
+        return jungsung.rawValue
+    }
 }
