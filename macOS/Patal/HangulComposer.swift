@@ -62,10 +62,11 @@ let compat종성Map: [종성: 자음] = [
 ]
 
 /// 한글 낱자를 조합하는 객체
-struct HangulComposer {
-    var chosungCode: 초성?
-    var jungsungCode: 중성?
-    var jongsungCode: 종성?
+/// 글자를 생성하고 출력할 수 있는 형태로 변환
+class HangulComposer {
+    private var chosungCode: 초성?
+    private var jungsungCode: 중성?
+    private var jongsungCode: 종성?
 
     init?(chosungPoint: 초성?, jungsungPoint: 중성?, jongsungPoint: 종성?) {
         switch (chosungPoint, jungsungPoint, jongsungPoint) {
@@ -116,14 +117,16 @@ struct HangulComposer {
         switch (chosungCode, jungsungCode, jongsungCode) {
         case (nil, nil, nil):
             return nil
-        // 닿소리 와 홀소리
-        case (let chosungPoint?, nil, nil):
-            return normalizeCompat(chosung: chosungPoint, jungsung: nil, jongsung: nil)
-        case (nil, let jungsungPoint?, nil):
-            return normalizeCompat(chosung: nil, jungsung: jungsungPoint, jongsung: nil)
-        case (nil, nil, let jongsungPoint?):
-            return normalizeCompat(chosung: nil, jungsung: nil, jongsung: jongsungPoint)
-        // 완성 낱자
+
+        // 닿소리와 홀소리: 호환 자모로 변환하여 제공
+        case (_?, nil, nil):
+            return normalizeCompat(음소.첫소리)
+        case (nil, _?, nil):
+            return normalizeCompat(음소.가운뎃소리)
+        case (nil, nil, _?):
+            return normalizeCompat(음소.끝소리)
+
+        // 완성 낱자: 첫/가 조합
         case (let chosungPoint?, let jungsungPoint?, nil):
             var offset = 0
             if let chosungOffset = chosungMapOffset[chosungPoint] {
@@ -132,8 +135,8 @@ struct HangulComposer {
             if let jungsungOffset = jungsungMapOffset[jungsungPoint] {
                 offset += jungsungOffset * jongsungOffset28
             }
-
             return Character(UnicodeScalar(hangulUnicodeOffset + offset)!)
+        // 완성 낱자: 첫/가/끝 조합
         case (let chosungPoint?, let jungsungPoint?, let jongsungPoint?):
             var offset = 0
             if let chosungOffset = chosungMapOffset[chosungPoint] {
@@ -145,8 +148,8 @@ struct HangulComposer {
             if let jongsungOffset = jongsungMapOffset[jongsungPoint] {
                 offset += jongsungOffset
             }
-
             return Character(UnicodeScalar(hangulUnicodeOffset + offset)!)
+
         // 미완성 낱자
         case (_, nil, _):
             print("조합 중...일까? 중성이 와야해...")
@@ -158,20 +161,18 @@ struct HangulComposer {
         }
     }
 
-    func normalizeCompat(chosung: 초성?, jungsung: 중성?, jongsung: 종성?) -> Character {
-        if let chosungCode = chosung {
-            let codePoint = compat초성Map[chosungCode]?.rawValue ?? 그외.채움문자.rawValue
+    /// 유니코드 첫/가/끝 낱자를 호환성이 높은 코드로 전환
+    func normalizeCompat(_ 낱자: 음소) -> Character {
+        switch 낱자 {
+        case .첫소리:
+            let codePoint = compat초성Map[chosungCode!]?.rawValue ?? 그외.채움문자.rawValue
+            return Character(UnicodeScalar(codePoint)!)
+        case .가운뎃소리:
+            let codePoint = compat중성Map[jungsungCode!]?.rawValue ?? 그외.채움문자.rawValue
+            return Character(UnicodeScalar(codePoint)!)
+        case .끝소리:
+            let codePoint = compat종성Map[jongsungCode!]?.rawValue ?? 그외.채움문자.rawValue
             return Character(UnicodeScalar(codePoint)!)
         }
-        if let jungsungCode = jungsung {
-            let codePoint = compat중성Map[jungsungCode]?.rawValue ?? 그외.채움문자.rawValue
-            return Character(UnicodeScalar(codePoint)!)
-        }
-        if let jongsungcode = jongsung {
-            let codePoint = compat종성Map[jongsungcode]?.rawValue ?? 그외.채움문자.rawValue
-            return Character(UnicodeScalar(codePoint)!)
-        }
-
-        return Character(UnicodeScalar(그외.대체문자.hashValue)!)
     }
 }

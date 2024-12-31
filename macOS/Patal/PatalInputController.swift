@@ -92,6 +92,7 @@ extension InputController {
         return false
     }
 
+    // 입력기 메뉴의 옵션이 변경되는 경우 호출됨
     @objc
     func changeLayoutOption(_ sender: Any?) {
         guard let optionItem = sender as? [String: Any] else {

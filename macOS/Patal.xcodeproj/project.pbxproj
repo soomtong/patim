@@ -28,7 +28,7 @@
 		E24856192D20F0A300AC78AF /* PatalInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24856182D20F0A300AC78AF /* PatalInputController.swift */; };
 		E258567D2D18134A006FD5E7 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = E258567C2D18134A006FD5E7 /* Extention.swift */; };
 		E284B61B2CFDF4F20009DE1C /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = E284B61A2CFDF4F20009DE1C /* Util.swift */; };
-		E2972D032CDF8C18001278E3 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2972D022CDF8C11001278E3 /* Layout.swift */; };
+		E2972D032CDF8C18001278E3 /* HangulLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2972D022CDF8C11001278E3 /* HangulLayout.swift */; };
 		E299CA4F2D008F2F00E2FD0D /* HangulComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */; };
 		E2B1644B2CDFAFD4003FCE85 /* HangulCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */; };
 /* End PBXBuildFile section */
@@ -72,7 +72,7 @@
 		E258567C2D18134A006FD5E7 /* Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extention.swift; sourceTree = "<group>"; };
 		E284B61A2CFDF4F20009DE1C /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		E289CD4C2CE9CD3D00E309D8 /* PatalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PatalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E2972D022CDF8C11001278E3 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
+		E2972D022CDF8C11001278E3 /* HangulLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulLayout.swift; sourceTree = "<group>"; };
 		E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulComposer.swift; sourceTree = "<group>"; };
 		E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulCode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -141,7 +141,7 @@
 				E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */,
 				E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */,
 				464092A92B92EDA800F5D81D /* HangulProcessor.swift */,
-				E2972D022CDF8C11001278E3 /* Layout.swift */,
+				E2972D022CDF8C11001278E3 /* HangulLayout.swift */,
 				E224DEE32D2024B900808927 /* OptionMenu.swift */,
 				E258567E2D182D6C006FD5E7 /* Layouts */,
 				E258567C2D18134A006FD5E7 /* Extention.swift */,
@@ -298,7 +298,7 @@
 				469C537F2B91E1C200446511 /* Logger.swift in Sources */,
 				464092AA2B92EDA800F5D81D /* HangulProcessor.swift in Sources */,
 				E24856192D20F0A300AC78AF /* PatalInputController.swift in Sources */,
-				E2972D032CDF8C18001278E3 /* Layout.swift in Sources */,
+				E2972D032CDF8C18001278E3 /* HangulLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

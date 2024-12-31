@@ -69,6 +69,7 @@ protocol HangulAutomata {
     func pickNonSyllable(by char: String) -> String?
 }
 
+/// 각 레이아웃이 가져야할 프로토콜의 공용 구현
 extension HangulAutomata {
     var can모아치기: Bool {
         return traits.contains(LayoutTrait.모아치기)

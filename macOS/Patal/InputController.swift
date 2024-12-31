@@ -47,22 +47,26 @@ class InputController: IMKInputController {
         }
     }
 
+    // 입력기가 전환될 때마다 호출됨
     @MainActor
     override open func activateServer(_ sender: Any!) {
         super.activateServer(sender)
         logger.debug("입력기 서버 시작: \(layoutName)")
     }
 
+    // 입력기가 비활성화 되면 호출됨
     @MainActor
     override open func deactivateServer(_ sender: Any!) {
         super.deactivateServer(sender)
         logger.debug("입력기 서버 중단: \(layoutName)")
     }
 
+    // 입력기 메뉴가 열릴 때마다 호출됨
     override open func menu() -> NSMenu! {
         return optionMenu.menu
     }
 
+    // 아직 적용 시나리오를 찾지 못함
     override func commitComposition(_ sender: Any!) {
         processor.flushCommit()
     }

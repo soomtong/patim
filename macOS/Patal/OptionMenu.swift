@@ -8,6 +8,7 @@
 import Cocoa
 import Foundation
 
+/// 입력기 메뉴 표시
 class OptionMenu {
     internal let logger = CustomLogger(category: "OptionMenu")
 

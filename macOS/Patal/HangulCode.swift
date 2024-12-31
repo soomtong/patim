@@ -7,6 +7,19 @@
 
 import Foundation
 
+/// https://blog.naver.com/anthony79/220413491136
+enum 음소 {
+    case 첫소리
+    case 가운뎃소리
+    case 끝소리
+}
+
+struct 조합자 {
+    var chosung: 초성?
+    var jungsung: 중성?
+    var jongsung: 종성?
+}
+
 /// 한글 호환 자모 코드; 첫/가/끝 자소와 호환되는 닿소리/홀소리/채움 및 대체 문자
 enum 자음: unichar {
     case 채움 = 0x115F
@@ -71,7 +84,7 @@ enum 모음: unichar {
 
 enum 그외: unichar {
     case 채움문자 = 0x3164
-    case 대체문자 = 0xFFFD // �
+    case 대체문자 = 0xFFFD  // �
 }
 
 enum 초성: unichar {

@@ -21,12 +21,6 @@ enum InputStrategy {
     case swapMarked
 }
 
-struct 글자 {
-    var chosung: 초성?
-    var jungsung: 중성?
-    var jongsung: 종성?
-}
-
 class HangulProcessor {
     internal let logger = CustomLogger(category: "InputTextKey")
     let layoutName: String
@@ -37,7 +31,7 @@ class HangulProcessor {
     /// preedit 에 처리중인 rawChar 배열: 겹낱자나 모아치기를 위한 버퍼
     var previous: [String]
     /// previous 를 한글 처리된 문자
-    var preedit: 글자
+    var preedit: 조합자
     /// 조합 종료된 한글
     var 완성: String?
 
@@ -45,12 +39,13 @@ class HangulProcessor {
 
     init(layout: HangulAutomata) {
         layoutName = String(describing: type(of: layout))
+        hangulLayout = layout
+
+        logger.debug("입력키 처리 클래스 초기화: \(layoutName)")
+
         rawChar = ""
         previous = []
-        preedit = 글자()
-
-        hangulLayout = layout
-        logger.debug("입력키 처리 클래스 초기화: \(layoutName)")
+        preedit = 조합자()
     }
 
     deinit {
@@ -339,6 +334,7 @@ class HangulProcessor {
         return CommitState.none
     }
 
+    /// 준비된 조합자를 한글 글자로 변환
     func getComposed() -> String? {
         if let hangulComposer = HangulComposer(
             chosungPoint: preedit.chosung,
@@ -357,7 +353,8 @@ class HangulProcessor {
         return nil
     }
 
-    func getComposedAlternative(preedit: 글자) -> Character? {
+    /// 현대한글로 전환하지 못한 경우 NFD 로 제공
+    func getComposedAlternative(preedit: 조합자) -> Character? {
         var unicodeScalars = String.UnicodeScalarView()
 
         if let codePoint = preedit.chosung {
