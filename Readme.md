@@ -79,5 +79,6 @@
 - [나빌 입력기](https://github.com/navilera/NavilIMEforMac)
 - [속 입력기](https://github.com/kiding/SokIM)
 - [azooKey 입력기](https://github.com/ensan-hcl/azooKey-Desktop)
+- [macSKK 입력기](https://github.com/mtgto/macSKK)
 - [글걸이](https://pat.im/category/한글%20자판)
 - [한글과 유니코드](https://gist.github.com/soomtong/b51861a440e0bfdc58008deb8078d465)

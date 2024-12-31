@@ -12,7 +12,7 @@ SCHEME = Patal
 # Default target
 .DEFAULT_GOAL := help
 
-.PHONY: all format install package distribute clean build kill remove remove-root remove-user list help test test-verbose
+.PHONY: all format install package distribute clean build kill remove remove-root remove-user list help test test-only test-verbose
 
 all: format install package distribute
 
@@ -21,7 +21,15 @@ test:
 	@cd $(SRC_DIR) && xcodebuild test \
 		-scheme $(SCHEME) \
 		-destination 'platform=macOS' \
-		| xcpretty
+		| xcbeautify
+
+test-only:
+	@echo "Running single test..."
+	@cd $(SRC_DIR) && xcodebuild test \
+		-scheme $(SCHEME) \
+		-destination 'platform=macOS' \
+		-only-testing:PatalTests/$(CLASS) \
+		| xcbeautify
 
 test-verbose:
 	@echo "Running tests with verbose output..."
@@ -95,5 +103,6 @@ help:
 	@echo "  remove-user - Remove the user Patal app"
 	@echo "  list        - List the contents of the dist directory"
 	@echo "  test        - Run tests with pretty formatting"
+	@echo "  test-only   - Run a single test (Usage: make test-only CLASS=AClass)"
 	@echo "  test-verbose- Run tests with verbose output"
 	@echo "  help        - Show this help message"
