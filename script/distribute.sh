@@ -11,9 +11,14 @@ PKG="$BUILD.pkg"
 DIST="../dist"
 COMPONENT="$DIST/$PKG"
 APP="$DIST/PatalInputMethod_$VERSION.pkg"
+UNSIGNED="$DIST/PatalInputMethodUnsigned.pkg"
+SIGNED="$DIST/PatalInputMethod_$VERSION.pkg"
 
 if [[ ! -f "$COMPONENT" ]]; then
   echo "Error: $COMPONENT file does not exist."
+  echo "Please build the package first."
+  echo "Run 'make package' to build the package."
+  echo ""
   exit 1
 fi
 
@@ -52,6 +57,22 @@ EOF
 rm -rf $BUILD\_*.pkg
 
 productbuild --distribution ./Distribution.xml --package-path . "$APP"
+# productbuild --distribution ./Distribution.xml --package-path . "$UNSIGNED"
+
+echo ""
+echo "Signing package..."
+security find-identity -v -p codesigning
+sleep 1
+
+# Sign the package
+DEVELOPER_ID_INSTALLER="Apple Development: soomtong@gmail.com (4XWP9KHTYS)"
+
+codesign --deep --force --sign "$DEVELOPER_ID_INSTALLER" "$APP"
+sleep 1
+codesign --verify --deep --strict "$APP"
+# productsign --sign "$DEVELOPER_ID_INSTALLER" "$UNSIGNED" "$SIGNED"
+# sleep 1
+# pkgutil --check-signature "$SIGNED"
 
 popd
 
