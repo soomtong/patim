@@ -50,8 +50,7 @@ func toggleLayoutTrait(
         logger.debug("특성 추가 \(trait.rawValue), \(layout.traits)")
         menuItem.state = NSControl.StateValue.on
     }
-    let traiteValue = layout.traits.map({ $0.rawValue }).joined(
-        separator: ",")
+    let traiteValue = layout.traits.map({ $0.rawValue }).joined(separator: ",")
 
     return traiteValue
 }
