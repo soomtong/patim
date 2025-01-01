@@ -61,16 +61,6 @@ class InputController: IMKInputController {
         logger.debug("입력기 서버 중단: \(layoutName)")
     }
 
-    // 입력기 메뉴가 열릴 때마다 호출됨
-    override open func menu() -> NSMenu! {
-        return optionMenu.menu
-    }
-
-    // 아직 적용 시나리오를 찾지 못함
-    override func commitComposition(_ sender: Any!) {
-        processor.flushCommit()
-    }
-
     //override func handle(_ event: NSEvent, client sender: Any) -> Bool {
     //    NSLog("hello patal input method: \(event)")
     //    return false

@@ -10,13 +10,14 @@ import Foundation
 import InputMethodKit
 
 extension InputController {
-    // 이 입력 방법은 OS 에서 백스페이스, 엔터 등을 처리함. 즉, 완성된 키코드를 제공함.
+    // 백스페이스, 엔터, ESC 키등의 추가 처리를 위해 inputText 대상을 변경
     @MainActor
-    override func inputText(_ rawStr: String!, client sender: Any!) -> Bool {
+    override func inputText(
+        _ rawStr: String!, key keyCode: Int, modifiers flags: Int, client sender: Any!
+    ) -> Bool {
         guard let client = sender as? IMKTextInput else {
             return false
         }
-
         // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
         // let strategy = processor.getInputStrategy(client: client)
         // if let bundleId = client.bundleIdentifier() {
@@ -24,8 +25,17 @@ extension InputController {
         // }
 
         if !processor.verifyProcessable(rawStr) {
-            let debug = "처리 불가: \(String(describing: rawStr))"
+            let debug = "비한글 처리 키코드: \(String(describing: keyCode)) (\(String(describing: rawStr)))"
             logger.debug(debug)
+
+            // 백스페이스/엔터/그 외 키코드 처리
+            // - 백스페이스: 키코드: 51 (Optional("\134u{08}"))
+            // - 스페이스: 키코드: 49 (Optional(" "))
+            // - 엔터: 키코드: 36 (Optional("\134r"))
+            // - ESC: 키코드: 53 (Optional("\134u{1B}"))
+
+            // 백스페이스 처리 로직이 필요함
+            // 첫/가/끝 역순으로 자소를 제거하면서 setMarkedText 를 수행
 
             // 남은 문자가 있는 경우 내보내자
             if let commit = processor.완성 {
@@ -45,6 +55,7 @@ extension InputController {
             return false
         }
 
+        /// 한글 조합 시작
         processor.rawChar = rawStr
 
         /// 비 한글 처리 먼저 진행
@@ -90,6 +101,32 @@ extension InputController {
         }
 
         return false
+    }
+
+    // 입력기 메뉴가 열릴 때마다 호출됨
+    override open func menu() -> NSMenu! {
+        return optionMenu.menu
+    }
+
+    // 자판 전환/ 마우스 클릭 등으로 조합을 끝낼 경우
+    override func commitComposition(_ sender: Any!) {
+        logger.debug("자판 전환/ 마우스 클릭 등으로 조합을 끝낼 경우")
+        guard let client = sender as? IMKTextInput else {
+            return
+        }
+
+        // 남은 문자가 있는 경우 내보내자
+        if let commit = processor.완성 {
+            logger.debug("남은 완성 글자: \(String(describing: commit))")
+            client.insertText(commit, replacementRange: .notFound)
+        }
+        if let preedit = processor.getComposed() {
+            // todo: preedit 은 완성된 문자가 아니라 화면에 출력 가능한 형태로 보정해야 함
+            // let compat = processor.getCompat(preedit)
+            logger.debug("조합 중인 글자: \(String(describing: preedit))")
+            client.insertText(preedit, replacementRange: .notFound)
+        }
+        processor.flushCommit()
     }
 
     // 입력기 메뉴의 옵션이 변경되는 경우 호출됨
