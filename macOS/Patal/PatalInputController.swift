@@ -24,23 +24,31 @@ extension InputController {
         //     logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
         // }
 
-        if !processor.verifyProcessable(rawStr) {
+        // 백스페이스는 별도 처리해야 함
+        if !processor.verifyProcessable(rawStr) && keyCode != KeyCode.BACKSPACE.rawValue {
             let debug = "비한글 처리 키코드: \(String(describing: keyCode)) (\(String(describing: rawStr)))"
             logger.debug(debug)
 
             // 백스페이스/엔터/그 외 키코드 처리
-            // - 백스페이스: 키코드: 51 (Optional("\134u{08}"))
-            // - 스페이스: 키코드: 49 (Optional(" "))
-            // - 엔터: 키코드: 36 (Optional("\134r"))
-            // - ESC: 키코드: 53 (Optional("\134u{1B}"))
-
-            // 백스페이스 처리 로직이 필요함
-            // 첫/가/끝 역순으로 자소를 제거하면서 setMarkedText 를 수행
 
             let flushed = processor.flushCommit()
             flushed.forEach { client.insertText($0, replacementRange: .notFound) }
 
             /// false 를 반환하는 경우는 시스템에서 rawStr 를 처리하고 출력한다
+            return false
+        }
+
+        // 백스페이스 처리 로직이 필요함
+        // 첫/가/끝 역순으로 자소를 제거하면서 setMarkedText 를 수행
+        if keyCode == KeyCode.BACKSPACE.rawValue {
+            processor.doBackspace()
+            // 한글 조합이 되고 있으면 다시 그리기
+            if let commit = processor.composeCommitToUpdate() {
+                let selection = NSRange(location: 0, length: commit.count)
+                client.setMarkedText(commit, selectionRange: selection, replacementRange: .notFound)
+                return true
+            }
+
             return false
         }
 
@@ -64,21 +72,10 @@ extension InputController {
             processor.완성 = nil
         }
 
-        if let hangul = processor.getComposed() {
-            let debug = "검수: \(String(describing: hangul))(\(String(describing: nextStatus)))"
-            logger.debug(debug)
-
-            /// setMarkedText 로 교체할 영역
-            let selection = NSRange(location: 0, length: hangul.count)
-            client.setMarkedText(hangul, selectionRange: selection, replacementRange: .notFound)
-
-            return true
-        }
-
-        /// 조합이 불가능한 경우 대체 문자를 제공
-        if processor.previous.count > 0 {
-            let selection = NSRange(location: 0, length: 0)
-            client.setMarkedText(그외.대체문자, selectionRange: selection, replacementRange: .notFound)
+        // updateCommit
+        if let commit = processor.composeCommitToUpdate() {
+            let selection = NSRange(location: 0, length: commit.count)
+            client.setMarkedText(commit, selectionRange: selection, replacementRange: .notFound)
 
             return true
         }

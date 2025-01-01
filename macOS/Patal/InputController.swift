@@ -18,6 +18,18 @@ class InputController: IMKInputController {
 
     let processor: HangulProcessor
 
+    internal enum KeyCode: Int {
+        // 백스페이스: 키코드: 51 (Optional("\134u{08}"))
+        // 스페이스: 키코드: 49 (Optional(" "))
+        // 엔터: 키코드: 36 (Optional("\134r"))
+        // ESC: 키코드: 53 (Optional("\134u{1B}"))
+        case BACKSPACE = 51
+        case SPACE = 49
+        case ENTER = 36
+        case RETURN = 76
+        case ESC = 53
+    }
+
     // 클래스 생성이 하나의 인스턴스에서 이루어지기 때문에 여러개의 Patal 입력기를 동시에 사용할 수 없음.
     override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
         guard let inputMethodID = getCurrentInputMethodID() else {

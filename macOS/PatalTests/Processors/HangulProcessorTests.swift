@@ -71,6 +71,76 @@ struct HangulProcessorTests {
         #expect(buffers.count == 1)
     }
 
+    @Test("백스페이스 처리")
+    func testBackspace() {
+        processor.preedit.chosung = 초성.기역
+        processor.doBackspace()
+        #expect(processor.preedit.chosung == nil)
+        #expect(processor.getComposed() == nil)
+
+        processor.preedit.chosung = 초성.기역
+        processor.preedit.jungsung = 중성.아
+        processor.doBackspace()
+        #expect(processor.preedit.chosung != nil)
+        #expect(processor.preedit.jungsung == nil)
+        #expect(processor.getComposed() == "ㄱ")
+
+        processor.preedit.chosung = 초성.기역
+        processor.preedit.jungsung = 중성.아
+        processor.preedit.jongsung = 종성.미음
+        processor.doBackspace()
+        #expect(processor.preedit.chosung != nil)
+        #expect(processor.preedit.jungsung != nil)
+        #expect(processor.preedit.jongsung == nil)
+        #expect(processor.getComposed() == "가")
+    }
+
+    @Test("백스페이스 처리 - 초성")
+    func testBackspace1() {
+        processor.rawChar = "k"
+        _ = processor.한글조합()
+        processor.doBackspace()
+        #expect(processor.preedit.chosung == nil)
+        #expect(processor.getComposed() == nil)
+    }
+
+    @Test("백스페이스 처리 - 중성")
+    func testBackspace2() {
+        processor.rawChar = "k"
+        _ = processor.한글조합()
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㄱ")
+        processor.rawChar = "f"
+        _ = processor.한글조합()
+        let c2 = processor.getComposed()
+        #expect(c2 == "가")
+        processor.doBackspace()
+        #expect(processor.preedit.chosung != nil)
+        #expect(processor.preedit.jungsung == nil)
+        #expect(processor.getComposed() == "ㄱ")
+    }
+
+    @Test("백스페이스 처리 - 종성")
+    func testBackspace3() {
+        processor.rawChar = "k"
+        _ = processor.한글조합()
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㄱ")
+        processor.rawChar = "f"
+        _ = processor.한글조합()
+        let c2 = processor.getComposed()
+        #expect(c2 == "가")
+        processor.rawChar = "a"
+        _ = processor.한글조합()
+        let c3 = processor.getComposed()
+        #expect(c3 == "강")
+        processor.doBackspace()
+        #expect(processor.preedit.chosung != nil)
+        #expect(processor.preedit.jungsung != nil)
+        #expect(processor.preedit.jongsung == nil)
+        #expect(processor.getComposed() == "가")
+    }
+
     @Test("Clear Preedit")
     func testClearPreedit() {
         processor.rawChar = "k"

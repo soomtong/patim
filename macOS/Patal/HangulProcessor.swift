@@ -386,6 +386,27 @@ class HangulProcessor {
         return nil
     }
 
+    /// 백스페이스가 들어오면 첫/가/끝의 역순으로 지움
+    func doBackspace() {
+        logger.debug("백스페이스 처리: \(String(describing: preedit))")
+        switch (preedit.chosung, preedit.jungsung, preedit.jongsung) {
+        case (nil, nil, nil):
+            print("아무것도 없음")
+            if previous.last != nil {
+                previous.removeLast()
+            }
+        case (.some(_), nil, nil):
+            print("초성을 지워도 됨: \(String(describing: preedit))")
+            preedit.chosung = nil
+        case (_, .some(_), nil):
+            print("중성을 지워야 함: \(String(describing: preedit))")
+            preedit.jungsung = nil
+        case (_, _, .some(_)):
+            print("종성을 지움: \(String(describing: preedit))")
+            preedit.jongsung = nil
+        }
+    }
+
     func clearPreedit() {
         preedit.chosung = nil
         preedit.jungsung = nil
@@ -397,6 +418,19 @@ class HangulProcessor {
         rawChar = ""
         previous = []
         완성 = nil
+    }
+
+    func composeCommitToUpdate() -> String? {
+        if let syllable = getComposed() {
+            logger.debug("조합이 가능함: \(String(describing: syllable))")
+            return syllable
+        }
+        /// 조합이 불가능한 경우 대체 문자를 제공
+        if previous.count > 0 {
+            logger.debug("조합이 불가능함: \(String(describing: previous))")
+            return String(UnicodeScalar(그외.대체문자.rawValue)!)
+        }
+        return nil
     }
 
     /// 버퍼에 있는 커밋이나 조합 중인 글자를 내보내기
