@@ -54,7 +54,6 @@ extension InputController {
                 logger.debug("혹시라도 그릴게 있나? \(String(describing: commit))")
                 switch strategy {
                 case .directInsert:
-                    // let count = commit.utf16.count
                     let count = commit.count
                     logger.debug("백스페이스 - 글자 카운트 \(count), 자소 카운트? \(composableCount)")
                     let selectedRange = client.selectedRange()
@@ -68,7 +67,18 @@ extension InputController {
                     }
                 case .swapMarked:
                     let string = NSAttributedString(string: commit, attributes: [.backgroundColor: NSColor.clear])
-                    client.setMarkedText(string, selectionRange: .defaultRange, replacementRange: .defaultRange)
+                    //client.setMarkedText(string, selectionRange: .defaultRange, replacementRange: .defaultRange)
+                    let count = commit.count
+                    logger.debug("백스페이스 - 글자 카운트 \(count), 자소 카운트? \(composableCount)")
+                    let selectedRange = client.selectedRange()
+                    let replacementRange = NSRange(
+                        location: max(0, selectedRange.location - count),
+                        length: min(NSNotFound, selectedRange.length + count))
+                    if composableCount > 1 {
+                        client.setMarkedText(string, selectionRange: .defaultRange, replacementRange: .defaultRange)
+                    } else {
+                        client.insertText(string, replacementRange: replacementRange)
+                    }
                 }
 
                 return true
