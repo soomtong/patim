@@ -65,11 +65,9 @@ class HangulProcessor {
             || attributes.contains("NSMarkedClauseSegment") && attributes.contains("NSFont")
             || attributes.contains("NSMarkedClauseSegment") && attributes.contains("NSGlyphInfo")
         {
-            // logger.debug("입력기 처리 방식: 직결 입력")
             return InputStrategy.directInsert
         }
 
-        // logger.debug("입력기 처리 방식: 조합 대치")
         return InputStrategy.swapMarked
     }
 

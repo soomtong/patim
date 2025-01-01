@@ -52,7 +52,7 @@ extension InputController {
                     location: max(0, selectedRange.location - commit.count),
                     length: min(NSNotFound, selectedRange.length + commit.count))
 
-                // logger.debug("백스페이스 - 글자 카운트 \(commit.count), 자소 카운트? \(composableCount)")
+                logger.debug("백스페이스 - 글자 카운트 \(commit.count), 자소 카운트? \(composableCount)")
 
                 switch strategy {
                 case .directInsert:
