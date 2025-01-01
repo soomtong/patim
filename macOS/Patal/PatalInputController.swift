@@ -42,21 +42,31 @@ extension InputController {
         // 백스페이스 처리 로직이 필요함
         // 첫/가/끝 역순으로 자소를 제거하면서 setMarkedText 를 수행
         if keyCode == KeyCode.BACKSPACE.rawValue {
-            if !processor.composable() {
+            processor.doBackspace()
+
+            let composableCount = processor.composable()
+            logger.debug("백스페이스 - 자소 카운트: \(composableCount)")
+            if composableCount == 0 {
                 return false
             }
-            processor.doBackspace()
             // 한글 조합이 되고 있으면 다시 그리기
             if let commit = processor.composeCommitToUpdate() {
                 logger.debug("혹시라도 그릴게 있나? \(String(describing: commit))")
-                if strategy == .directInsert {
-                    let x = client.selectedRange()
-                    let count = commit.utf16.count
-                    let prevRange = NSRange(
-                        location: max(0, x.location - count),
-                        length: min(NSNotFound, x.length + count))
-                    client.insertText(commit, replacementRange: prevRange)
-                } else {
+                switch strategy {
+                case .directInsert:
+                    // let count = commit.utf16.count
+                    let count = commit.count
+                    logger.debug("백스페이스 - 글자 카운트 \(count), 자소 카운트? \(composableCount)")
+                    let selectedRange = client.selectedRange()
+                    let replacementRange = NSRange(
+                        location: max(0, selectedRange.location - count),
+                        length: min(NSNotFound, selectedRange.length + count))
+                    if composableCount > 1 {
+                        client.setMarkedText(commit, selectionRange: .defaultRange, replacementRange: replacementRange)
+                    } else {
+                        client.insertText(commit, replacementRange: replacementRange)
+                    }
+                case .swapMarked:
                     let string = NSAttributedString(string: commit, attributes: [.backgroundColor: NSColor.clear])
                     client.setMarkedText(string, selectionRange: .defaultRange, replacementRange: .defaultRange)
                 }

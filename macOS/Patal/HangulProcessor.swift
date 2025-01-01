@@ -96,10 +96,12 @@ class HangulProcessor {
     }
 
     /// 조합중인 낱자가 있는지 검사
-    func composable() -> Bool {
-        return (preedit.chosung != nil)
-            || (preedit.jungsung != nil)
-            || (preedit.jongsung != nil)
+    func composable() -> Int {
+        var count = 0
+        if preedit.chosung != nil { count += 1 }
+        if preedit.jungsung != nil { count += 1 }
+        if preedit.jongsung != nil { count += 1 }
+        return count
     }
 
     /// 조합 가능한 문자가 들어온다. 다시 검수할 필요는 없음. 겹자음/겹모음이 있을 수 있기 때문에 previous 를 기준으로 운영.
@@ -403,10 +405,11 @@ class HangulProcessor {
     }
 
     /// 백스페이스가 들어오면 첫/가/끝의 역순으로 지움
-    @MainActor
     func doBackspace() {
         logger.debug("백스페이스 처리 전: \(String(describing: preedit)) \(previous)")
-        previous.removeLast()
+        if previous.last != nil {
+            previous.removeLast()
+        }
         switch (preedit.chosung, preedit.jungsung, preedit.jongsung) {
         case (nil, nil, nil):
             print("아무것도 없음 \(preedit)")
