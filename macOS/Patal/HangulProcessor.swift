@@ -388,13 +388,12 @@ class HangulProcessor {
 
     /// 백스페이스가 들어오면 첫/가/끝의 역순으로 지움
     func doBackspace() {
-        logger.debug("백스페이스 처리: \(String(describing: preedit))")
+        logger.debug("백스페이스 처리: \(String(describing: preedit)) \(previous)")
+        clearBuffers()
         switch (preedit.chosung, preedit.jungsung, preedit.jongsung) {
         case (nil, nil, nil):
-            print("아무것도 없음")
-            if previous.last != nil {
-                previous.removeLast()
-            }
+            print("아무것도 없음 \(preedit)")
+            clearBuffers()
         case (.some(_), nil, nil):
             print("초성을 지워도 됨: \(String(describing: preedit))")
             preedit.chosung = nil

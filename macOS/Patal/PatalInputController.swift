@@ -25,7 +25,8 @@ extension InputController {
         // }
 
         // 백스페이스는 별도 처리해야 함
-        if !processor.verifyProcessable(rawStr) && keyCode != KeyCode.BACKSPACE.rawValue {
+        // 모디파이어가 있는 경우는 비한글 처리해야 함
+        if !processor.verifyProcessable(rawStr) && keyCode != KeyCode.BACKSPACE.rawValue || flags > 0 {
             let debug = "비한글 처리 키코드: \(String(describing: keyCode)) (\(String(describing: rawStr)))"
             logger.debug(debug)
 
@@ -44,10 +45,17 @@ extension InputController {
             processor.doBackspace()
             // 한글 조합이 되고 있으면 다시 그리기
             if let commit = processor.composeCommitToUpdate() {
+                logger.debug("혹시라도 그릴게 있나? \(String(describing: commit))")
+
                 let selection = NSRange(location: 0, length: commit.count)
                 client.setMarkedText(commit, selectionRange: selection, replacementRange: .notFound)
+
                 return true
             }
+            // xxx: 여기가 마지막 핵심일지도
+            logger.debug("아아~ 백스페이스 \(String(describing: rawStr)), \(String(describing: processor))")
+            let flushed = processor.flushCommit()
+            flushed.forEach { client.insertText($0, replacementRange: .notFound) }
 
             return false
         }

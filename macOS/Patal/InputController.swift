@@ -25,8 +25,8 @@ class InputController: IMKInputController {
         // ESC: 키코드: 53 (Optional("\134u{1B}"))
         case BACKSPACE = 51
         case SPACE = 49
-        case ENTER = 36
-        case RETURN = 76
+        case ENTER = 76
+        case RETURN = 36
         case ESC = 53
     }
 

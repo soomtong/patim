@@ -93,6 +93,19 @@ struct HangulProcessorTests {
         #expect(processor.preedit.jungsung != nil)
         #expect(processor.preedit.jongsung == nil)
         #expect(processor.getComposed() == "가")
+
+        processor.doBackspace()
+        #expect(processor.preedit.chosung != nil)
+        #expect(processor.preedit.jungsung == nil)
+        #expect(processor.preedit.jongsung == nil)
+        #expect(processor.getComposed() == "ㄱ")
+
+        processor.doBackspace()
+        print(processor.previous)
+        #expect(processor.preedit.chosung == nil)
+        #expect(processor.preedit.jungsung == nil)
+        #expect(processor.preedit.jongsung == nil)
+        #expect(processor.getComposed() == nil)
     }
 
     @Test("백스페이스 처리 - 초성")
