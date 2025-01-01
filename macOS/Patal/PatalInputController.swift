@@ -26,12 +26,12 @@ extension InputController {
 
         // 백스페이스는 별도 처리해야 함
         // 모디파이어가 있는 경우는 비한글 처리해야 함
-        if !processor.verifyProcessable(rawStr) && keyCode != KeyCode.BACKSPACE.rawValue || flags > 0 {
-            let debug = "비한글 처리 키코드: \(String(describing: keyCode)) (\(String(describing: rawStr)))"
-            logger.debug(debug)
-
+        // OS 에게 처리 절차를 바로 넘기는 조건
+        // - 백스페이스 + 글자단위 삭제 특성이 활성화 된 경우
+        // - command, option 키와 함께 사용되는 경우
+        // - 한글 레이아웃 자판 맵에 등록되지 않은 키코드 인 경우
+        if !processor.verifyProcessable(rawStr, keyCode: keyCode, modifierCode: flags) {
             // 백스페이스/엔터/그 외 키코드 처리
-
             let flushed = processor.flushCommit()
             flushed.forEach { client.insertText($0, replacementRange: .notFound) }
 

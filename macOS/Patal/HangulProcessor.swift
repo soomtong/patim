@@ -37,6 +37,8 @@ class HangulProcessor {
 
     var hangulLayout: HangulAutomata
 
+    let managableModifiers = [ModifierCode.NONE.rawValue, ModifierCode.SHIFT.rawValue]
+
     init(layout: HangulAutomata) {
         layoutName = String(describing: type(of: layout))
         hangulLayout = layout
@@ -72,7 +74,14 @@ class HangulProcessor {
     }
 
     /// 처리 가능한 입력인지 검증한다.
-    func verifyProcessable(_ s: String) -> Bool {
+    func verifyProcessable(_ s: String, keyCode: Int = 0, modifierCode: Int = 0) -> Bool {
+        logger.debug(" => \(s), \(keyCode), \(modifierCode)")
+
+        if !managableModifiers.contains(modifierCode) { return false }
+        // 자소단위 삭제(글자단위 삭제가 아닌 경우)인 경우는 composer 로 넘겨야 함(true 반환)
+        let composableBackspace = keyCode == KeyCode.BACKSPACE.rawValue && !hangulLayout.can글자단위삭제
+        if composableBackspace { return true }
+
         return hangulLayout.chosungMap.keys.contains(s)
             || hangulLayout.jungsungMap.keys.contains(s)
             || hangulLayout.jongsungMap.keys.contains(s)

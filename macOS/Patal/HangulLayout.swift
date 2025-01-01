@@ -32,6 +32,24 @@ enum LayoutTrait: String {
     case 아래아
     case 화살표
     case 두줄숫자
+    case 글자단위삭제
+}
+
+enum KeyCode: Int {
+    case BACKSPACE = 51
+    case SPACE = 49
+    case ENTER = 76
+    case RETURN = 36
+    case ESC = 53
+}
+
+enum ModifierCode: Int {
+    case NONE = 0
+    case SHIFT = 131072
+    case ALT = 524288
+    case CONTROL = 262144
+    case COMMAND = 1_048_576
+    case COMMAND_SHIFT = 1_179_648
 }
 
 let logger = CustomLogger(category: "Layout")
@@ -85,6 +103,10 @@ extension HangulAutomata {
 
     var has두줄숫자: Bool {
         return traits.contains(LayoutTrait.두줄숫자)
+    }
+
+    var can글자단위삭제: Bool {
+        return traits.contains(LayoutTrait.글자단위삭제)
     }
 
     func pickChosung(by char: String) -> unichar? {
