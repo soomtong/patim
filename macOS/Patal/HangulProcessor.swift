@@ -74,6 +74,12 @@ class HangulProcessor {
     }
 
     /// 처리 가능한 입력인지 검증한다.
+    /// - 백스페이스는 별도 처리해야 함
+    /// - 모디파이어가 있는 경우는 비한글 처리해야 함
+    /// OS 에게 처리 절차를 바로 넘기는 조건
+    /// - 백스페이스 + 글자단위 삭제 특성이 활성화 된 경우
+    /// - command, option 키와 함께 사용되는 경우
+    /// - 한글 레이아웃 자판 맵에 등록되지 않은 키코드 인 경우
     func verifyProcessable(_ s: String, keyCode: Int = 0, modifierCode: Int = 0) -> Bool {
         logger.debug(" => \(s), \(keyCode), \(modifierCode)")
 

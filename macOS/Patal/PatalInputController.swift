@@ -24,12 +24,6 @@ extension InputController {
             logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
         }
 
-        // 백스페이스는 별도 처리해야 함
-        // 모디파이어가 있는 경우는 비한글 처리해야 함
-        // OS 에게 처리 절차를 바로 넘기는 조건
-        // - 백스페이스 + 글자단위 삭제 특성이 활성화 된 경우
-        // - command, option 키와 함께 사용되는 경우
-        // - 한글 레이아웃 자판 맵에 등록되지 않은 키코드 인 경우
         if !processor.verifyProcessable(rawStr, keyCode: keyCode, modifierCode: flags) {
             // 백스페이스/엔터/그 외 키코드 처리
             let flushed = processor.flushCommit()
@@ -39,27 +33,29 @@ extension InputController {
             return false
         }
 
-        // 백스페이스 처리 로직이 필요함
-        // 첫/가/끝 역순으로 자소를 제거하면서 setMarkedText 를 수행
+        /// 백스페이스 처리 로직
+        /// client 와 processor 가 자주 사용되어 InputController 내부에 둠
         if keyCode == KeyCode.BACKSPACE.rawValue {
+            // 첫/가/끝 역순으로 자소를 제거하면서 setMarkedText 를 수행
             processor.doBackspace()
 
             let composableCount = processor.composable()
-            logger.debug("백스페이스 - 자소 카운트: \(composableCount)")
-            if composableCount == 0 {
+            // 조합중인 자소가 없으면 처리 중단
+            if composableCount < 1 {
                 return false
             }
-            // 한글 조합이 되고 있으면 다시 그리기
+            // 조합중이면 클라이언트 특성에 따라 갱신
             if let commit = processor.composeCommitToUpdate() {
-                logger.debug("혹시라도 그릴게 있나? \(String(describing: commit))")
+                // Sok 입력기 참고
+                let selectedRange = client.selectedRange()
+                let replacementRange = NSRange(
+                    location: max(0, selectedRange.location - commit.count),
+                    length: min(NSNotFound, selectedRange.length + commit.count))
+
+                // logger.debug("백스페이스 - 글자 카운트 \(commit.count), 자소 카운트? \(composableCount)")
+
                 switch strategy {
                 case .directInsert:
-                    let count = commit.count
-                    logger.debug("백스페이스 - 글자 카운트 \(count), 자소 카운트? \(composableCount)")
-                    let selectedRange = client.selectedRange()
-                    let replacementRange = NSRange(
-                        location: max(0, selectedRange.location - count),
-                        length: min(NSNotFound, selectedRange.length + count))
                     if composableCount > 1 {
                         client.setMarkedText(commit, selectionRange: .defaultRange, replacementRange: replacementRange)
                     } else {
@@ -67,13 +63,7 @@ extension InputController {
                     }
                 case .swapMarked:
                     let string = NSAttributedString(string: commit, attributes: [.backgroundColor: NSColor.clear])
-                    //client.setMarkedText(string, selectionRange: .defaultRange, replacementRange: .defaultRange)
-                    let count = commit.count
-                    logger.debug("백스페이스 - 글자 카운트 \(count), 자소 카운트? \(composableCount)")
-                    let selectedRange = client.selectedRange()
-                    let replacementRange = NSRange(
-                        location: max(0, selectedRange.location - count),
-                        length: min(NSNotFound, selectedRange.length + count))
+
                     if composableCount > 1 {
                         client.setMarkedText(string, selectionRange: .defaultRange, replacementRange: .defaultRange)
                     } else {
@@ -83,15 +73,8 @@ extension InputController {
 
                 return true
             }
-            // xxx: 여기가 마지막 핵심일지도
+
             processor.clearBuffers()
-            logger
-                .debug(
-                    "아아~ 백스페이스 \(String(describing: rawStr)), \(String(describing: processor.rawChar)), \(String(describing: processor.previous))"
-                )
-            //            let flushed = processor.flushCommit()
-            //            logger.debug("플러쉬? flushed: \(flushed) \(flushed.count)")
-            //            flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
 
             return false
         }
