@@ -95,6 +95,13 @@ class HangulProcessor {
             || hangulLayout.jongsungMap.keys.contains(s)
     }
 
+    /// 조합중인 낱자가 있는지 검사
+    func composable() -> Bool {
+        return (preedit.chosung != nil)
+            || (preedit.jungsung != nil)
+            || (preedit.jongsung != nil)
+    }
+
     /// 조합 가능한 문자가 들어온다. 다시 검수할 필요는 없음. 겹자음/겹모음이 있을 수 있기 때문에 previous 를 기준으로 운영.
     /// previous=raw char 조합, preedit=조합중인 한글, commit=조합된 한글
     /// todo: return (previous, preedit, commitState) 튜플로 개선
@@ -396,12 +403,14 @@ class HangulProcessor {
     }
 
     /// 백스페이스가 들어오면 첫/가/끝의 역순으로 지움
+    @MainActor
     func doBackspace() {
-        logger.debug("백스페이스 처리: \(String(describing: preedit)) \(previous)")
-        clearBuffers()
+        logger.debug("백스페이스 처리 전: \(String(describing: preedit)) \(previous)")
+        previous.removeLast()
         switch (preedit.chosung, preedit.jungsung, preedit.jongsung) {
         case (nil, nil, nil):
             print("아무것도 없음 \(preedit)")
+            logger.debug("백스페이스 처리: \(String(describing: preedit)) \(previous)")
             clearBuffers()
         case (.some(_), nil, nil):
             print("초성을 지워도 됨: \(String(describing: preedit))")
@@ -413,6 +422,7 @@ class HangulProcessor {
             print("종성을 지움: \(String(describing: preedit))")
             preedit.jongsung = nil
         }
+        logger.debug("백스페이스 처리 후: \(String(describing: preedit)) \(previous)")
     }
 
     func clearPreedit() {
@@ -423,8 +433,8 @@ class HangulProcessor {
     }
 
     func clearBuffers() {
+        previous.removeAll()
         rawChar = ""
-        previous = []
         완성 = nil
     }
 

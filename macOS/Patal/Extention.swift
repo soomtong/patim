@@ -8,7 +8,10 @@
 import Foundation
 
 extension NSRange {
-    static var notFound: NSRange {
+    static var notFoundRange: NSRange {
         NSRange(location: NSNotFound, length: NSNotFound)
+    }
+    static var defaultRange: NSRange {
+        NSRange(location: NSNotFound, length: 0)
     }
 }

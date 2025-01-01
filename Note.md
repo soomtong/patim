@@ -5,6 +5,10 @@
 ### Day 20
 
 백스페이스 처리하고 1.0 버전을 올린다.
+그런데 백스페이스 처리 어렵구나.
+마지막 초성이 사라져야 할 때 백스페이스가 남는다 즉 `` 이렇게 남는다.
+
+zed 는 swapMarked, textEdit, markEdit, Note 는 directInput 으로 판단된다.
 
 ### Day 19
 

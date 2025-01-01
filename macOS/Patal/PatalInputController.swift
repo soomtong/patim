@@ -19,10 +19,10 @@ extension InputController {
             return false
         }
         // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
-        // let strategy = processor.getInputStrategy(client: client)
-        // if let bundleId = client.bundleIdentifier() {
-        //     logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
-        // }
+        let strategy = processor.getInputStrategy(client: client)
+        if let bundleId = client.bundleIdentifier() {
+            logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
+        }
 
         // 백스페이스는 별도 처리해야 함
         // 모디파이어가 있는 경우는 비한글 처리해야 함
@@ -33,7 +33,7 @@ extension InputController {
         if !processor.verifyProcessable(rawStr, keyCode: keyCode, modifierCode: flags) {
             // 백스페이스/엔터/그 외 키코드 처리
             let flushed = processor.flushCommit()
-            flushed.forEach { client.insertText($0, replacementRange: .notFound) }
+            flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
 
             /// false 를 반환하는 경우는 시스템에서 rawStr 를 처리하고 출력한다
             return false
@@ -42,20 +42,36 @@ extension InputController {
         // 백스페이스 처리 로직이 필요함
         // 첫/가/끝 역순으로 자소를 제거하면서 setMarkedText 를 수행
         if keyCode == KeyCode.BACKSPACE.rawValue {
+            if !processor.composable() {
+                return false
+            }
             processor.doBackspace()
             // 한글 조합이 되고 있으면 다시 그리기
             if let commit = processor.composeCommitToUpdate() {
                 logger.debug("혹시라도 그릴게 있나? \(String(describing: commit))")
-
-                let selection = NSRange(location: 0, length: commit.count)
-                client.setMarkedText(commit, selectionRange: selection, replacementRange: .notFound)
+                if strategy == .directInsert {
+                    let x = client.selectedRange()
+                    let count = commit.utf16.count
+                    let prevRange = NSRange(
+                        location: max(0, x.location - count),
+                        length: min(NSNotFound, x.length + count))
+                    client.insertText(commit, replacementRange: prevRange)
+                } else {
+                    let string = NSAttributedString(string: commit, attributes: [.backgroundColor: NSColor.clear])
+                    client.setMarkedText(string, selectionRange: .defaultRange, replacementRange: .defaultRange)
+                }
 
                 return true
             }
             // xxx: 여기가 마지막 핵심일지도
-            logger.debug("아아~ 백스페이스 \(String(describing: rawStr)), \(String(describing: processor))")
-            let flushed = processor.flushCommit()
-            flushed.forEach { client.insertText($0, replacementRange: .notFound) }
+            processor.clearBuffers()
+            logger
+                .debug(
+                    "아아~ 백스페이스 \(String(describing: rawStr)), \(String(describing: processor.rawChar)), \(String(describing: processor.previous))"
+                )
+            //            let flushed = processor.flushCommit()
+            //            logger.debug("플러쉬? flushed: \(flushed) \(flushed.count)")
+            //            flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
 
             return false
         }
@@ -66,7 +82,7 @@ extension InputController {
         /// 비 한글 처리 먼저 진행
         if !processor.verifyCombosable(rawStr) {
             let flushed = processor.flushCommit()
-            flushed.forEach { client.insertText($0, replacementRange: .notFound) }
+            flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
 
             return true
         }
@@ -76,14 +92,14 @@ extension InputController {
         logger.debug("상태: \(String(describing: nextStatus))")
 
         if let commit = processor.완성 {
-            client.insertText(commit, replacementRange: .notFound)
+            client.insertText(commit, replacementRange: .notFoundRange)
             processor.완성 = nil
         }
 
         // updateCommit
         if let commit = processor.composeCommitToUpdate() {
             let selection = NSRange(location: 0, length: commit.count)
-            client.setMarkedText(commit, selectionRange: selection, replacementRange: .notFound)
+            client.setMarkedText(commit, selectionRange: selection, replacementRange: .notFoundRange)
 
             return true
         }
@@ -104,7 +120,7 @@ extension InputController {
         }
 
         let flushed = processor.flushCommit()
-        flushed.forEach { client.insertText($0, replacementRange: .notFound) }
+        flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
     }
 
     // 입력기 메뉴의 옵션이 변경되는 경우 호출됨

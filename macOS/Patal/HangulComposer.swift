@@ -165,13 +165,13 @@ class HangulComposer {
     func normalizeCompat(_ 낱자: 음소) -> Character {
         switch 낱자 {
         case .첫소리:
-            let codePoint = compat초성Map[chosungCode!]?.rawValue ?? 그외.채움문자.rawValue
+            let codePoint = compat초성Map[chosungCode!]?.rawValue ?? 그외.대체문자.rawValue
             return Character(UnicodeScalar(codePoint)!)
         case .가운뎃소리:
-            let codePoint = compat중성Map[jungsungCode!]?.rawValue ?? 그외.채움문자.rawValue
+            let codePoint = compat중성Map[jungsungCode!]?.rawValue ?? 그외.대체문자.rawValue
             return Character(UnicodeScalar(codePoint)!)
         case .끝소리:
-            let codePoint = compat종성Map[jongsungCode!]?.rawValue ?? 그외.채움문자.rawValue
+            let codePoint = compat종성Map[jongsungCode!]?.rawValue ?? 그외.대체문자.rawValue
             return Character(UnicodeScalar(codePoint)!)
         }
     }
