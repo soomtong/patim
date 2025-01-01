@@ -37,19 +37,8 @@ extension InputController {
             // 백스페이스 처리 로직이 필요함
             // 첫/가/끝 역순으로 자소를 제거하면서 setMarkedText 를 수행
 
-            // 남은 문자가 있는 경우 내보내자
-            if let commit = processor.완성 {
-                logger.debug("남은 완성 글자: \(String(describing: commit))")
-                client.insertText(commit, replacementRange: .notFound)
-            }
-            if let preedit = processor.getComposed() {
-                // todo: preedit 은 완성된 문자가 아니라 화면에 출력 가능한 형태로 보정해야 함
-                // let compat = processor.getCompat(preedit)
-                logger.debug("조합 중인 글자: \(String(describing: preedit))")
-                client.insertText(preedit, replacementRange: .notFound)
-            }
-
-            processor.flushCommit()
+            let flushed = processor.flushCommit()
+            flushed.forEach { client.insertText($0, replacementRange: .notFound) }
 
             /// false 를 반환하는 경우는 시스템에서 rawStr 를 처리하고 출력한다
             return false
@@ -60,14 +49,8 @@ extension InputController {
 
         /// 비 한글 처리 먼저 진행
         if !processor.verifyCombosable(rawStr) {
-            if let preedit = processor.getComposed() {
-                client.insertText(preedit, replacementRange: .notFound)
-            }
-            if let nonSyllable = processor.getConverted() {
-                client.insertText(nonSyllable, replacementRange: .notFound)
-            }
-
-            processor.flushCommit()
+            let flushed = processor.flushCommit()
+            flushed.forEach { client.insertText($0, replacementRange: .notFound) }
 
             return true
         }
@@ -108,25 +91,15 @@ extension InputController {
         return optionMenu.menu
     }
 
-    // 자판 전환/ 마우스 클릭 등으로 조합을 끝낼 경우
+    // 자판 전환, 마우스 클릭 등으로 조합을 끝낼 경우
     override func commitComposition(_ sender: Any!) {
-        logger.debug("자판 전환/ 마우스 클릭 등으로 조합을 끝낼 경우")
+        logger.debug("자판 전환, 마우스 클릭 등으로 조합을 끝낼 경우")
         guard let client = sender as? IMKTextInput else {
             return
         }
 
-        // 남은 문자가 있는 경우 내보내자
-        if let commit = processor.완성 {
-            logger.debug("남은 완성 글자: \(String(describing: commit))")
-            client.insertText(commit, replacementRange: .notFound)
-        }
-        if let preedit = processor.getComposed() {
-            // todo: preedit 은 완성된 문자가 아니라 화면에 출력 가능한 형태로 보정해야 함
-            // let compat = processor.getCompat(preedit)
-            logger.debug("조합 중인 글자: \(String(describing: preedit))")
-            client.insertText(preedit, replacementRange: .notFound)
-        }
-        processor.flushCommit()
+        let flushed = processor.flushCommit()
+        flushed.forEach { client.insertText($0, replacementRange: .notFound) }
     }
 
     // 입력기 메뉴의 옵션이 변경되는 경우 호출됨

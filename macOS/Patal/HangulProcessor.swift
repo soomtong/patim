@@ -379,7 +379,6 @@ class HangulProcessor {
 
     /// 한글이 아닌 문자가 들어오는 경우
     func getConverted() -> String? {
-        logger.debug("비한글 조합: \(rawChar)")
         if let nonSyllable = hangulLayout.pickNonSyllable(by: rawChar) {
             return nonSyllable
         }
@@ -394,19 +393,33 @@ class HangulProcessor {
         previous.removeAll()
     }
 
-    func flushCommit() {
+    func clearBuffers() {
         rawChar = ""
-        clearPreedit()
+        previous = []
         완성 = nil
     }
 
-    // func convertFromCodepoint() -> String {
-    //     var result: [unichar] = []
-    //
-    //     for codePoint in preedit {
-    //         result.append(codePoint)
-    //     }
-    //
-    //     return String(utf16CodeUnits: result, count: result.count)
-    // }
+    /// 버퍼에 있는 커밋이나 조합 중인 글자를 내보내기
+    func flushCommit() -> [String] {
+        var buffers: [String] = []
+        // 남은 문자가 있는 경우 내보내자
+        if let commit = 완성 {
+            // 이 경우는 거의 없을 거 같은데...
+            logger.debug("남은 완성 글자 내보내기: \(String(describing: commit))")
+            buffers.append(commit)
+        }
+        if let preedit = getComposed() {
+            logger.debug("조합 중인 글자 내보내기: \(String(describing: preedit))")
+            buffers.append(preedit)
+        }
+        if let nonSyllable = getConverted() {
+            logger.debug("조합 불가한 글자 내보내기: \(String(describing: nonSyllable))")
+            buffers.append(nonSyllable)
+        }
+
+        clearPreedit()
+        clearBuffers()
+
+        return buffers
+    }
 }

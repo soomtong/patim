@@ -58,6 +58,7 @@ struct HangulProcessorTests {
     @Test("Non-Hangul Composition")
     func testNonHangulComposition() {
         processor.rawChar = "!"
+        #expect(processor.getComposed() == nil)
         #expect(processor.getConverted() == nil)
     }
 
@@ -65,8 +66,9 @@ struct HangulProcessorTests {
     func testFlushCommit() {
         processor.rawChar = "k"
         _ = processor.한글조합()
-        processor.flushCommit()
-        #expect(processor.getComposed() == nil)
+        #expect(processor.getComposed() == "ㄱ")
+        let buffers = processor.flushCommit()
+        #expect(buffers.count == 1)
     }
 
     @Test("Clear Preedit")

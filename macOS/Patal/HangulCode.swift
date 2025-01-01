@@ -7,7 +7,11 @@
 
 import Foundation
 
-/// https://blog.naver.com/anthony79/220413491136
+enum 구분 {
+    case 한글
+    case 비한글
+}
+
 enum 음소 {
     case 첫소리
     case 가운뎃소리
