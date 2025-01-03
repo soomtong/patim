@@ -64,6 +64,7 @@ distribute:
 
 clean:
 	@echo "Cleaning up..."
+	@rm -rf $(DIST_DIR)/*.zip
 	@rm -rf $(DIST_DIR)/*.pkg
 	@rm -rf $(DIST_DIR)/Distribution.xml
 	@echo "Cleaned up."
