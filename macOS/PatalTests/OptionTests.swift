@@ -18,7 +18,7 @@ struct OptionTests {
         var layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
         var processor: HangulProcessor!
         var optionMenu: OptionMenu!
-        let holders = [LayoutTrait.글자단위삭제.rawValue, LayoutTrait.화살표.rawValue, LayoutTrait.모아치기.rawValue]
+        let holders = [LayoutTrait.글자단위삭제.rawValue, LayoutTrait.화살표.rawValue]
 
         init() {
             processor = HangulProcessor(layout: layout)
