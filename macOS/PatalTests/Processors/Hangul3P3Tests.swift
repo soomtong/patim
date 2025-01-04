@@ -86,11 +86,11 @@ struct Hangul3P3Tests {
         #expect(d9 == "9")
     }
 
-    @Test("모아치기")
+    @Test("느슨한조합")
     func availableTraits() {
         print(processor.hangulLayout.availableTraits)
         print(processor.hangulLayout.traits)
-        #expect(processor.hangulLayout.traits.contains(LayoutTrait.모아치기) == true)
+        #expect(processor.hangulLayout.traits.contains(LayoutTrait.느슨한조합) == true)
     }
 
     @Test("ㄲ")

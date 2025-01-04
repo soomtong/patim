@@ -96,7 +96,7 @@ class HangulComposer {
             jungsungCode = jungsungPoint
             jongsungCode = jongsungPoint
 
-        // 아니 모아치기할 수 있지 않을까?
+        // 아니 느슨한 조합을 할 수 있지 않을까?
         case (let chosungPoint?, nil, let jongsungPoint?)
         where chosungMapOffset[chosungPoint] != nil && jongsungMapOffset[jongsungPoint] != nil:
             chosungCode = chosungPoint
