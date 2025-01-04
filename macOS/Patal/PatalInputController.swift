@@ -37,9 +37,7 @@ extension InputController {
         /// client 와 processor 가 자주 사용되어 InputController 내부에 둠
         if keyCode == KeyCode.BACKSPACE.rawValue {
             // 첫/가/끝 역순으로 자소를 제거하면서 setMarkedText 를 수행
-            processor.doBackspace()
-
-            let composableCount = processor.composable()
+            let composableCount = processor.applyBackspace()
             // 조합중인 자소가 없으면 처리 중단
             if composableCount < 1 {
                 return false

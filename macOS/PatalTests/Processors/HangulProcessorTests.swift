@@ -74,13 +74,15 @@ struct HangulProcessorTests {
     @Test("백스페이스 처리")
     func testBackspace() {
         processor.preedit.chosung = 초성.기역
-        processor.doBackspace()
+        var composableCount = processor.applyBackspace()
+        #expect(composableCount == 0)
         #expect(processor.preedit.chosung == nil)
         #expect(processor.getComposed() == nil)
 
         processor.preedit.chosung = 초성.기역
         processor.preedit.jungsung = 중성.아
-        processor.doBackspace()
+        composableCount = processor.applyBackspace()
+        #expect(composableCount == 1)
         #expect(processor.preedit.chosung != nil)
         #expect(processor.preedit.jungsung == nil)
         #expect(processor.getComposed() == "ㄱ")
@@ -88,20 +90,23 @@ struct HangulProcessorTests {
         processor.preedit.chosung = 초성.기역
         processor.preedit.jungsung = 중성.아
         processor.preedit.jongsung = 종성.미음
-        processor.doBackspace()
+        composableCount = processor.applyBackspace()
+        #expect(composableCount == 2)
         #expect(processor.preedit.chosung != nil)
         #expect(processor.preedit.jungsung != nil)
         #expect(processor.preedit.jongsung == nil)
         #expect(processor.getComposed() == "가")
 
-        processor.doBackspace()
+        composableCount = processor.applyBackspace()
+        #expect(composableCount == 1)
         #expect(processor.preedit.chosung != nil)
         #expect(processor.preedit.jungsung == nil)
         #expect(processor.preedit.jongsung == nil)
         #expect(processor.getComposed() == "ㄱ")
 
-        processor.doBackspace()
+        composableCount = processor.applyBackspace()
         print(processor.previous)
+        #expect(composableCount == 0)
         #expect(processor.preedit.chosung == nil)
         #expect(processor.preedit.jungsung == nil)
         #expect(processor.preedit.jongsung == nil)
@@ -112,7 +117,8 @@ struct HangulProcessorTests {
     func testBackspace1() {
         processor.rawChar = "k"
         _ = processor.한글조합()
-        processor.doBackspace()
+        let composableCount = processor.applyBackspace()
+        #expect(composableCount == 0)
         #expect(processor.preedit.chosung == nil)
         #expect(processor.getComposed() == nil)
     }
@@ -127,7 +133,8 @@ struct HangulProcessorTests {
         _ = processor.한글조합()
         let c2 = processor.getComposed()
         #expect(c2 == "가")
-        processor.doBackspace()
+        let composableCount = processor.applyBackspace()
+        #expect(composableCount == 1)
         #expect(processor.preedit.chosung != nil)
         #expect(processor.preedit.jungsung == nil)
         #expect(processor.getComposed() == "ㄱ")
@@ -147,7 +154,8 @@ struct HangulProcessorTests {
         _ = processor.한글조합()
         let c3 = processor.getComposed()
         #expect(c3 == "강")
-        processor.doBackspace()
+        let composableCount = processor.applyBackspace()
+        #expect(composableCount == 2)
         #expect(processor.preedit.chosung != nil)
         #expect(processor.preedit.jungsung != nil)
         #expect(processor.preedit.jongsung == nil)

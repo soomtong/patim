@@ -54,6 +54,15 @@ class HangulProcessor {
         logger.debug("입력키 처리 클래스 해제: \(layoutName)")
     }
 
+    /// 조합중인 낱자가 있는지 검사
+    private func countComposable() -> Int {
+        var count = 0
+        if preedit.chosung != nil { count += 1 }
+        if preedit.jungsung != nil { count += 1 }
+        if preedit.jongsung != nil { count += 1 }
+        return count
+    }
+
     /// 입력 방식 강제 지정
     func getInputStrategy(client: IMKTextInput) -> InputStrategy {
         // 클라이언트에 따라서 setMarkedText 를 사용할 것인지 insertText 를 사용할 것인지 판단
@@ -97,15 +106,6 @@ class HangulProcessor {
         return hangulLayout.chosungMap.keys.contains(s)
             || hangulLayout.jungsungMap.keys.contains(s)
             || hangulLayout.jongsungMap.keys.contains(s)
-    }
-
-    /// 조합중인 낱자가 있는지 검사
-    func composable() -> Int {
-        var count = 0
-        if preedit.chosung != nil { count += 1 }
-        if preedit.jungsung != nil { count += 1 }
-        if preedit.jongsung != nil { count += 1 }
-        return count
     }
 
     /// 조합 가능한 문자가 들어온다. 다시 검수할 필요는 없음. 겹자음/겹모음이 있을 수 있기 때문에 previous 를 기준으로 운영.
@@ -409,7 +409,7 @@ class HangulProcessor {
     }
 
     /// 백스페이스가 들어오면 첫/가/끝의 역순으로 지움
-    func doBackspace() {
+    func applyBackspace() -> Int {
         logger.debug("백스페이스 처리 전: \(String(describing: preedit)) \(previous)")
         if previous.last != nil {
             previous.removeLast()
@@ -430,6 +430,8 @@ class HangulProcessor {
             preedit.jongsung = nil
         }
         logger.debug("백스페이스 처리 후: \(String(describing: preedit)) \(previous)")
+
+        return countComposable()
     }
 
     func clearPreedit() {
