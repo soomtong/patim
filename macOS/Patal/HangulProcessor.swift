@@ -91,8 +91,11 @@ class HangulProcessor {
         logger.debug(" => \(s), \(keyCode), \(modifierCode)")
 
         if !managableModifiers.contains(modifierCode) { return false }
+
         // 자소단위 삭제(글자단위 삭제가 아닌 경우)인 경우는 composer 로 넘겨야 함(true 반환)
-        let composableBackspace = keyCode == KeyCode.BACKSPACE.rawValue && !hangulLayout.can글자단위삭제
+        let composableBackspace =
+            !hangulLayout.can글자단위삭제
+            && (keyCode == KeyCode.BACKSPACE.rawValue && modifierCode == 0)
         if composableBackspace { return true }
 
         return hangulLayout.chosungMap.keys.contains(s)
