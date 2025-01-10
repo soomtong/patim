@@ -179,6 +179,21 @@ struct Hangul3ShinPcsTests {
         #expect(c2 == "ㅎ")
     }
 
+    @Test("종성 ㅎㅎ")
+    func getComposedChar_종성ㅎㅎ() {
+        processor.rawChar = "D"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㅎ")
+
+        processor.rawChar = "D"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.committed)
+        let c2 = processor.getComposed()
+        #expect(c2 == "ㅎ")
+    }
+
     @Test("ㅏ")
     func getComposedChar_ㅏ() {
         processor.rawChar = "f"
