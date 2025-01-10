@@ -55,7 +55,7 @@ class HangulProcessor {
     }
 
     /// 조합중인 낱자가 있는지 검사
-    private func countComposable() -> Int {
+    func countComposable() -> Int {
         var count = 0
         if preedit.chosung != nil { count += 1 }
         if preedit.jungsung != nil { count += 1 }
@@ -302,12 +302,15 @@ class HangulProcessor {
 
             print("초성과 중성이 있는데 중성이 또 왔다")
             /// "ㅁ" + "ㅗ" + "ㅏ" -> "뫄"
-            previous.append(rawChar)
+            // 백스페이스로 종성을 지우고 다시 종성을 조합하기 위해 previous 를 검사해야 함
+            if (previous.count > 0) {
+                previous.append(rawChar)
 
-            if let 복합중성코드 = hangulLayout.pickJungsung(by: previous.joined()) {
-                preedit.jungsung = 중성(rawValue: 복합중성코드)
+                if let 복합중성코드 = hangulLayout.pickJungsung(by: previous.joined()) {
+                    preedit.jungsung = 중성(rawValue: 복합중성코드)
 
-                return CommitState.composing
+                    return CommitState.composing
+                }
             }
 
             print("종성이 왔다면!")

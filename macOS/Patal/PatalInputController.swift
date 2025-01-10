@@ -37,7 +37,12 @@ extension InputController {
         /// client 와 processor 가 자주 사용되어 InputController 내부에 둠
         if keyCode == KeyCode.BACKSPACE.rawValue {
             // 첫/가/끝 역순으로 자소를 제거하면서 setMarkedText 를 수행
-            let composableCount = processor.applyBackspace()
+            var composableCount = processor.countComposable()
+            logger.debug("백스페이스 시작 - 자소 카운트? \(composableCount)")
+            if composableCount < 1 {
+                return false
+            }
+            composableCount = processor.applyBackspace()
             // 조합중인 자소가 없으면 처리 중단
             if composableCount < 1 {
                 // 하나 남은 자소를 마감 처리
@@ -53,7 +58,7 @@ extension InputController {
                     location: max(0, selectedRange.location - commit.count),
                     length: min(NSNotFound, selectedRange.length + commit.count))
 
-                logger.debug("백스페이스 - 글자 카운트 \(commit.count), 자소 카운트? \(composableCount)")
+                logger.debug("백스페이스 처리 - 글자 카운트 \(commit.count), 자소 카운트? \(composableCount)")
 
                 switch strategy {
                 case .directInsert:
