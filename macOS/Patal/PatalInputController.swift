@@ -40,7 +40,10 @@ extension InputController {
             let composableCount = processor.applyBackspace()
             // 조합중인 자소가 없으면 처리 중단
             if composableCount < 1 {
-                return false
+                // 하나 남은 자소를 마감 처리
+                client.setMarkedText("", selectionRange: .defaultRange, replacementRange: .defaultRange)
+
+                return true
             }
             // 조합중이면 클라이언트 특성에 따라 갱신
             if let commit = processor.composeCommitToUpdate() {
@@ -54,7 +57,7 @@ extension InputController {
 
                 switch strategy {
                 case .directInsert:
-                    if composableCount > 1 {
+                    if composableCount > 0 {
                         client.setMarkedText(commit, selectionRange: .defaultRange, replacementRange: replacementRange)
                     } else {
                         client.insertText(commit, replacementRange: replacementRange)
@@ -62,7 +65,7 @@ extension InputController {
                 case .swapMarked:
                     let string = NSAttributedString(string: commit, attributes: [.backgroundColor: NSColor.clear])
 
-                    if composableCount > 1 {
+                    if composableCount > 0 {
                         client.setMarkedText(string, selectionRange: .defaultRange, replacementRange: .defaultRange)
                     } else {
                         client.insertText(string, replacementRange: replacementRange)
