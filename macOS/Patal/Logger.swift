@@ -8,7 +8,7 @@
 import Foundation
 import os
 
-class CustomLogger {
+final class CustomLogger: Sendable {
     private let debugLogger: Logger
 
     init(category: String) {

@@ -48,14 +48,12 @@ class InputController: IMKInputController {
     }
 
     // 입력기가 전환될 때마다 호출됨
-    @MainActor
     override open func activateServer(_ sender: Any!) {
         super.activateServer(sender)
         logger.debug("입력기 서버 시작: \(layoutName)")
     }
 
     // 입력기가 비활성화 되면 호출됨
-    @MainActor
     override open func deactivateServer(_ sender: Any!) {
         super.deactivateServer(sender)
         logger.debug("입력기 서버 중단: \(layoutName)")

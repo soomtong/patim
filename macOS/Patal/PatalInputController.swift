@@ -11,7 +11,6 @@ import InputMethodKit
 
 extension InputController {
     // 백스페이스, 엔터, ESC 키등의 추가 처리를 위해 inputText 대상을 변경
-    @MainActor
     override func inputText(
         _ rawStr: String!, key keyCode: Int, modifiers flags: Int, client sender: Any!
     ) -> Bool {
