@@ -58,9 +58,4 @@ class InputController: IMKInputController {
         super.deactivateServer(sender)
         logger.debug("입력기 서버 중단: \(layoutName)")
     }
-
-    //override func handle(_ event: NSEvent, client sender: Any) -> Bool {
-    //    NSLog("hello patal input method: \(event)")
-    //    return false
-    //}
 }

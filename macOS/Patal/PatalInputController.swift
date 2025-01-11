@@ -10,85 +10,83 @@ import Foundation
 import InputMethodKit
 
 extension InputController {
-    // 백스페이스, 엔터, ESC 키등의 추가 처리를 위해 inputText 대상을 변경
-    override func inputText(
-        _ rawStr: String!, key keyCode: Int, modifiers flags: Int, client sender: Any!
-    ) -> Bool {
+    // 백스페이스 처리
+    private func updateEmptyCommit(client: IMKTextInput) -> Bool {
+        client.setMarkedText("", selectionRange: .defaultRange, replacementRange: .defaultRange)
+        return true
+    }
+
+    private func updateReplacementRangeCommit(client: IMKTextInput, with: String) -> Bool {
+        let selectedRange = client.selectedRange()
+        let replacementRange = NSRange(
+            location: max(0, selectedRange.location - with.count),
+            length: min(NSNotFound, selectedRange.length + with.count))
+
+        client.setMarkedText(with, selectionRange: .defaultRange, replacementRange: replacementRange)
+        return true
+    }
+
+    private func updateDefaultRangeCommit(client: IMKTextInput, with: String) -> Bool {
+        let string = NSAttributedString(string: with, attributes: [.backgroundColor: NSColor.clear])
+        client.setMarkedText(string, selectionRange: .defaultRange, replacementRange: .defaultRange)
+        return true
+    }
+
+    // 조합 처리
+    private func updateSelectedRangeCommit(client: IMKTextInput, with: String) -> Bool {
+        let selection = NSRange(location: 0, length: with.count)
+        client.setMarkedText(with, selectionRange: selection, replacementRange: .notFoundRange)
+        return true
+    }
+
+    // 글자 조합, 백스페이스, 엔터, ESC 키 처리
+    override func inputText(_ s: String!, key keyCode: Int, modifiers flags: Int, client sender: Any!) -> Bool {
         guard let client = sender as? IMKTextInput else {
+            // false 를 반환하는 경우는 시스템에서 string 을 처리하고 출력한다
             return false
         }
         // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
         let strategy = processor.getInputStrategy(client: client)
-        if let bundleId = client.bundleIdentifier() {
-            logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
-        }
+        // if let bundleId = client.bundleIdentifier() {
+        //    logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
+        // }
 
-        if !processor.verifyProcessable(rawStr, keyCode: keyCode, modifierCode: flags) {
-            // 백스페이스/엔터/그 외 키코드 처리
+        if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: flags) {
+            // 엔터 같은 특수 키코드 처리
             let flushed = processor.flushCommit()
+            logger.debug("내보낼 것: \(flushed)")
             flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
-
-            /// false 를 반환하는 경우는 시스템에서 rawStr 를 처리하고 출력한다
             return false
         }
 
         /// 백스페이스 처리 로직
-        /// client 와 processor 가 자주 사용되어 InputController 내부에 둠
         if keyCode == KeyCode.BACKSPACE.rawValue {
-            // 첫/가/끝 역순으로 자소를 제거하면서 setMarkedText 를 수행
-            var composableCount = processor.countComposable()
-            logger.debug("백스페이스 시작 - 자소 카운트? \(composableCount)")
-            if composableCount < 1 {
+            /// 조합중인 자소가 없으면 처리 중단
+            if processor.countComposable() < 1 {
                 return false
             }
-            composableCount = processor.applyBackspace()
-            // 조합중인 자소가 없으면 처리 중단
-            if composableCount < 1 {
-                // 하나 남은 자소를 마감 처리
-                client.setMarkedText("", selectionRange: .defaultRange, replacementRange: .defaultRange)
-
-                return true
+            /// 조합 중인 자소에 대해 백스페이스 처리 후 조합할 자소가 없다면 마감
+            if processor.applyBackspace() < 1 {
+                return updateEmptyCommit(client: client)
             }
-            // 조합중이면 클라이언트 특성에 따라 갱신
+            /// 조합중이면 클라이언트 특성에 따라 첫/가/끝 역순으로 자소를 제거하면서 setMarkedText 를 수행
             if let commit = processor.composeCommitToUpdate() {
-                // Sok 입력기 참고
-                let selectedRange = client.selectedRange()
-                let replacementRange = NSRange(
-                    location: max(0, selectedRange.location - commit.count),
-                    length: min(NSNotFound, selectedRange.length + commit.count))
-
-                logger.debug("백스페이스 처리 - 글자 카운트 \(commit.count), 자소 카운트? \(composableCount)")
-
                 switch strategy {
                 case .directInsert:
-                    if composableCount > 0 {
-                        client.setMarkedText(commit, selectionRange: .defaultRange, replacementRange: replacementRange)
-                    } else {
-                        client.insertText(commit, replacementRange: replacementRange)
-                    }
+                    return updateReplacementRangeCommit(client: client, with: commit)
                 case .swapMarked:
-                    let string = NSAttributedString(string: commit, attributes: [.backgroundColor: NSColor.clear])
-
-                    if composableCount > 0 {
-                        client.setMarkedText(string, selectionRange: .defaultRange, replacementRange: .defaultRange)
-                    } else {
-                        client.insertText(string, replacementRange: replacementRange)
-                    }
+                    return updateDefaultRangeCommit(client: client, with: commit)
                 }
-
-                return true
             }
-
-            processor.clearBuffers()
 
             return false
         }
 
         /// 한글 조합 시작
-        processor.rawChar = rawStr
+        processor.rawChar = s
 
         /// 비 한글 처리 먼저 진행
-        if !processor.verifyCombosable(rawStr) {
+        if !processor.verifyCombosable(s) {
             let flushed = processor.flushCommit()
             flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
 
@@ -101,15 +99,12 @@ extension InputController {
 
         if let commit = processor.완성 {
             client.insertText(commit, replacementRange: .notFoundRange)
-            processor.완성 = nil
+            processor.clearBuffers()
         }
 
         // updateCommit
         if let commit = processor.composeCommitToUpdate() {
-            let selection = NSRange(location: 0, length: commit.count)
-            client.setMarkedText(commit, selectionRange: selection, replacementRange: .notFoundRange)
-
-            return true
+            return updateSelectedRangeCommit(client: client, with: commit)
         }
 
         return false
@@ -150,5 +145,4 @@ extension InputController {
             }
         }
     }
-
 }

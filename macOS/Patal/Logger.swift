@@ -23,6 +23,10 @@ final class CustomLogger: Sendable {
         }
     }
 
+    func info(_ message: String = "") {
+        debugLogger.info("\(message, privacy: .public)")
+    }
+
     func error(_ message: String = "") {
         debugLogger.error("\(message, privacy: .public)")
     }

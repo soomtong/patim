@@ -422,9 +422,7 @@ class HangulProcessor {
         }
         switch (preedit.chosung, preedit.jungsung, preedit.jongsung) {
         case (nil, nil, nil):
-            print("아무것도 없음 \(preedit)")
-            logger.debug("백스페이스 처리: \(String(describing: preedit)) \(previous)")
-            clearBuffers()
+            print("아무것도 없음")
         case (.some(_), nil, nil):
             print("초성을 지워도 됨: \(String(describing: preedit))")
             preedit.chosung = nil
@@ -448,7 +446,6 @@ class HangulProcessor {
     }
 
     func clearBuffers() {
-        previous.removeAll()
         rawChar = ""
         완성 = nil
     }
