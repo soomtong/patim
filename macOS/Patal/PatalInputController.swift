@@ -54,8 +54,10 @@ extension InputController {
         if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: flags) {
             // 엔터 같은 특수 키코드 처리
             let flushed = processor.flushCommit()
-            logger.debug("내보낼 것: \(flushed)")
-            flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
+            if !flushed.isEmpty {
+                logger.debug("내보낼 것: \(flushed)")
+                flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
+            }
             return false
         }
 
@@ -123,7 +125,10 @@ extension InputController {
         }
 
         let flushed = processor.flushCommit()
-        flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
+        if !flushed.isEmpty {
+            logger.debug("강제로 내보낼 것: \(flushed)")
+            flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
+        }
     }
 
     // 입력기 메뉴의 옵션이 변경되는 경우 호출됨
