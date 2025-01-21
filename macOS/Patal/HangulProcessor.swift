@@ -130,22 +130,41 @@ class HangulProcessor {
                 return CommitState.composing
             }
 
-            /// "" -> "ㅏ"
-            print("시작? 중성을 채움")
-            if let 중성코드 = hangulLayout.pickJungsung(by: rawChar) {
-                preedit.jungsung = 중성(rawValue: 중성코드)
-                previous.append(rawChar)
+            // 느슨한 조합인 경우 중성이 우선
+            if hangulLayout.can느슨한조합 {
+                /// "" -> "ㅏ"
+                print("시작? 중성을 채움")
+                if let 중성코드 = hangulLayout.pickJungsung(by: rawChar) {
+                    preedit.jungsung = 중성(rawValue: 중성코드)
+                    previous.append(rawChar)
 
-                return CommitState.composing
-            }
+                    return CommitState.composing
+                }
 
-            /// "" -> "ㄴ"
-            print("시작? 종성을 채움")
-            if let 종성코드 = hangulLayout.pickJongsung(by: rawChar) {
-                preedit.jongsung = 종성(rawValue: 종성코드)
-                previous.append(rawChar)
+                /// "" -> "ㄴ"
+                print("시작? 종성을 채움")
+                if let 종성코드 = hangulLayout.pickJongsung(by: rawChar) {
+                    preedit.jongsung = 종성(rawValue: 종성코드)
+                    previous.append(rawChar)
 
-                return CommitState.composing
+                    return CommitState.composing
+                }
+            } else {
+                print("시작? 종성을 채움")
+                if let 종성코드 = hangulLayout.pickJongsung(by: rawChar) {
+                    preedit.jongsung = 종성(rawValue: 종성코드)
+                    previous.append(rawChar)
+
+                    return CommitState.composing
+                }
+
+                print("시작? 중성을 채움")
+                if let 중성코드 = hangulLayout.pickJungsung(by: rawChar) {
+                    preedit.jungsung = 중성(rawValue: 중성코드)
+                    previous.append(rawChar)
+
+                    return CommitState.composing
+                }
             }
         case (_, nil, nil):
             /// "ㄱ" + "ㅏ" -> "가"
@@ -303,7 +322,7 @@ class HangulProcessor {
             print("초성과 중성이 있는데 중성이 또 왔다")
             /// "ㅁ" + "ㅗ" + "ㅏ" -> "뫄"
             // 백스페이스로 종성을 지우고 다시 종성을 조합하기 위해 previous 를 검사해야 함
-            if (previous.count > 0) {
+            if previous.count > 0 {
                 previous.append(rawChar)
 
                 if let 복합중성코드 = hangulLayout.pickJungsung(by: previous.joined()) {
