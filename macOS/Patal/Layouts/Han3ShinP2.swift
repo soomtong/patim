@@ -14,7 +14,7 @@ import Foundation
 
 /// enum LayoutName 의 createLayoutInstance 조합기 이름과 같아야 합니다.
 struct Han3ShinP2Layout: HangulAutomata {
-    let availableTraits: Set<LayoutTrait> = [LayoutTrait.아래아, LayoutTrait.글자단위삭제]
+    let availableTraits: Set<LayoutTrait> = [LayoutTrait.아래아, LayoutTrait.글자단위삭제, LayoutTrait.화살표]
     var traits: Set<LayoutTrait> = []
 
     let chosungMap: [String: 초성] = [
@@ -111,18 +111,27 @@ struct Han3ShinP2Layout: HangulAutomata {
     ]
 
     let nonSyllableMap: [String: String] = [
-        "Y": "✕",  // U+2715
-        "U": "◯",  // U+25EF
-        "I": "※",  // U+203B
-        "O": "◦",  // U+25E6
+        "Y": "✕",
+        "U": "○",
+        "I": "△",
+        "O": "※",
         "P": ";",
-        "H": "☐",  // U+2610
+        "H": "□",
         "J": "\'",
         "K": "\"",
         "L": "·",
         "\"": "/",
         "N": "―",
         "M": "…",
+    ]
+
+    let nonSyllableMapWith쉬운화살표: [String: String] = [
+        "Y": "✕",
+        "U": "◯",
+        "I": "∆",
+        "H": "☐",
+        "N": "←",
+        "M": "→",
     ]
 
     func pickJungsung(by char: String) -> unichar? {
@@ -137,5 +146,19 @@ struct Han3ShinP2Layout: HangulAutomata {
         }
 
         return jungsung.rawValue
+    }
+
+    func pickNonSyllable(by char: String) -> String? {
+        if has화살표 {
+            if let nonSyllable = nonSyllableMapWith쉬운화살표[char] {
+                return nonSyllable
+            }
+        }
+
+        guard let nonSyllable = nonSyllableMap[char] else {
+            return nil
+        }
+
+        return nonSyllable
     }
 }
