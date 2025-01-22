@@ -435,7 +435,6 @@ class HangulProcessor {
 
     /// 백스페이스가 들어오면 첫/가/끝의 역순으로 지움
     func applyBackspace() -> Int {
-        logger.debug("백스페이스 처리 전: \(String(describing: preedit)) \(previous)")
         if previous.last != nil {
             previous.removeLast()
         }
@@ -444,12 +443,17 @@ class HangulProcessor {
             print("아무것도 없음")
         case (.some(_), nil, nil):
             print("초성을 지워도 됨: \(String(describing: preedit))")
+            previous = []
             preedit.chosung = nil
-        case (_, .some(_), nil):
-            print("중성을 지워야 함: \(String(describing: preedit))")
+        case (let chosung, .some(_), nil):
+            print("중성을 지워야 함: \(String(describing: preedit)); 초성을 복구한다.")
+            let rawString = hangulLayout.getChosungRawString(by: chosung!)
+            previous = [rawString]
             preedit.jungsung = nil
-        case (_, _, .some(_)):
-            print("종성을 지움: \(String(describing: preedit))")
+        case (_, let jungsung, .some(_)):
+            print("종성을 지움: \(String(describing: preedit)); 중성을 복구한다.")
+            let rawString = hangulLayout.getJungsungRawString(by: jungsung!)
+            previous = [rawString]
             preedit.jongsung = nil
         }
         logger.debug("백스페이스 처리 후: \(String(describing: preedit)) \(previous)")

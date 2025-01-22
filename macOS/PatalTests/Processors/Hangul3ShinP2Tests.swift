@@ -880,6 +880,39 @@ struct Hangul3ShinP2Tests {
         #expect(c6 == "아")
     }
 
+    @Test("가←네")
+    func getComposedChar_가백스페이스네() {
+        var r1 = processor.verifyCombosable("k")
+        #expect(r1 == true)
+        processor.rawChar = "k"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㄱ")
+
+        r1 = processor.verifyCombosable("f")
+        #expect(r1 == true)
+        processor.rawChar = "f"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.composing)
+        let c2 = processor.getComposed()
+        #expect(c2 == "가")
+
+        let countComposable = processor.applyBackspace()
+        #expect(countComposable == 1)
+
+        processor.rawChar = "h"
+        let s3 = processor.한글조합()
+        #expect(s3 == CommitState.committed)
+        let c3 = processor.getComposed()
+        #expect(c3 == "ㄴ")
+
+        processor.rawChar = "c"
+        let s4 = processor.한글조합()
+        #expect(s4 == CommitState.composing)
+        let c4 = processor.getComposed()
+        #expect(c4 == "네")
+    }
     //    @Test("강^H")
     //    func getComposedChar_강백스페이스() {
     //        let processor = HangulProcessor(layout: Layout.HAN3_SHIN_PCS)

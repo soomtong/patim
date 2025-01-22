@@ -151,4 +151,32 @@ struct Han3P3Layout: HangulAutomata {
 
         return nonSyllable
     }
+
+    let chosungReverseIndex: [String] = [
+        "k", "kk", "h", "u", "y", "i", ";", ";;", "n", "nn",
+        "j", "l", "ll", "o", "'", "0", "p", "m",
+    ]
+
+    func getChosungRawString(by chosung: 초성) -> String {
+        return chosungReverseIndex[chosungMapOffset[chosung]!]
+    }
+
+    let jungsungReverseIndex: [String] = [
+        "f", "t", "6", "T", "r", "c", "e", "7", "v",
+        "/f", "/e", "/d", "4", "b", "9", "9r", "9c", "9d",
+        "5", "g", "8d", "d",
+    ]
+
+    func getJungsungRawString(by jungsung: 중성) -> String {
+        return jungsungReverseIndex[jungsungMapOffset[jungsung]!]
+    }
+
+    let jongsungReverseIndex: [String] = [
+        "x", "xx", "xq", "s", "sv", "sd", "S", "c", "w", "wx", "wz", "w3", "wq",
+        "we", "wf", "wd", "z", "3", "3q", "q", "2", "a", "v", "r", "1", "e", "f", "d",
+    ]
+
+    func getJongsungRawString(by jongsung: 종성) -> String {
+        return jongsungReverseIndex[jongsungMapOffset[jongsung]!]
+    }
 }
