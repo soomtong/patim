@@ -447,13 +447,17 @@ class HangulProcessor {
             preedit.chosung = nil
         case (let chosung, .some(_), nil):
             print("중성을 지워야 함: \(String(describing: preedit)); 초성을 복구한다.")
-            let rawString = hangulLayout.getChosungRawString(by: chosung!)
-            previous = [rawString]
+            if chosung != nil {
+                let recovered = hangulLayout.getChosungRawString(by: chosung!)
+                previous = [recovered]
+            }
             preedit.jungsung = nil
         case (_, let jungsung, .some(_)):
             print("종성을 지움: \(String(describing: preedit)); 중성을 복구한다.")
-            let rawString = hangulLayout.getJungsungRawString(by: jungsung!)
-            previous = [rawString]
+            if jungsung != nil {
+                let recovered = hangulLayout.getJungsungRawString(by: jungsung!)
+                previous = [recovered]
+            }
             preedit.jongsung = nil
         }
         logger.debug("백스페이스 처리 후: \(String(describing: preedit)) \(previous)")
