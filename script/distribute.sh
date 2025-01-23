@@ -4,7 +4,7 @@ set -e
 # "Apple Development: soomtong@gmail.com (4XWP9KHTYS)"
 
 TITLE="팥알 입력기"
-VERSION="1.2.0"
+VERSION="1.2.1"
 APPID="com.soomtong.inputmethod.Patal"
 BUILD="PatalInputMethod"
 PKG="$BUILD.pkg"

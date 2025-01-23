@@ -127,9 +127,11 @@ struct Han3ShinP2Layout: HangulAutomata {
 
     let nonSyllableMapWith쉬운화살표: [String: String] = [
         "Y": "✕",
-        "U": "◯",
-        "I": "∆",
-        "H": "☐",
+        "U": "○",
+        "I": "△",
+        "O": "□",
+        "H": "·",
+        "L": "…",
         "N": "←",
         "M": "→",
     ]
