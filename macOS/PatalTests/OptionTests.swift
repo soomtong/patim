@@ -18,7 +18,7 @@ struct OptionTests {
         var layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
         var processor: HangulProcessor!
         var optionMenu: OptionMenu!
-        let holders = [LayoutTrait.글자단위삭제.rawValue, LayoutTrait.화살표.rawValue]
+        let holders = [LayoutTrait.글자단위삭제.rawValue, LayoutTrait.수정기호.rawValue]
 
         init() {
             processor = HangulProcessor(layout: layout)
@@ -47,7 +47,7 @@ struct OptionTests {
     }
 
     @Suite("수정 옵션 1")
-    struct Active화살표OnTests {
+    struct Active수정기호OnTests {
         var layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
         var optionMenu: OptionMenu!
 

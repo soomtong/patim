@@ -30,7 +30,7 @@ func createLayoutInstance(name: LayoutName) -> HangulAutomata {
 enum LayoutTrait: String {
     case 느슨한조합
     case 아래아
-    case 화살표
+    case 수정기호
     case 두줄숫자
     case 글자단위삭제
 }
@@ -96,8 +96,8 @@ extension HangulAutomata {
         return traits.contains(LayoutTrait.느슨한조합)
     }
 
-    var has화살표: Bool {
-        return traits.contains(LayoutTrait.화살표)
+    var has수정기호: Bool {
+        return traits.contains(LayoutTrait.수정기호)
     }
 
     var has아래아: Bool {

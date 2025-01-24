@@ -32,12 +32,12 @@ struct Hangul3ShinPcsTests {
     func availableTraits() {
         print(processor.hangulLayout.availableTraits)
         print(processor.hangulLayout.traits)
-        #expect(processor.hangulLayout.traits.contains(LayoutTrait.화살표) == true)
+        #expect(processor.hangulLayout.traits.contains(LayoutTrait.수정기호) == true)
         // #expect(processor.hangulLayout.traits.contains(LayoutTrait.느슨한조합) == true)
         #expect(processor.hangulLayout.traits.contains(LayoutTrait.글자단위삭제) == true)
     }
 
-    @Test("쉬운 화살표")
+    @Test("수정기호")
     func 화살표() {
         processor.hangulLayout.traits.removeAll()
 

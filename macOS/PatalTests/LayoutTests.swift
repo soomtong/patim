@@ -92,20 +92,20 @@ struct Han3ShinPcsLayoutTests {
         var processor: HangulProcessor!
 
         init() {
-            layout.traits.insert(LayoutTrait.화살표)
+            layout.traits.insert(LayoutTrait.수정기호)
             processor = HangulProcessor(layout: layout)
         }
 
         @Test("초기 옵션")
         func loadTraits() {
-            #expect(self.processor.hangulLayout.has화살표 == true)
+            #expect(self.processor.hangulLayout.has수정기호 == true)
         }
 
         @Test("전체 특성 목록")
         func availableTraits() {
             let traits = layout.availableTraits
             #expect(traits.count > 0)
-            #expect(traits.contains(LayoutTrait.화살표))
+            #expect(traits.contains(LayoutTrait.수정기호))
         }
     }
 }
