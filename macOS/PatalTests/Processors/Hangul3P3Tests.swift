@@ -227,7 +227,7 @@ struct Hangul3P3Tests {
         let c2 = processor.getComposed()
         #expect(c2 == "�")
         // 중성과 종성이 조합 중인 상태
-        let e2 = processor.previous.count
+        let e2 = processor.composing.count
         #expect(e2 == 1)
     }
 
@@ -243,7 +243,7 @@ struct Hangul3P3Tests {
         let s2 = processor.한글조합()
         #expect(s2 == CommitState.composing)
         // 중성과 종성이 조합 중인 상태
-        let e2 = processor.previous.count
+        let e2 = processor.composing.count
         #expect(e2 == 1)
     }
 

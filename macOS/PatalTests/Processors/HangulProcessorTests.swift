@@ -105,7 +105,7 @@ struct HangulProcessorTests {
         #expect(processor.getComposed() == "ㄱ")
 
         composableCount = processor.applyBackspace()
-        print(processor.previous)
+        print(processor.composing)
         #expect(composableCount == 0)
         #expect(processor.preedit.chosung == nil)
         #expect(processor.preedit.jungsung == nil)
