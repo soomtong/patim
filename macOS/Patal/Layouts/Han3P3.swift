@@ -13,7 +13,7 @@ import Foundation
 
 /// enum LayoutName 의 createLayoutInstance 조합기 이름과 같아야 합니다.
 struct Han3P3Layout: HangulAutomata {
-    let availableTraits: Set<LayoutTrait> = [LayoutTrait.느슨한조합, LayoutTrait.두줄숫자, LayoutTrait.글자단위삭제]
+    let availableTraits: Set<LayoutTrait> = [LayoutTrait.모아주기, LayoutTrait.두줄숫자, LayoutTrait.글자단위삭제]
     var traits: Set<LayoutTrait> = []
 
     let chosungMap: [String: 초성] = [
@@ -153,8 +153,8 @@ struct Han3P3Layout: HangulAutomata {
     }
 
     let chosungReverseIndex: [String] = [
-        "k", "kk", "h", "u", "y", "i", ";", ";;", "n", "nn",
-        "j", "l", "ll", "o", "'", "0", "p", "m",
+        "k", "kk", "h", "u", "uu", "y", "i", ";", ";;",
+        "n", "nn", "j", "l", "ll", "o", "'", "0", "p", "m",
     ]
 
     func getChosungRawString(by chosung: 초성) -> String {
@@ -162,9 +162,9 @@ struct Han3P3Layout: HangulAutomata {
     }
 
     let jungsungReverseIndex: [String] = [
-        "f", "t", "6", "T", "r", "c", "e", "7", "v",
-        "/f", "/e", "/d", "4", "b", "9", "9r", "9c", "9d",
-        "5", "g", "8d", "d",
+        "f", "t", "6", "T", "r", "c", "e", "7", "/",
+        "/f", "/e", "/d", "4", "9", "9r", "9c", "9d",
+        "5", "8", "8d", "d",
     ]
 
     func getJungsungRawString(by jungsung: 중성) -> String {

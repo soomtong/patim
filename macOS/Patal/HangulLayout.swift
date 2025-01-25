@@ -28,7 +28,7 @@ func createLayoutInstance(name: LayoutName) -> HangulAutomata {
 }
 
 enum LayoutTrait: String {
-    case 느슨한조합
+    case 모아주기
     case 아래아
     case 수정기호
     case 두줄숫자
@@ -93,7 +93,7 @@ protocol HangulAutomata {
 /// 각 레이아웃이 가져야할 프로토콜의 공용 구현
 extension HangulAutomata {
     var can느슨한조합: Bool {
-        return traits.contains(LayoutTrait.느슨한조합)
+        return traits.contains(LayoutTrait.모아주기)
     }
 
     var has수정기호: Bool {

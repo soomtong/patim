@@ -175,9 +175,9 @@ struct Han3ShinP2Layout: HangulAutomata {
     }
 
     let jungsungReverseIndex: [String] = [
-        "f", "e", "w", "q", "r", "c", "t", "s", "v", "pf",
-        "pe", "pd", "x", "b", "o", "or", "oc", "od", "a",
-        "g", "g", "i", "id", "z", "d",
+        "f", "e", "w", "q", "r", "c", "t", "s", "p", "pf",
+        "pe", "pd", "x", "o", "or", "oc", "od", "a",
+        "i", "z", "d",
     ]
 
     func getJungsungRawString(by jungsung: 중성) -> String {

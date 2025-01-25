@@ -90,7 +90,7 @@ struct Hangul3P3Tests {
     func availableTraits() {
         print(processor.hangulLayout.availableTraits)
         print(processor.hangulLayout.traits)
-        #expect(processor.hangulLayout.traits.contains(LayoutTrait.느슨한조합) == true)
+        #expect(processor.hangulLayout.traits.contains(LayoutTrait.모아주기) == true)
     }
 
     @Test("ㄲ")
@@ -792,5 +792,126 @@ struct Hangul3P3Tests {
         #expect(s6 == CommitState.composing)
         let c6 = processor.getComposed()
         #expect(c6 == "아")
+    }
+
+    @Test("가←네")
+    func getComposedChar_가백스페이스네() {
+        var r1 = processor.verifyCombosable("k")
+        #expect(r1 == true)
+        processor.rawChar = "k"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㄱ")
+
+        r1 = processor.verifyCombosable("f")
+        #expect(r1 == true)
+        processor.rawChar = "f"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.composing)
+        let c2 = processor.getComposed()
+        #expect(c2 == "가")
+
+        let countComposable = processor.applyBackspace()
+        #expect(countComposable == 1)
+        #expect(processor.composing == ["k"])
+
+        processor.rawChar = "h"
+        let s3 = processor.한글조합()
+        #expect(s3 == CommitState.committed)
+        let c3 = processor.getComposed()
+        #expect(c3 == "ㄴ")
+
+        processor.rawChar = "c"
+        let s4 = processor.한글조합()
+        #expect(s4 == CommitState.composing)
+        let c4 = processor.getComposed()
+        #expect(c4 == "네")
+    }
+    @Test("한←글")
+    func getComposedChar_한백스페이스백스페이스네() {
+        var r = processor.verifyCombosable("m")
+        #expect(r == true)
+        processor.rawChar = "m"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㅎ")
+
+        r = processor.verifyCombosable("f")
+        #expect(r == true)
+        processor.rawChar = "f"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.composing)
+        let c2 = processor.getComposed()
+        #expect(c2 == "하")
+
+        r = processor.verifyCombosable("s")
+        #expect(r == true)
+        processor.rawChar = "s"
+        let s3 = processor.한글조합()
+        #expect(s3 == CommitState.composing)
+        let c3 = processor.getComposed()
+        #expect(c3 == "한")
+
+        var countComposable = processor.applyBackspace()
+        #expect(countComposable == 2)
+        #expect(processor.composing == ["f"])
+
+        countComposable = processor.applyBackspace()
+        #expect(countComposable == 1)
+        #expect(processor.composing == ["m"])
+
+        processor.rawChar = "u"
+        let s4 = processor.한글조합()
+        #expect(s4 == CommitState.committed)
+        let c4 = processor.getComposed()
+        #expect(c4 == "ㄷ")
+
+        processor.rawChar = "f"
+        let s5 = processor.한글조합()
+        #expect(s5 == CommitState.composing)
+        let c5 = processor.getComposed()
+        #expect(c5 == "다")
+    }
+    @Test("인←사")
+    func getComposedChar_인백스페이스사() {
+        processor.rawChar = "j"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㅇ")
+
+        processor.rawChar = "d"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.composing)
+        let c2 = processor.getComposed()
+        #expect(c2 == "이")
+
+        processor.rawChar = "s"
+        let s3 = processor.한글조합()
+        #expect(s3 == CommitState.composing)
+        let c3 = processor.getComposed()
+        #expect(c3 == "인")
+
+        var countComposable = processor.applyBackspace()
+        #expect(countComposable == 2)
+        #expect(processor.composing == ["d"])
+
+        countComposable = processor.applyBackspace()
+        #expect(countComposable == 1)
+        #expect(processor.composing == ["j"])
+
+        processor.rawChar = "n"
+        let s4 = processor.한글조합()
+        #expect(s4 == CommitState.committed)
+        let c4 = processor.getComposed()
+        #expect(c4 == "ㅅ")
+
+        processor.rawChar = "f"
+        let s5 = processor.한글조합()
+        #expect(s5 == CommitState.composing)
+        let c5 = processor.getComposed()
+        #expect(c5 == "사")
     }
 }

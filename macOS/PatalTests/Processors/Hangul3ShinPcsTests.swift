@@ -205,7 +205,7 @@ struct Hangul3ShinPcsTests {
 
     @Test("ㅏᅡ")
     func getComposedChar_ㅏᅡ() {
-        processor.hangulLayout.traits.insert(LayoutTrait.느슨한조합)
+        processor.hangulLayout.traits.insert(LayoutTrait.모아주기)
 
         processor.rawChar = "f"
         let s1 = processor.한글조합()
@@ -222,7 +222,7 @@ struct Hangul3ShinPcsTests {
 
     @Test("ㅏㅓ")
     func getComposedChar_ㅏㅓ() {
-        processor.hangulLayout.traits.insert(LayoutTrait.느슨한조합)
+        processor.hangulLayout.traits.insert(LayoutTrait.모아주기)
 
         processor.rawChar = "f"
         let s1 = processor.한글조합()
@@ -239,7 +239,7 @@ struct Hangul3ShinPcsTests {
 
     @Test("ㅗㅏ")
     func getComposedChar_ㅗㅏ() {
-        processor.hangulLayout.traits.insert(LayoutTrait.느슨한조합)
+        processor.hangulLayout.traits.insert(LayoutTrait.모아주기)
 
         processor.rawChar = "v"
         let s1 = processor.한글조합()
@@ -256,7 +256,7 @@ struct Hangul3ShinPcsTests {
 
     @Test("ㅜㅓ")
     func getComposedChar_ㅜㅓ() {
-        processor.hangulLayout.traits.insert(LayoutTrait.느슨한조합)
+        processor.hangulLayout.traits.insert(LayoutTrait.모아주기)
 
         processor.rawChar = "b"
         let s1 = processor.한글조합()
@@ -273,7 +273,7 @@ struct Hangul3ShinPcsTests {
 
     @Test("ㅡㅣ")
     func getComposedChar_ㅡㅣ() {
-        processor.hangulLayout.traits.insert(LayoutTrait.느슨한조합)
+        processor.hangulLayout.traits.insert(LayoutTrait.모아주기)
 
         processor.rawChar = "g"
         let s1 = processor.한글조합()
@@ -313,7 +313,7 @@ struct Hangul3ShinPcsTests {
 
     @Test("ㅇㅡㅎ - 느슨한조합")
     func getComposedChar_으흥() {
-        processor.hangulLayout.traits.insert(LayoutTrait.느슨한조합)
+        processor.hangulLayout.traits.insert(LayoutTrait.모아주기)
 
         processor.rawChar = "g"
         let s1 = processor.한글조합()
