@@ -79,6 +79,27 @@ struct Hangul3ShinP2Tests {
         #expect(c3 == "ㄱ")
     }
 
+    @Test("ㅇㄱㄱ")
+    func getComposedChar_ㅇㄱㄱ() {
+        processor.rawChar = "j"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        let c1 = processor.getComposed()
+        #expect(c1 == "ㅇ")
+
+        processor.rawChar = "k"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.committed)
+        let c2 = processor.getComposed()
+        #expect(c2 == "ㄱ")
+
+        processor.rawChar = "k"
+        let s3 = processor.한글조합()
+        #expect(s3 == CommitState.composing)
+        let c3 = processor.getComposed()
+        #expect(c3 == "ㄲ")
+    }
+
     @Test("ㄴㄷ")
     func getComposedChar_ㄴㄷ() {
         processor.rawChar = "h"

@@ -171,8 +171,7 @@ class HangulProcessor {
             print("중성이 왔다면!")
             if let 중성코드 = hangulLayout.pickJungsung(by: rawChar) {
                 preedit.jungsung = 중성(rawValue: 중성코드)
-                previous.removeAll()
-                previous.append(rawChar)
+                restartPrevious(rawChar)
 
                 return CommitState.composing
             }
@@ -182,8 +181,7 @@ class HangulProcessor {
             if hangulLayout.can느슨한조합 {
                 if let 종성코드 = hangulLayout.pickJongsung(by: rawChar) {
                     preedit.jongsung = 종성(rawValue: 종성코드)
-                    previous.removeAll()
-                    previous.append(rawChar)
+                    restartPrevious(rawChar)
 
                     return CommitState.composing
                 }
@@ -203,6 +201,7 @@ class HangulProcessor {
             if let 새초성코드 = hangulLayout.pickChosung(by: rawChar) {
                 완성 = getComposed()
                 preedit.chosung = 초성(rawValue: 새초성코드)
+                restartPrevious(rawChar)
 
                 return CommitState.committed
             }
@@ -334,8 +333,7 @@ class HangulProcessor {
 
             print("종성이 왔다면!")
             /// "ㄱ" + "ㅏ" + "ㅇ" -> "강"
-            previous.removeAll()
-            previous.append(rawChar)
+            restartPrevious(rawChar)
 
             if let 종성코드 = hangulLayout.pickJongsung(by: previous.joined()) {
                 preedit.jongsung = 종성(rawValue: 종성코드)
@@ -463,6 +461,11 @@ class HangulProcessor {
         logger.debug("백스페이스 처리 후: \(String(describing: preedit)) \(previous)")
 
         return countComposable()
+    }
+    
+    func restartPrevious(_ s: String) {
+        previous.removeAll()
+        previous.append(s)
     }
 
     func clearPreedit() {
