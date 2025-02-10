@@ -133,7 +133,7 @@ struct Han3ShinP2Layout: HangulAutomata {
         "H": "※",
         "L": "/",
         "\"": "·",
-        "N": "←",
+        "N": "―",
         "M": "→",
     ]
 
