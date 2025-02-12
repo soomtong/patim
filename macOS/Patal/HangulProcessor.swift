@@ -131,7 +131,7 @@ class HangulProcessor {
             }
 
             // 느슨한 조합인 경우 중성이 우선
-            if hangulLayout.can느슨한조합 {
+            if hangulLayout.can모아주기 {
                 /// "" -> "ㅏ"
                 print("시작? 중성을 채움")
                 if let 중성코드 = hangulLayout.pickJungsung(by: rawChar) {
@@ -177,8 +177,8 @@ class HangulProcessor {
             }
 
             /// "ㄱ" + "ㅇ" -> 대체문자
-            print("종성이 온다고? \(hangulLayout.can느슨한조합)")
-            if hangulLayout.can느슨한조합 {
+            print("종성이 온다고? \(hangulLayout.can모아주기)")
+            if hangulLayout.can모아주기 {
                 if let 종성코드 = hangulLayout.pickJongsung(by: rawChar) {
                     preedit.jongsung = 종성(rawValue: 종성코드)
                     resetComposing(rawChar)
@@ -215,9 +215,9 @@ class HangulProcessor {
             }
 
             /// "ᅡ" + "ᆻ" -> 대체 문자 (완성 낱자를 구할 수 없어서 필요가 없는 조건인데 느슨한 조합을 구성해보면???)
-            print("종성이 먼저 올수도 있지! 이건 중성/종성 나뉜 공세벌만 가능해: \(hangulLayout.can느슨한조합)")
+            print("종성이 먼저 올수도 있지! 이건 중성/종성 나뉜 공세벌만 가능해: \(hangulLayout.can모아주기)")
             /// 공세벌식 자판의 경우 좀 더 느슨한 조합 사용할 수 있다!
-            if hangulLayout.can느슨한조합 {
+            if hangulLayout.can모아주기 {
                 if let 종성코드 = hangulLayout.pickJongsung(by: rawChar) {
                     preedit.jongsung = 종성(rawValue: 종성코드)
 
@@ -263,7 +263,7 @@ class HangulProcessor {
             }
 
             /// 여기까지 왔다!
-            if hangulLayout.can느슨한조합 {
+            if hangulLayout.can모아주기 {
                 if let 초성코드 = hangulLayout.pickChosung(by: rawChar) {
                     preedit.chosung = 초성(rawValue: 초성코드)
 
@@ -282,7 +282,7 @@ class HangulProcessor {
             }
 
             /// "ᆻ" + "ᅡ" + "ᄋ" -> "았"
-            if hangulLayout.can느슨한조합 {
+            if hangulLayout.can모아주기 {
                 if let 중성코드 = hangulLayout.pickJungsung(by: rawChar) {
                     preedit.jungsung = 중성(rawValue: 중성코드)
 
