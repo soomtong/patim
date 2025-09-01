@@ -31,6 +31,7 @@
 		E2972D032CDF8C18001278E3 /* HangulLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2972D022CDF8C11001278E3 /* HangulLayout.swift */; };
 		E299CA4F2D008F2F00E2FD0D /* HangulComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */; };
 		E2B1644B2CDFAFD4003FCE85 /* HangulCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */; };
+		E2FE77C02E65C28E00D5B355 /* KeyCodeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE77BF2E65C28E00D5B355 /* KeyCodeMapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		E2972D022CDF8C11001278E3 /* HangulLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulLayout.swift; sourceTree = "<group>"; };
 		E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulComposer.swift; sourceTree = "<group>"; };
 		E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulCode.swift; sourceTree = "<group>"; };
+		E2FE77BF2E65C28E00D5B355 /* KeyCodeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCodeMapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -142,6 +144,7 @@
 				E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */,
 				464092A92B92EDA800F5D81D /* HangulProcessor.swift */,
 				E2972D022CDF8C11001278E3 /* HangulLayout.swift */,
+				E2FE77BF2E65C28E00D5B355 /* KeyCodeMapper.swift */,
 				E224DEE32D2024B900808927 /* OptionMenu.swift */,
 				E258567E2D182D6C006FD5E7 /* Layouts */,
 				E258567C2D18134A006FD5E7 /* Extention.swift */,
@@ -224,7 +227,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1610;
-				LastUpgradeCheck = 1620;
+				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					46E67F4C26EC5505005EC052 = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -296,6 +299,7 @@
 				E284B61B2CFDF4F20009DE1C /* Util.swift in Sources */,
 				46E67F5126EC5505005EC052 /* AppDelegate.swift in Sources */,
 				469C537F2B91E1C200446511 /* Logger.swift in Sources */,
+				E2FE77C02E65C28E00D5B355 /* KeyCodeMapper.swift in Sources */,
 				464092AA2B92EDA800F5D81D /* HangulProcessor.swift in Sources */,
 				E24856192D20F0A300AC78AF /* PatalInputController.swift in Sources */,
 				E2972D032CDF8C18001278E3 /* HangulLayout.swift in Sources */,
@@ -380,6 +384,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = LL75ZY5CKZ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -446,6 +451,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = LL75ZY5CKZ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -478,9 +484,8 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.2;
+				CURRENT_PROJECT_VERSION = 1.3;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = LL75ZY5CKZ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Patal/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "팥알입력기";
@@ -491,7 +496,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.2.3;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.Patal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 6.0;
@@ -509,9 +514,8 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.2;
+				CURRENT_PROJECT_VERSION = 1.3;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = LL75ZY5CKZ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Patal/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "팥알입력기";
@@ -522,7 +526,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.2.3;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.Patal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 6.0;
@@ -537,7 +541,6 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LL75ZY5CKZ;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
@@ -560,7 +563,6 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LL75ZY5CKZ;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;

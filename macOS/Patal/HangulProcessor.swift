@@ -98,6 +98,15 @@ class HangulProcessor {
             && (keyCode == KeyCode.BACKSPACE.rawValue && modifierCode == 0)
         if composableBackspace { return true }
 
+        // 키코드 기반 검증 우선 적용 (라틴 자판 독립적)
+        if let hangulChar = KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: keyCode, modifiers: modifierCode) {
+            return hangulLayout.chosungMap.keys.contains(hangulChar)
+                || hangulLayout.jungsungMap.keys.contains(hangulChar)
+                || hangulLayout.jongsungMap.keys.contains(hangulChar)
+                || hangulLayout.nonSyllableMap.keys.contains(hangulChar)
+        }
+
+        // 키코드 매핑이 없는 경우 기존 문자열 기반 검증 (하위 호환성)
         return hangulLayout.chosungMap.keys.contains(s)
             || hangulLayout.jungsungMap.keys.contains(s)
             || hangulLayout.jongsungMap.keys.contains(s)
@@ -109,6 +118,21 @@ class HangulProcessor {
         return hangulLayout.chosungMap.keys.contains(s)
             || hangulLayout.jungsungMap.keys.contains(s)
             || hangulLayout.jongsungMap.keys.contains(s)
+    }
+
+    /// 키코드를 한글 입력용 문자로 변환하고 rawChar에 설정
+    /// - Parameters:
+    ///   - keyCode: 물리적 키코드
+    ///   - modifiers: 수정자 키 플래그
+    /// - Returns: 변환된 문자 (라틴 자판 독립적)
+    func processKeyCodeInput(keyCode: Int, modifiers: Int) -> String? {
+        if let hangulChar = KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: keyCode, modifiers: modifiers) {
+            rawChar = hangulChar
+            logger.debug(
+                "키코드 변환: \(KeyCodeMapper.debugKeyInfo(keyCode: keyCode, modifiers: modifiers)) -> '\(hangulChar)'")
+            return hangulChar
+        }
+        return nil
     }
 
     /// 조합 가능한 문자가 들어온다. 다시 검수할 필요는 없음. 겹자음/겹모음이 있을 수 있기 때문에 previous 를 기준으로 운영.
@@ -462,7 +486,7 @@ class HangulProcessor {
 
         return countComposable()
     }
-    
+
     func resetComposing(_ s: String) {
         composing.removeAll()
         composing.append(s)

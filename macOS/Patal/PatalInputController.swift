@@ -84,11 +84,22 @@ extension InputController {
             return false
         }
 
-        /// 한글 조합 시작
-        processor.rawChar = s
+        /// 한글 조합 시작 - 키코드 기반 처리 (라틴 자판 독립적)
+        var baseChar: String = s
+
+        // 키코드 기반 문자 변환 시도 (기본 동작)
+        if KeyCodeMapper.isHangulInputKey(keyCode: keyCode) {
+            if let keyCodeChar = processor.processKeyCodeInput(keyCode: keyCode, modifiers: flags) {
+                baseChar = keyCodeChar
+                logger.debug("키코드 기반 입력: \(KeyCodeMapper.debugKeyInfo(keyCode: keyCode, modifiers: flags))")
+            }
+        } else {
+            // 키코드 매핑이 없는 경우 기존 문자열 사용 (하위 호환성)
+            processor.rawChar = s
+        }
 
         /// 비 한글 처리 먼저 진행
-        if !processor.verifyCombosable(s) {
+        if !processor.verifyCombosable(baseChar) {
             let flushed = processor.flushCommit()
             flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
 
