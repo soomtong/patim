@@ -22,7 +22,7 @@ struct HangulProcessorTests {
     func testVerifyProcessable() {
         #expect(processor.verifyProcessable("k") == true)
         #expect(processor.verifyProcessable("f") == true)
-        #expect(processor.verifyProcessable("!") == false)
+        #expect(processor.verifyProcessable("!", keyCode: 18, modifierCode: 131072) == false)
     }
 
     @Test("Verify Combosable Characters")
