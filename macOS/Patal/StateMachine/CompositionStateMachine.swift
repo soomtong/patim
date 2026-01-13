@@ -633,7 +633,7 @@ struct CompositionStateMachine {
             let char = String(Character(UnicodeScalar(jung.rawValue)!))
             return .cleared(char: (committed ?? "") + char)
 
-        case .chosungOrJongsung(let cho, let jong):
+        case .chosungOrJongsung(let cho, _):
             // 겹종성 시도
             var newBuffer = state.composingBuffer
             newBuffer.append(input.rawChar)

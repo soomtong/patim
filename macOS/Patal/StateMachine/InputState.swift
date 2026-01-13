@@ -2,12 +2,12 @@
 //  InputState.swift
 //  Patal
 //
-//  FSM 상태 정의
+//  상태 기계 상태 정의
 //
 
 import Foundation
 
-/// FSM 상태 (기본 4상태)
+/// 입력 상태 (기본 4상태)
 /// 모아주기(느슨한 조합)는 can모아주기 플래그로 분기 처리
 enum InputState: Equatable, CustomStringConvertible {
     /// 빈 상태 - 조합 없음

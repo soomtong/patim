@@ -2,7 +2,7 @@
 //  InputEvent.swift
 //  Patal
 //
-//  FSM 입력 이벤트 정의
+//  입력 이벤트 정의
 //
 
 import Foundation
@@ -44,7 +44,7 @@ struct JamoInput: Equatable {
     }
 }
 
-/// FSM 입력 이벤트
+/// 입력 이벤트
 enum InputEvent: Equatable {
     /// 자모 입력
     case jamo(JamoInput)

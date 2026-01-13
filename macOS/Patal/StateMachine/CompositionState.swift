@@ -8,7 +8,7 @@
 import Foundation
 
 /// 조합 상태 데이터
-/// 순수 데이터 컨테이너로 FSM에서 상태 전이 시 새 인스턴스 생성
+/// 순수 데이터 컨테이너로 상태 전이 시 새 인스턴스 생성
 struct CompositionState: Equatable {
     let chosung: 초성?
     let jungsung: 중성?
