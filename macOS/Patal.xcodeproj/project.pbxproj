@@ -24,6 +24,11 @@
 		46E67F8026EC5CFA005EC052 /* han3-P2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */; };
 		46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7E26EC5CFA005EC052 /* han3-P2.png */; };
 		46E67F8226EC5CFA005EC052 /* icon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7F26EC5CFA005EC052 /* icon.tiff */; };
+		8025ADC42F15F7BB00920C64 /* CompositionStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8025ADBF2F15F7BB00920C64 /* CompositionStateMachine.swift */; };
+		8025ADC52F15F7BB00920C64 /* InputEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8025ADC02F15F7BB00920C64 /* InputEvent.swift */; };
+		8025ADC62F15F7BB00920C64 /* InputState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8025ADC12F15F7BB00920C64 /* InputState.swift */; };
+		8025ADC72F15F7BB00920C64 /* CompositionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8025ADBE2F15F7BB00920C64 /* CompositionState.swift */; };
+		8025ADC82F15F7BB00920C64 /* SyllableRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8025ADC22F15F7BB00920C64 /* SyllableRule.swift */; };
 		E224DEE42D2024B900808927 /* OptionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E224DEE32D2024B900808927 /* OptionMenu.swift */; };
 		E24856192D20F0A300AC78AF /* PatalInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24856182D20F0A300AC78AF /* PatalInputController.swift */; };
 		E258567D2D18134A006FD5E7 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = E258567C2D18134A006FD5E7 /* Extention.swift */; };
@@ -68,6 +73,11 @@
 		46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-P2@2x.png"; sourceTree = "<group>"; };
 		46E67F7E26EC5CFA005EC052 /* han3-P2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-P2.png"; sourceTree = "<group>"; };
 		46E67F7F26EC5CFA005EC052 /* icon.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = icon.tiff; sourceTree = "<group>"; };
+		8025ADBE2F15F7BB00920C64 /* CompositionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionState.swift; sourceTree = "<group>"; };
+		8025ADBF2F15F7BB00920C64 /* CompositionStateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionStateMachine.swift; sourceTree = "<group>"; };
+		8025ADC02F15F7BB00920C64 /* InputEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputEvent.swift; sourceTree = "<group>"; };
+		8025ADC12F15F7BB00920C64 /* InputState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputState.swift; sourceTree = "<group>"; };
+		8025ADC22F15F7BB00920C64 /* SyllableRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyllableRule.swift; sourceTree = "<group>"; };
 		E224DEE32D2024B900808927 /* OptionMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionMenu.swift; sourceTree = "<group>"; };
 		E24856182D20F0A300AC78AF /* PatalInputController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatalInputController.swift; sourceTree = "<group>"; };
 		E258567C2D18134A006FD5E7 /* Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extention.swift; sourceTree = "<group>"; };
@@ -136,6 +146,7 @@
 		46E67F4F26EC5505005EC052 /* Patal */ = {
 			isa = PBXGroup;
 			children = (
+				8025ADC32F15F7BB00920C64 /* StateMachine */,
 				469C537E2B91E1C200446511 /* Logger.swift */,
 				46E67F5026EC5505005EC052 /* AppDelegate.swift */,
 				134356FF27DDFF850074E691 /* InputController.swift */,
@@ -171,6 +182,18 @@
 				1343570527DE0BEB0074E691 /* InfoPlist.strings */,
 			);
 			path = Resource;
+			sourceTree = "<group>";
+		};
+		8025ADC32F15F7BB00920C64 /* StateMachine */ = {
+			isa = PBXGroup;
+			children = (
+				8025ADBE2F15F7BB00920C64 /* CompositionState.swift */,
+				8025ADBF2F15F7BB00920C64 /* CompositionStateMachine.swift */,
+				8025ADC02F15F7BB00920C64 /* InputEvent.swift */,
+				8025ADC12F15F7BB00920C64 /* InputState.swift */,
+				8025ADC22F15F7BB00920C64 /* SyllableRule.swift */,
+			);
+			path = StateMachine;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,7 +250,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1610;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					46E67F4C26EC5505005EC052 = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -302,6 +325,11 @@
 				E2FE77C02E65C28E00D5B355 /* KeyCodeMapper.swift in Sources */,
 				464092AA2B92EDA800F5D81D /* HangulProcessor.swift in Sources */,
 				E24856192D20F0A300AC78AF /* PatalInputController.swift in Sources */,
+				8025ADC42F15F7BB00920C64 /* CompositionStateMachine.swift in Sources */,
+				8025ADC52F15F7BB00920C64 /* InputEvent.swift in Sources */,
+				8025ADC62F15F7BB00920C64 /* InputState.swift in Sources */,
+				8025ADC72F15F7BB00920C64 /* CompositionState.swift in Sources */,
+				8025ADC82F15F7BB00920C64 /* SyllableRule.swift in Sources */,
 				E2972D032CDF8C18001278E3 /* HangulLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -407,6 +435,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
@@ -467,6 +496,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
@@ -481,12 +511,17 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Patal/Patal.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development: soomtong@gmail.com (4XWP9KHTYS)";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.3;
 				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = YES;
+				ENABLE_RESOURCE_ACCESS_USB = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				INFOPLIST_FILE = Patal/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "팥알입력기";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -499,6 +534,7 @@
 				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.Patal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
@@ -511,12 +547,17 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Patal/Patal.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development: soomtong@gmail.com (4XWP9KHTYS)";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.3;
 				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = YES;
+				ENABLE_RESOURCE_ACCESS_USB = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				INFOPLIST_FILE = Patal/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "팥알입력기";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -529,6 +570,7 @@
 				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.Patal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
@@ -541,6 +583,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
@@ -563,6 +606,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;

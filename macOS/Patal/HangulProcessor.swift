@@ -13,6 +13,18 @@ enum CommitState {
     case none
     case composing
     case committed
+
+    /// ResultType에서 변환
+    static func from(_ resultType: ResultType) -> CommitState {
+        switch resultType {
+        case .composing:
+            return .composing
+        case .committed:
+            return .committed
+        case .cleared, .unchanged:
+            return .none
+        }
+    }
 }
 
 /// insertText 와 setMarkedText 호출을 위한 조건 구분
@@ -28,16 +40,37 @@ class HangulProcessor {
     /// OS 에서 제공하는 문자
     var rawChar: String
 
-    /// preedit 에 처리중인 rawChar 배열: 겹낱자나 느슨한 조합을 위한 버퍼
-    var composing: [String]
-    /// previous 를 한글 처리된 문자
-    var preedit: 조합자
+    /// preedit 에 처리중인 rawChar 배열: 겹낱자나 느슨한 조합을 위한 버퍼 (FSM 상태와 동기화)
+    var composing: [String] {
+        get { state.composingBuffer }
+        set { state = state.withBuffer(newValue) }
+    }
+
+    /// previous 를 한글 처리된 문자 (FSM 상태와 동기화)
+    var preedit: 조합자 {
+        get { state.to조합자() }
+        set { state = CompositionState.from(newValue, buffer: state.composingBuffer) }
+    }
+
     /// 조합 종료된 한글
     var 완성: String?
 
     var hangulLayout: HangulAutomata
 
     let managableModifiers = [ModifierCode.NONE.rawValue, ModifierCode.SHIFT.rawValue]
+
+    // MARK: - 상태 기계 기반 상태 관리
+
+    /// 조합 상태 (내부 상태)
+    private var state: CompositionState = .empty
+
+    /// 상태 기계 인스턴스 (지연 초기화)
+    private lazy var stateMachine: CompositionStateMachine = CompositionStateMachine(layout: hangulLayout)
+
+    /// 현재 상태 기계 상태 (읽기 전용)
+    var inputState: InputState {
+        state.inputState
+    }
 
     init(layout: HangulAutomata) {
         layoutName = String(describing: type(of: layout))
@@ -46,21 +79,71 @@ class HangulProcessor {
         logger.debug("입력키 처리 클래스 초기화: \(layoutName)")
 
         rawChar = ""
-        composing = []
-        preedit = 조합자()
     }
 
     deinit {
         logger.debug("입력키 처리 클래스 해제: \(layoutName)")
     }
 
+    // MARK: - 상태 기계 기반 이벤트 처리
+
+    /// 상태 기계 이벤트 처리 (새 API)
+    /// - Parameter event: 입력 이벤트
+    /// - Returns: 전이 결과
+    func handleEvent(_ event: InputEvent) -> TransitionResult {
+        logger.debug("StateMachine 이벤트: \(event), 현재 상태: \(state)")
+
+        let result = stateMachine.transition(from: state, with: event)
+        state = result.newState
+        완성 = result.committedChar
+
+        logger.debug("StateMachine 결과: \(result.resultType), 새 상태: \(state)")
+        return result
+    }
+
+    /// rawChar를 InputEvent로 변환
+    func createJamoEvent() -> InputEvent {
+        createJamoEvent(from: rawChar)
+    }
+
+    /// 문자열을 InputEvent로 변환
+    func createJamoEvent(from char: String) -> InputEvent {
+        // 초성 확인
+        if let choCode = hangulLayout.pickChosung(by: char) {
+            let cho = 초성(rawValue: choCode)!
+
+            // 3-벌식: 종성도 확인
+            if let jongCode = hangulLayout.pickJongsung(by: char) {
+                let jong = 종성(rawValue: jongCode)!
+                return .jamo(JamoInput(
+                    rawChar: char,
+                    jamoType: .chosungOrJongsung(chosung: cho, jongsung: jong),
+                    codePoint: choCode
+                ))
+            }
+
+            return .jamo(JamoInput.chosung(cho, rawChar: char))
+        }
+
+        // 중성 확인
+        if let jungCode = hangulLayout.pickJungsung(by: char) {
+            let jung = 중성(rawValue: jungCode)!
+            return .jamo(JamoInput.jungsung(jung, rawChar: char))
+        }
+
+        // 종성 확인
+        if let jongCode = hangulLayout.pickJongsung(by: char) {
+            let jong = 종성(rawValue: jongCode)!
+            return .jamo(JamoInput.jongsung(jong, rawChar: char))
+        }
+
+        // 알 수 없는 입력은 commit
+        return .commit
+    }
+
     /// 조합중인 낱자가 있는지 검사
     func countComposable() -> Int {
-        var count = 0
-        if preedit.chosung != nil { count += 1 }
-        if preedit.jungsung != nil { count += 1 }
-        if preedit.jongsung != nil { count += 1 }
-        return count
+        state.composableCount
     }
 
     /// 입력 방식 강제 지정
@@ -135,13 +218,24 @@ class HangulProcessor {
         return nil
     }
 
-    /// 조합 가능한 문자가 들어온다. 다시 검수할 필요는 없음. 겹자음/겹모음이 있을 수 있기 때문에 previous 를 기준으로 운영.
-    /// previous=raw char 조합, preedit=조합중인 한글, commit=조합된 한글
-    /// todo: return (previous, preedit, commitState) 튜플로 개선
+    /// 조합 가능한 문자가 들어온다 (상태 기계 기반)
+    /// rawChar를 기반으로 한글 조합을 수행
     func 한글조합() -> CommitState {
         logger.debug("- 이전: \(composing) 프리에딧: \(String(describing: preedit))")
         logger.debug("- 입력: \(rawChar)")
 
+        // rawChar를 InputEvent로 변환하여 FSM에 전달
+        let event = createJamoEvent()
+        let result = handleEvent(event)
+
+        return CommitState.from(result.resultType)
+    }
+
+    // MARK: - Legacy 한글조합 (참조용, 제거 예정)
+
+    /// 기존 한글조합 로직 - 상태 기계 전환 완료 후 제거
+    @available(*, deprecated, message: "Use 한글조합() with StateMachine instead")
+    func 한글조합Legacy() -> CommitState {
         let status = (preedit.chosung, preedit.jungsung, preedit.jongsung)
         switch status {
         case (nil, nil, nil):
@@ -273,7 +367,7 @@ class HangulProcessor {
 
                 preedit.jongsung = 종성(rawValue: 새종성코드)
 
-                let _ = 한글조합()
+                let _ = 한글조합Legacy()
                 return CommitState.committed
             }
         case (nil, nil, _):
@@ -300,7 +394,7 @@ class HangulProcessor {
 
                     preedit.chosung = 초성(rawValue: 새초성코드)
 
-                    let _ = 한글조합()
+                    let _ = 한글조합Legacy()
                     return CommitState.committed
                 }
             }
@@ -376,7 +470,7 @@ class HangulProcessor {
             완성 = String(UnicodeScalar(그외.대체문자.rawValue)!)
             clearPreedit()
 
-            let _ = 한글조합()
+            let _ = 한글조합Legacy()
             return CommitState.committed
         case (_, _, _):
             print("초성, 중성, 종성이 있는데?")
@@ -393,7 +487,7 @@ class HangulProcessor {
             완성 = getComposed()
             clearPreedit()
 
-            let _ = 한글조합()
+            let _ = 한글조합Legacy()
             return CommitState.committed
         }
 
@@ -455,48 +549,19 @@ class HangulProcessor {
         return nil
     }
 
-    /// 백스페이스가 들어오면 첫/가/끝의 역순으로 지움
+    /// 백스페이스가 들어오면 첫/가/끝의 역순으로 지움 (상태 기계 기반)
     func applyBackspace() -> Int {
-        if composing.last != nil {
-            composing.removeLast()
-        }
-        switch (preedit.chosung, preedit.jungsung, preedit.jongsung) {
-        case (nil, nil, nil):
-            print("아무것도 없음")
-        case (.some(_), nil, nil):
-            print("초성을 지워도 됨: \(String(describing: preedit))")
-            composing = []
-            preedit.chosung = nil
-        case (let chosung, .some(_), nil):
-            print("중성을 지워야 함: \(String(describing: preedit)); 초성을 복구한다.")
-            if chosung != nil {
-                let recovered = hangulLayout.getChosungRawString(by: chosung!)
-                composing = [recovered]
-            }
-            preedit.jungsung = nil
-        case (_, let jungsung, .some(_)):
-            print("종성을 지움: \(String(describing: preedit)); 중성을 복구한다.")
-            if jungsung != nil {
-                let recovered = hangulLayout.getJungsungRawString(by: jungsung!)
-                composing = [recovered]
-            }
-            preedit.jongsung = nil
-        }
+        let result = handleEvent(.backspace)
         logger.debug("백스페이스 처리 후: \(String(describing: preedit)) \(composing)")
-
         return countComposable()
     }
 
     func resetComposing(_ s: String) {
-        composing.removeAll()
-        composing.append(s)
+        state = state.withBuffer([s])
     }
 
     func clearPreedit() {
-        preedit.chosung = nil
-        preedit.jungsung = nil
-        preedit.jongsung = nil
-        composing.removeAll()
+        state = .empty
     }
 
     func clearBuffers() {
@@ -517,25 +582,31 @@ class HangulProcessor {
         return nil
     }
 
-    /// 버퍼에 있는 커밋이나 조합 중인 글자를 내보내기
+    /// 버퍼에 있는 커밋이나 조합 중인 글자를 내보내기 (cancel 이벤트 사용)
     func flushCommit() -> [String] {
         var buffers: [String] = []
-        // 남은 문자가 있는 경우 내보내자
+
+        // 남은 완성 글자가 있는 경우
         if let commit = 완성 {
-            // 이 경우는 거의 없을 거 같은데...
             logger.debug("남은 완성 글자 내보내기: \(String(describing: commit))")
             buffers.append(commit)
         }
-        if let preedit = getComposed() {
-            logger.debug("조합 중인 글자 내보내기: \(String(describing: preedit))")
-            buffers.append(preedit)
+
+        // FSM cancel 이벤트로 조합 중인 글자 확정
+        if state.isComposing {
+            let result = handleEvent(.cancel)
+            if let committed = result.committedChar {
+                logger.debug("조합 중인 글자 내보내기: \(committed)")
+                buffers.append(committed)
+            }
         }
+
+        // 조합 불가한 글자 처리
         if let nonSyllable = getConverted() {
             logger.debug("조합 불가한 글자 내보내기: \(String(describing: nonSyllable))")
             buffers.append(nonSyllable)
         }
 
-        clearPreedit()
         clearBuffers()
 
         return buffers
