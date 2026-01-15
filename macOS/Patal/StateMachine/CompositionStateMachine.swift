@@ -208,26 +208,21 @@ struct CompositionStateMachine {
             return .composing(newState)
 
         case .jungsung(let jung):
-            if layout.can모아주기 {
-                let newState = CompositionState(
-                    jungsung: jung,
-                    composingBuffer: [input.rawChar]
-                )
-                return .composing(newState)
-            }
-            // 모아주기 아니면 바로 확정
-            let char = String(Character(UnicodeScalar(jung.rawValue)!))
-            return .cleared(char: char)
+            // 3-벌식: 중성만 입력해도 조합 상태 (나중에 초성이 올 수 있음)
+            let newState = CompositionState(
+                jungsung: jung,
+                composingBuffer: [input.rawChar]
+            )
+            return .composing(newState)
 
         case .jongsung(let jong):
-            if layout.can모아주기 {
-                let newState = CompositionState(
-                    jongsung: jong,
-                    composingBuffer: [input.rawChar]
-                )
-                return .composing(newState)
-            }
-            return .unchanged(.empty)
+            // 한글 자음(종성) 단독 입력은 항상 허용
+            // 모아주기와 관계없이 조합 상태로 전환
+            let newState = CompositionState(
+                jongsung: jong,
+                composingBuffer: [input.rawChar]
+            )
+            return .composing(newState)
 
         case .chosungOrJongsung(let cho, _):
             // 빈 상태에서는 초성으로 처리
@@ -236,6 +231,32 @@ struct CompositionStateMachine {
                 composingBuffer: [input.rawChar]
             )
             return .composing(newState)
+
+        case .chosungOrJungsung(let cho, _):
+            // 빈 상태에서는 초성으로 처리
+            let newState = CompositionState(
+                chosung: cho,
+                composingBuffer: [input.rawChar]
+            )
+            return .composing(newState)
+
+        case .jungsungOrJongsung(let jung, let jong, let hasUppercase):
+            // 모아주기 활성화: 중성 우선 (유연한 조합 모드)
+            // 모아주기 비활성화 + 대문자 대안 있음: 종성 우선 (자음 단독 입력)
+            // 모아주기 비활성화 + 대문자 대안 없음: 중성 우선
+            if layout.can모아주기 || !hasUppercase {
+                let newState = CompositionState(
+                    jungsung: jung,
+                    composingBuffer: [input.rawChar]
+                )
+                return .composing(newState)
+            } else {
+                let newState = CompositionState(
+                    jongsung: jong,
+                    composingBuffer: [input.rawChar]
+                )
+                return .composing(newState)
+            }
         }
     }
 
@@ -307,6 +328,24 @@ struct CompositionStateMachine {
                 composingBuffer: [input.rawChar]
             )
             return .committed(newState, char: committed)
+
+        case .jungsungOrJongsung(let jung, _, _):
+            // 초성 뒤에서는 중성으로 처리 (모음 추가)
+            let newState = CompositionState(
+                chosung: state.chosung,
+                jungsung: jung,
+                composingBuffer: [input.rawChar]
+            )
+            return .composing(newState)
+
+        case .chosungOrJungsung(_, let jung):
+            // 초성 뒤에서는 중성으로 처리 (모음 추가)
+            let newState = CompositionState(
+                chosung: state.chosung,
+                jungsung: jung,
+                composingBuffer: [input.rawChar]
+            )
+            return .composing(newState)
         }
     }
 
@@ -365,6 +404,25 @@ struct CompositionStateMachine {
                 chosung: cho,
                 jungsung: state.jungsung,
                 composingBuffer: state.composingBuffer
+            )
+            return .composing(newState)
+
+        case .chosungOrJungsung(let cho, _):
+            // 초성으로 처리
+            let newState = CompositionState(
+                chosung: cho,
+                jungsung: state.jungsung,
+                composingBuffer: state.composingBuffer
+            )
+            return .composing(newState)
+
+        case .jungsungOrJongsung(_, let jong, _):
+            // jungsungOrJongsung 키는 종성으로 처리 (겹중성 원하면 순수 중성 키 사용)
+            // 3-벌식: 중성+종성 조합
+            let newState = CompositionState(
+                jungsung: state.jungsung,
+                jongsung: jong,
+                composingBuffer: [input.rawChar]
             )
             return .composing(newState)
         }
@@ -441,6 +499,64 @@ struct CompositionStateMachine {
                 composingBuffer: [input.rawChar]
             )
             return .committed(newState, char: committed)
+
+        case .jungsungOrJongsung(let jung, let jong, let hasUppercase):
+            // 먼저 겹종성 시도
+            var newBuffer = state.composingBuffer
+            newBuffer.append(input.rawChar)
+
+            if let combined = layout.pickJongsung(by: newBuffer.joined()) {
+                let newState = CompositionState(
+                    jongsung: 종성(rawValue: combined),
+                    composingBuffer: newBuffer
+                )
+                return .composing(newState)
+            }
+
+            // 겹종성 불가, 모아주기: 중성으로 처리 (중성+종성 가능)
+            if layout.can모아주기 {
+                let newState = CompositionState(
+                    jungsung: jung,
+                    jongsung: state.jongsung,
+                    composingBuffer: [input.rawChar]
+                )
+                return .composing(newState)
+            }
+
+            // 모아주기 아님: hasUppercase에 따라 결정
+            let committed = composeSyllable(state: state)
+            if hasUppercase {
+                // 대문자로 중성 입력 가능 → 종성으로 처리
+                let newState = CompositionState(
+                    jongsung: jong,
+                    composingBuffer: [input.rawChar]
+                )
+                return .committed(newState, char: committed)
+            } else {
+                // 중성 입력 유일 방법 → 중성으로 처리
+                let newState = CompositionState(
+                    jungsung: jung,
+                    composingBuffer: [input.rawChar]
+                )
+                return .committed(newState, char: committed)
+            }
+
+        case .chosungOrJungsung(let cho, _):
+            // 종성만 있는 상태에서는 초성으로 처리
+            if layout.can모아주기 {
+                let newState = CompositionState(
+                    chosung: cho,
+                    jongsung: state.jongsung,
+                    composingBuffer: state.composingBuffer
+                )
+                return .composing(newState)
+            }
+            let committed = composeSyllable(state: state)
+            let newState = CompositionState(
+                chosung: cho,
+                composingBuffer: [input.rawChar]
+            )
+            return .committed(newState, char: committed)
         }
     }
 
@@ -449,6 +565,26 @@ struct CompositionStateMachine {
         switch input.jamoType {
         case .jungsung(let jung):
             // 중성 추가 → 완성
+            let newState = CompositionState(
+                chosung: state.chosung,
+                jungsung: jung,
+                jongsung: state.jongsung,
+                composingBuffer: [input.rawChar]
+            )
+            return .composing(newState)
+
+        case .jungsungOrJongsung(let jung, _, _):
+            // 초성+종성 상태에서는 중성으로 처리 → 완성
+            let newState = CompositionState(
+                chosung: state.chosung,
+                jungsung: jung,
+                jongsung: state.jongsung,
+                composingBuffer: [input.rawChar]
+            )
+            return .composing(newState)
+
+        case .chosungOrJungsung(_, let jung):
+            // 초성+종성 상태에서는 중성으로 처리 → 완성
             let newState = CompositionState(
                 chosung: state.chosung,
                 jungsung: jung,
@@ -503,30 +639,56 @@ struct CompositionStateMachine {
             return .cleared(char: (committed ?? "") + char)
 
         case .jongsung(let jong):
-            // 종성 추가
-            var newBuffer = state.composingBuffer
-            newBuffer.append(input.rawChar)
-
+            // 종성 추가 - 새 종성 시작이므로 버퍼 리셋
             let newState = CompositionState(
                 chosung: state.chosung,
                 jungsung: state.jungsung,
                 jongsung: jong,
-                composingBuffer: newBuffer
+                composingBuffer: [input.rawChar]
             )
             return .composing(newState)
 
         case .chosungOrJongsung(_, let jong):
-            // 3-벌식: 종성으로 처리
-            var newBuffer = state.composingBuffer
-            newBuffer.append(input.rawChar)
-
+            // 3-벌식: 종성으로 처리 - 새 종성 시작이므로 버퍼 리셋
             let newState = CompositionState(
                 chosung: state.chosung,
                 jungsung: state.jungsung,
                 jongsung: jong,
-                composingBuffer: newBuffer
+                composingBuffer: [input.rawChar]
             )
             return .composing(newState)
+
+        case .jungsungOrJongsung(_, let jong, _):
+            // 먼저 겹중성 시도 (겹모음이 가능한 경우 우선)
+            var newBuffer = state.composingBuffer
+            newBuffer.append(input.rawChar)
+
+            if let combined = layout.pickJungsung(by: newBuffer.joined()) {
+                let newState = CompositionState(
+                    chosung: state.chosung,
+                    jungsung: 중성(rawValue: combined),
+                    composingBuffer: newBuffer
+                )
+                return .composing(newState)
+            }
+
+            // 겹중성 불가 → 초성+중성 상태에서는 종성으로 처리하여 음절 완성
+            let newState = CompositionState(
+                chosung: state.chosung,
+                jungsung: state.jungsung,
+                jongsung: jong,
+                composingBuffer: [input.rawChar]
+            )
+            return .composing(newState)
+
+        case .chosungOrJungsung(let cho, _):
+            // 초성+중성 상태에서는 새 초성으로 → 이전 글자 확정
+            let committed = composeSyllable(state: state)
+            let newState = CompositionState(
+                chosung: cho,
+                composingBuffer: [input.rawChar]
+            )
+            return .committed(newState, char: committed)
         }
     }
 
@@ -543,7 +705,27 @@ struct CompositionStateMachine {
             )
             return .composing(newState)
 
-        case .jungsung, .jongsung, .chosungOrJongsung:
+        case .chosungOrJongsung(let cho, _):
+            // 초성으로 처리 → 완성
+            let newState = CompositionState(
+                chosung: cho,
+                jungsung: state.jungsung,
+                jongsung: state.jongsung,
+                composingBuffer: state.composingBuffer
+            )
+            return .composing(newState)
+
+        case .chosungOrJungsung(let cho, _):
+            // 초성으로 처리 → 완성
+            let newState = CompositionState(
+                chosung: cho,
+                jungsung: state.jungsung,
+                jongsung: state.jongsung,
+                composingBuffer: state.composingBuffer
+            )
+            return .composing(newState)
+
+        case .jungsung, .jongsung, .jungsungOrJongsung:
             let committed = composeSyllable(state: state)
             return handleEmptyState(input: input).with(committed: committed)
         }
@@ -649,6 +831,104 @@ struct CompositionStateMachine {
             }
 
             // 아니면 새 초성으로
+            let committed = composeSyllable(state: state)
+            let newState = CompositionState(
+                chosung: cho,
+                composingBuffer: [input.rawChar]
+            )
+            return .committed(newState, char: committed)
+
+        case .jungsungOrJongsung(let jung, _, _):
+            // 먼저 겹종성 시도
+            var newBuffer = state.composingBuffer
+            newBuffer.append(input.rawChar)
+
+            if let combined = layout.pickJongsung(by: newBuffer.joined()) {
+                let newState = CompositionState(
+                    chosung: state.chosung,
+                    jungsung: state.jungsung,
+                    jongsung: 종성(rawValue: combined),
+                    composingBuffer: newBuffer
+                )
+                return .composing(newState)
+            }
+
+            // 겹종성 불가 → 중성으로 처리 (종성 분리 시도)
+            if let (firstJong, secondCho) = rule.canSplitFinal(state.jongsung!) {
+                // 겹받침 분리: ㄳ → ㄱ (종성) + ㅅ (초성)
+                let prevState = CompositionState(
+                    chosung: state.chosung,
+                    jungsung: state.jungsung,
+                    jongsung: firstJong
+                )
+                let committed = composeSyllable(state: prevState)
+                let newState = CompositionState(
+                    chosung: secondCho,
+                    jungsung: jung,
+                    composingBuffer: [input.rawChar]
+                )
+                return .committed(newState, char: committed)
+            }
+
+            // 단일 종성을 초성으로 변환
+            if let newCho = rule.jongsungToChosung(state.jongsung!) {
+                let prevState = CompositionState(
+                    chosung: state.chosung,
+                    jungsung: state.jungsung,
+                    jongsung: nil
+                )
+                let committed = composeSyllable(state: prevState)
+                let newState = CompositionState(
+                    chosung: newCho,
+                    jungsung: jung,
+                    composingBuffer: [input.rawChar]
+                )
+                return .committed(newState, char: committed)
+            }
+
+            // 변환 불가 → 전체 확정 + 새 중성 시작
+            let committed = composeSyllable(state: state)
+            let newState = CompositionState(
+                jungsung: jung,
+                composingBuffer: [input.rawChar]
+            )
+            return .committed(newState, char: committed)
+
+        case .chosungOrJungsung(let cho, let jung):
+            // 완성 상태에서 초성/중성 공유 키 → 중성으로 처리 (종성 분리 시도)
+            if let (firstJong, secondCho) = rule.canSplitFinal(state.jongsung!) {
+                // 겹받침 분리: ㄳ → ㄱ (종성) + ㅅ (초성)
+                let prevState = CompositionState(
+                    chosung: state.chosung,
+                    jungsung: state.jungsung,
+                    jongsung: firstJong
+                )
+                let committed = composeSyllable(state: prevState)
+                let newState = CompositionState(
+                    chosung: secondCho,
+                    jungsung: jung,
+                    composingBuffer: [input.rawChar]
+                )
+                return .committed(newState, char: committed)
+            }
+
+            // 단일 종성을 초성으로 변환
+            if let newCho = rule.jongsungToChosung(state.jongsung!) {
+                let prevState = CompositionState(
+                    chosung: state.chosung,
+                    jungsung: state.jungsung,
+                    jongsung: nil
+                )
+                let committed = composeSyllable(state: prevState)
+                let newState = CompositionState(
+                    chosung: newCho,
+                    jungsung: jung,
+                    composingBuffer: [input.rawChar]
+                )
+                return .committed(newState, char: committed)
+            }
+
+            // 변환 불가 → 전체 확정 + 새 초성 시작
             let committed = composeSyllable(state: state)
             let newState = CompositionState(
                 chosung: cho,

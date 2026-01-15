@@ -112,12 +112,22 @@ class HangulProcessor {
         if let choCode = hangulLayout.pickChosung(by: char) {
             let cho = 초성(rawValue: choCode)!
 
-            // 3-벌식: 종성도 확인
+            // 3-벌식: 종성도 확인 (갈마들이)
             if let jongCode = hangulLayout.pickJongsung(by: char) {
                 let jong = 종성(rawValue: jongCode)!
                 return .jamo(JamoInput(
                     rawChar: char,
                     jamoType: .chosungOrJongsung(chosung: cho, jongsung: jong),
+                    codePoint: choCode
+                ))
+            }
+
+            // 3-벌식: 중성도 확인 (갈마들이)
+            if let jungCode = hangulLayout.pickJungsung(by: char) {
+                let jung = 중성(rawValue: jungCode)!
+                return .jamo(JamoInput(
+                    rawChar: char,
+                    jamoType: .chosungOrJungsung(chosung: cho, jungsung: jung),
                     codePoint: choCode
                 ))
             }
@@ -128,6 +138,29 @@ class HangulProcessor {
         // 중성 확인
         if let jungCode = hangulLayout.pickJungsung(by: char) {
             let jung = 중성(rawValue: jungCode)!
+
+            // 3-벌식: 종성도 확인 (갈마들이)
+            if let jongCode = hangulLayout.pickJongsung(by: char) {
+                let jong = 종성(rawValue: jongCode)!
+
+                // 대문자 대안 확인: 대문자도 같은 중성을 가지면 true
+                // 예: Han3ShinPCS에서 'f'와 'F' 모두 ㅏ에 매핑 → hasUppercaseAlternative = true
+                // Han3P3에서 'f'만 ㅏ에 매핑 → hasUppercaseAlternative = false
+                let uppercased = char.uppercased()
+                let hasUppercaseAlternative = (char != uppercased)
+                    && hangulLayout.pickJungsung(by: uppercased) == jungCode
+
+                return .jamo(JamoInput(
+                    rawChar: char,
+                    jamoType: .jungsungOrJongsung(
+                        jungsung: jung,
+                        jongsung: jong,
+                        hasUppercaseAlternative: hasUppercaseAlternative
+                    ),
+                    codePoint: jungCode
+                ))
+            }
+
             return .jamo(JamoInput.jungsung(jung, rawChar: char))
         }
 

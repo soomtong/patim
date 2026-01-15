@@ -14,6 +14,11 @@ enum JamoType: Equatable {
     case jongsung(종성)
     /// 3-벌식에서 초성/종성 공유 키 (갈마들이)
     case chosungOrJongsung(chosung: 초성, jongsung: 종성)
+    /// 3-벌식에서 초성/중성 공유 키 (갈마들이)
+    case chosungOrJungsung(chosung: 초성, jungsung: 중성)
+    /// 3-벌식에서 중성/종성 공유 키 (갈마들이)
+    /// hasUppercaseAlternative: 대문자로 같은 중성을 얻을 수 있으면 true
+    case jungsungOrJongsung(jungsung: 중성, jongsung: 종성, hasUppercaseAlternative: Bool)
 }
 
 /// 자모 입력 정보

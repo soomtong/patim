@@ -22,7 +22,8 @@ struct HangulProcessorTests {
     func testVerifyProcessable() {
         #expect(processor.verifyProcessable("k") == true)
         #expect(processor.verifyProcessable("f") == true)
-        #expect(processor.verifyProcessable("!") == false)
+        // keyCode -1을 전달하여 문자열 기반 검증을 테스트 (keyCode 0은 "a"에 매핑됨)
+        #expect(processor.verifyProcessable("!", keyCode: -1) == false)
     }
 
     @Test("Verify Combosable Characters")
