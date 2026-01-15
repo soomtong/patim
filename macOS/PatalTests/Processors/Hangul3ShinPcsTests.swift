@@ -867,4 +867,32 @@ struct Hangul3ShinPcsTests {
     func getComposedChar_강백스페이스() {
         //
     }
+
+    @Test("겹모음 백스페이스: 취→추→ㅊ")
+    func testCompoundVowelBackspace() {
+        // 취 조합: ㅊ + ㅟ (기존 테스트 "취"와 동일)
+        processor.rawChar = "o"  // 초성 ㅊ
+        _ = processor.한글조합()
+        #expect(processor.getComposed() == "ㅊ")
+
+        processor.rawChar = "o"  // 중성 ㅜ
+        _ = processor.한글조합()
+        #expect(processor.getComposed() == "추")
+
+        processor.rawChar = "d"  // 겹모음 ㅟ (ㅜ+ㅣ)
+        _ = processor.한글조합()
+        #expect(processor.getComposed() == "취")
+
+        // 백스페이스: 취 → 추 (겹모음 한 글자 제거)
+        _ = processor.applyBackspace()
+        #expect(processor.getComposed() == "추")
+
+        // 백스페이스: 추 → ㅊ (중성 제거)
+        _ = processor.applyBackspace()
+        #expect(processor.getComposed() == "ㅊ")
+
+        // 백스페이스: ㅊ → nil (초성 제거)
+        _ = processor.applyBackspace()
+        #expect(processor.getComposed() == nil)
+    }
 }

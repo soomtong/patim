@@ -122,7 +122,21 @@ struct CompositionStateMachine {
             return .cleared()
 
         case (nil, .some, nil):
-            // 중성만 (모아주기) - 중성 제거
+            // 중성만 (모아주기) - 겹모음이면 한 글자씩 제거
+            if state.composingBuffer.count > 1 {
+                var newBuffer = state.composingBuffer
+                newBuffer.removeLast()
+
+                if let combined = layout.pickJungsung(by: newBuffer.joined()) {
+                    let newState = CompositionState(
+                        chosung: nil,
+                        jungsung: 중성(rawValue: combined),
+                        jongsung: nil,
+                        composingBuffer: newBuffer
+                    )
+                    return .composing(newState)
+                }
+            }
             return .cleared()
 
         case (nil, nil, .some):
@@ -130,7 +144,24 @@ struct CompositionStateMachine {
             return .cleared()
 
         case (let cho, .some, nil):
-            // 초성+중성 - 중성 제거, 초성만 남김
+            // 초성+중성 - 겹모음이면 한 글자씩 제거
+            if state.composingBuffer.count > 1 {
+                // 마지막 글자 제거 후 중성 확인
+                var newBuffer = state.composingBuffer
+                newBuffer.removeLast()
+
+                if let combined = layout.pickJungsung(by: newBuffer.joined()) {
+                    let newState = CompositionState(
+                        chosung: cho,
+                        jungsung: 중성(rawValue: combined),
+                        jongsung: nil,
+                        composingBuffer: newBuffer
+                    )
+                    return .composing(newState)
+                }
+            }
+
+            // 겹모음 아니거나 남은 버퍼가 중성을 만들 수 없으면 초성만 남김
             if let chosung = cho {
                 let recovered = layout.getChosungRawString(by: chosung)
                 let newState = CompositionState(
@@ -157,11 +188,13 @@ struct CompositionStateMachine {
         case (nil, .some(let jung), .some):
             // 중성+종성 (모아주기) - 종성 제거, 중성만 남김
             let recovered = layout.getJungsungRawString(by: jung)
+            // 겹모음 복원을 위해 문자열을 개별 문자 배열로 저장
+            let newBuffer = recovered.map { String($0) }
             let newState = CompositionState(
                 chosung: nil,
                 jungsung: jung,
                 jongsung: nil,
-                composingBuffer: [recovered]
+                composingBuffer: newBuffer
             )
             return .composing(newState)
 
@@ -169,11 +202,13 @@ struct CompositionStateMachine {
             // 초성+중성+종성 - 종성 제거, 초성+중성 남김
             if let jungsung = jung {
                 let recovered = layout.getJungsungRawString(by: jungsung)
+                // 겹모음 복원을 위해 문자열을 개별 문자 배열로 저장
+                let newBuffer = recovered.map { String($0) }
                 let newState = CompositionState(
                     chosung: cho,
                     jungsung: jungsung,
                     jongsung: nil,
-                    composingBuffer: [recovered]
+                    composingBuffer: newBuffer
                 )
                 return .composing(newState)
             }
