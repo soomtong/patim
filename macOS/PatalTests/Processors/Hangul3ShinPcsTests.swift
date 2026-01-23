@@ -860,11 +860,11 @@ struct Hangul3ShinPcsTests {
 
     @Test("강_", .disabled())
     func getComposedChar_강_남() {
-        //
+        // todo
     }
 
     @Test("강^H", .disabled())
     func getComposedChar_강백스페이스() {
-        //
+        // todo
     }
 }
