@@ -220,6 +220,21 @@ class HangulProcessor {
                 }
             }
 
+            // 모아주기 비활성화 상태에서 종성 키가 들어온 경우
+            // 현재 초성을 커밋하고, 종성에 해당하는 자음을 새 초성으로 시작
+            if !hangulLayout.can모아주기 {
+                if let 종성코드 = hangulLayout.pickJongsung(by: rawChar) {
+                    if let 대응초성 = jongsungToChosung(종성(rawValue: 종성코드)!) {
+                        완성 = getComposed()
+                        preedit.chosung = 대응초성
+                        resetComposing(rawChar)
+                        keyHistory = [rawChar]
+
+                        return CommitState.committed
+                    }
+                }
+            }
+
             /// "ㄱ" -> "ㄲ", "ㄱ" -> "ㄱㄴ", "ㄲ" -> "ㅋ"
             print("초성이 있는데 또 초성이 온 경우, 또는 연타해서 다른 글자를 만들 경우")
             composing.append(rawChar)

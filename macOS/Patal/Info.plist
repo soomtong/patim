@@ -38,15 +38,15 @@
 				<key>TISIntendedLanguage</key>
 				<string>ko</string>
 				<key>tsInputModeAlternateMenuIconFileKey</key>
-				<string>han3-shin-p2.png</string>
+				<string>han3-P2.png</string>
 				<key>tsInputModeDefaultStateKey</key>
 				<true/>
 				<key>tsInputModeIsVisibleKey</key>
 				<true/>
 				<key>tsInputModeMenuIconFileKey</key>
-				<string>han3-shin-p2.png</string>
+				<string>han3-P2.png</string>
 				<key>tsInputModePaletteIconFileKey</key>
-				<string>han3-shin-p2.png</string>
+				<string>han3-P2.png</string>
 				<key>tsInputModePrimaryInScriptKey</key>
 				<true/>
 				<key>tsInputModeScriptKey</key>

@@ -174,3 +174,27 @@ enum 종성: unichar {
     case 피읖 = 0x11C1
     case 히흫 = 0x11C2
 }
+
+/// 종성 코드를 대응하는 초성 코드로 변환
+/// 겹받침은 초성으로 변환 불가하므로 nil 반환
+func jongsungToChosung(_ jongsung: 종성) -> 초성? {
+    switch jongsung {
+    case .기역: return .기역
+    case .쌍기역: return .쌍기역
+    case .니은: return .니은
+    case .디귿: return .디귿
+    case .리을: return .리을
+    case .미음: return .미음
+    case .비읍: return .비읍
+    case .시옷: return .시옷
+    case .쌍시옷: return .쌍시옷
+    case .이응: return .이응
+    case .지읒: return .지읒
+    case .치읓: return .치읓
+    case .키읔: return .키읔
+    case .티긑: return .티긑
+    case .피읖: return .피읖
+    case .히흫: return .히읗
+    default: return nil  // 겹받침(ㄳ, ㄵ, ㄶ 등)은 초성으로 변환 불가
+    }
+}

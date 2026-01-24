@@ -914,4 +914,58 @@ struct Hangul3P3Tests {
         let c5 = processor.getComposed()
         #expect(c5 == "사")
     }
+
+    @Test("ㄱ+종성ㄴ - 모아주기 비활성")
+    func getComposedChar_초성종성_모아주기비활성() {
+        processor.hangulLayout.traits.remove(LayoutTrait.모아주기)
+
+        // 초성 ㄱ (k)
+        processor.rawChar = "k"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        #expect(processor.getComposed() == "ㄱ")
+
+        // 종성 ㄴ (s) → ㄱ 커밋, 새 초성 ㄴ
+        processor.rawChar = "s"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.committed)
+        #expect(processor.완성 == "ㄱ")
+        #expect(processor.getComposed() == "ㄴ")
+    }
+
+    @Test("ㄴ+종성ㄹ - 모아주기 비활성")
+    func getComposedChar_초성종성_ㄴㄹ_모아주기비활성() {
+        processor.hangulLayout.traits.remove(LayoutTrait.모아주기)
+
+        // 초성 ㄴ (h)
+        processor.rawChar = "h"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        #expect(processor.getComposed() == "ㄴ")
+
+        // 종성 ㄹ (w) → ㄴ 커밋, 새 초성 ㄹ
+        processor.rawChar = "w"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.committed)
+        #expect(processor.완성 == "ㄴ")
+        #expect(processor.getComposed() == "ㄹ")
+    }
+
+    @Test("ㅎ+종성ㄱ - 모아주기 비활성")
+    func getComposedChar_초성종성_ㅎㄱ_모아주기비활성() {
+        processor.hangulLayout.traits.remove(LayoutTrait.모아주기)
+
+        // 초성 ㅎ (m)
+        processor.rawChar = "m"
+        let s1 = processor.한글조합()
+        #expect(s1 == CommitState.composing)
+        #expect(processor.getComposed() == "ㅎ")
+
+        // 종성 ㄱ (x) → ㅎ 커밋, 새 초성 ㄱ
+        processor.rawChar = "x"
+        let s2 = processor.한글조합()
+        #expect(s2 == CommitState.committed)
+        #expect(processor.완성 == "ㅎ")
+        #expect(processor.getComposed() == "ㄱ")
+    }
 }
