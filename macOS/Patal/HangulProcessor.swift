@@ -30,6 +30,8 @@ class HangulProcessor {
 
     /// preedit 에 처리중인 rawChar 배열: 겹낱자나 느슨한 조합을 위한 버퍼
     var composing: [String]
+    /// 키 입력 히스토리: 백스페이스 시 정확한 복원을 위해 키 1회 입력 = 1원소
+    var keyHistory: [String]
     /// previous 를 한글 처리된 문자
     var preedit: 조합자
     /// 조합 종료된 한글
@@ -47,6 +49,7 @@ class HangulProcessor {
 
         rawChar = ""
         composing = []
+        keyHistory = []
         preedit = 조합자()
     }
 
@@ -139,6 +142,12 @@ class HangulProcessor {
     /// previous=raw char 조합, preedit=조합중인 한글, commit=조합된 한글
     /// todo: return (previous, preedit, commitState) 튜플로 개선
     func 한글조합() -> CommitState {
+        keyHistory.append(rawChar)
+        return 한글조합내부()
+    }
+
+    /// 내부 조합 로직: 히스토리 관리 없이 순수 조합만 수행 (리플레이용)
+    private func 한글조합내부() -> CommitState {
         logger.debug("- 이전: \(composing) 프리에딧: \(String(describing: preedit))")
         logger.debug("- 입력: \(rawChar)")
 
@@ -455,33 +464,23 @@ class HangulProcessor {
         return nil
     }
 
-    /// 백스페이스가 들어오면 첫/가/끝의 역순으로 지움
+    /// 백스페이스가 들어오면 키 히스토리에서 마지막 입력을 제거하고 재조합
     func applyBackspace() -> Int {
-        if composing.last != nil {
-            composing.removeLast()
+        guard !keyHistory.isEmpty else {
+            logger.debug("백스페이스: 히스토리 비어있음")
+            return 0
         }
-        switch (preedit.chosung, preedit.jungsung, preedit.jongsung) {
-        case (nil, nil, nil):
-            print("아무것도 없음")
-        case (.some(_), nil, nil):
-            print("초성을 지워도 됨: \(String(describing: preedit))")
-            composing = []
-            preedit.chosung = nil
-        case (let chosung, .some(_), nil):
-            print("중성을 지워야 함: \(String(describing: preedit)); 초성을 복구한다.")
-            if chosung != nil {
-                let recovered = hangulLayout.getChosungRawString(by: chosung!)
-                composing = [recovered]
-            }
-            preedit.jungsung = nil
-        case (_, let jungsung, .some(_)):
-            print("종성을 지움: \(String(describing: preedit)); 중성을 복구한다.")
-            if jungsung != nil {
-                let recovered = hangulLayout.getJungsungRawString(by: jungsung!)
-                composing = [recovered]
-            }
-            preedit.jongsung = nil
+
+        keyHistory.removeLast()
+        logger.debug("백스페이스: 히스토리에서 제거 후 \(keyHistory)")
+
+        if keyHistory.isEmpty {
+            resetPreeditState()
+            logger.debug("백스페이스 처리 후: 빈 상태")
+            return 0
         }
+
+        recomputeFromHistory()
         logger.debug("백스페이스 처리 후: \(String(describing: preedit)) \(composing)")
 
         return countComposable()
@@ -497,6 +496,33 @@ class HangulProcessor {
         preedit.jungsung = nil
         preedit.jongsung = nil
         composing.removeAll()
+        keyHistory.removeAll()
+    }
+
+    /// preedit 상태만 초기화 (keyHistory 유지)
+    private func resetPreeditState() {
+        preedit.chosung = nil
+        preedit.jungsung = nil
+        preedit.jongsung = nil
+        composing.removeAll()
+        완성 = nil
+    }
+
+    /// 키 히스토리를 기반으로 preedit 상태를 재계산
+    /// 백스페이스 후 정확한 중간 상태 복원에 사용
+    func recomputeFromHistory() {
+        let savedHistory = keyHistory
+        resetPreeditState()
+        keyHistory.removeAll()
+
+        for key in savedHistory {
+            rawChar = key
+            let state = 한글조합내부()
+            if state == .committed {
+                완성 = nil
+            }
+        }
+        keyHistory = savedHistory
     }
 
     func clearBuffers() {
