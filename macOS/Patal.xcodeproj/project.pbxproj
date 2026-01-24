@@ -31,6 +31,8 @@
 		E2972D032CDF8C18001278E3 /* HangulLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2972D022CDF8C11001278E3 /* HangulLayout.swift */; };
 		E299CA4F2D008F2F00E2FD0D /* HangulComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */; };
 		E2B1644B2CDFAFD4003FCE85 /* HangulCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */; };
+		E2DEB0722F24A82D0078431E /* han3-p.png in Resources */ = {isa = PBXBuildFile; fileRef = E2DEB0702F24A82D0078431E /* han3-p.png */; };
+		E2DEB0732F24A82D0078431E /* han3-p@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2DEB0712F24A82D0078431E /* han3-p@2x.png */; };
 		E2FE77C02E65C28E00D5B355 /* KeyCodeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE77BF2E65C28E00D5B355 /* KeyCodeMapper.swift */; };
 /* End PBXBuildFile section */
 
@@ -76,6 +78,8 @@
 		E2972D022CDF8C11001278E3 /* HangulLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulLayout.swift; sourceTree = "<group>"; };
 		E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulComposer.swift; sourceTree = "<group>"; };
 		E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulCode.swift; sourceTree = "<group>"; };
+		E2DEB0702F24A82D0078431E /* han3-p.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-p.png"; sourceTree = "<group>"; };
+		E2DEB0712F24A82D0078431E /* han3-p@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-p@2x.png"; sourceTree = "<group>"; };
 		E2FE77BF2E65C28E00D5B355 /* KeyCodeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCodeMapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -164,8 +168,10 @@
 				461A81552B49B030005E7725 /* han3-shin-pcs@2x.png */,
 				461A81562B49B030005E7725 /* han3-shin-p2.png */,
 				461A81582B49B030005E7725 /* han3-shin-p2@2x.png */,
-				46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */,
+				E2DEB0702F24A82D0078431E /* han3-p.png */,
+				E2DEB0712F24A82D0078431E /* han3-p@2x.png */,
 				46E67F7E26EC5CFA005EC052 /* han3-P2.png */,
+				46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */,
 				462EBD162B3F3DF400BD94B2 /* Korean.tiff */,
 				46E67F7F26EC5CFA005EC052 /* icon.tiff */,
 				1343570527DE0BEB0074E691 /* InfoPlist.strings */,
@@ -268,6 +274,8 @@
 				1343570327DE0BEB0074E691 /* InfoPlist.strings in Resources */,
 				461A815C2B49B030005E7725 /* han3-shin-p2@2x.png in Resources */,
 				461A815A2B49B030005E7725 /* han3-shin-p2.png in Resources */,
+				E2DEB0722F24A82D0078431E /* han3-p.png in Resources */,
+				E2DEB0732F24A82D0078431E /* han3-p@2x.png in Resources */,
 				46E67F5626EC5506005EC052 /* MainMenu.xib in Resources */,
 				461A815B2B49B030005E7725 /* han3-shin-pcs.png in Resources */,
 				46E67F8026EC5CFA005EC052 /* han3-P2@2x.png in Resources */,
