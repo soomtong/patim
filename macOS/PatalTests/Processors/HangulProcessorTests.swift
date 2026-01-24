@@ -389,3 +389,142 @@ struct DoubleVowelBackspaceTests {
         #expect(processor.getComposed() == "웇")
     }
 }
+
+@Suite("커밋 후 백스페이스 테스트", .serialized)
+struct CommittedBackspaceTests {
+    let layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_P2)
+    var processor: HangulProcessor!
+
+    init() {
+        processor = HangulProcessor(layout: layout)
+    }
+
+    @Test("초성+새초성 경로: 위자 → 위ㅈ → 위")
+    func testChosungCommitBackspace() {
+        // 신세벌P2: j(ㅇ) + o(ㅜ) + d(ㅣ) = "위"
+        processor.rawChar = "j"
+        var state = processor.한글조합()
+        #expect(state == CommitState.composing)
+
+        processor.rawChar = "o"
+        state = processor.한글조합()
+        #expect(state == CommitState.composing)
+
+        processor.rawChar = "d"
+        state = processor.한글조합()
+        #expect(state == CommitState.composing)
+        #expect(processor.getComposed() == "위")
+
+        // l(초성ㅈ) + f(ㅏ) = "자" (새 글자 시작)
+        processor.rawChar = "l"
+        state = processor.한글조합()
+        #expect(state == CommitState.committed)  // "위" 커밋
+        #expect(processor.완성 == "위")
+        #expect(processor.getComposed() == "ㅈ")
+
+        processor.rawChar = "f"
+        state = processor.한글조합()
+        #expect(state == CommitState.composing)
+        #expect(processor.getComposed() == "자")
+
+        // 백스페이스: "자" → "ㅈ"
+        var count = processor.applyBackspace()
+        #expect(count == 1)
+        #expect(processor.getComposed() == "ㅈ")
+
+        // 백스페이스: "ㅈ" → 빈 상태 (이전 커밋된 "위"는 영향 없음)
+        count = processor.applyBackspace()
+        #expect(count == 0)
+        #expect(processor.getComposed() == nil)
+    }
+
+    @Test("중성+새중성 경로: 커밋 후 백스페이스")
+    func testJungsungCommitBackspace() {
+        // 신세벌P2에서 중성만 입력하고 새 중성이 오는 경우
+        // 모아치기 자판에서 중성으로 시작할 수 있음
+        let layoutMoachigi = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
+        let proc = HangulProcessor(layout: layoutMoachigi)
+
+        // f(ㅏ) = 중성만
+        proc.rawChar = "f"
+        var state = proc.한글조합()
+        #expect(state == CommitState.composing)
+
+        // g(ㅓ) = 새 중성, 이전 중성 커밋
+        proc.rawChar = "g"
+        state = proc.한글조합()
+        #expect(state == CommitState.committed)
+        #expect(proc.완성 != nil)
+
+        // 백스페이스: 새 글자만 영향
+        let count = proc.applyBackspace()
+        #expect(count == 0)
+        #expect(proc.getComposed() == nil)
+    }
+
+    @Test("종성+새종성 경로: 커밋 후 백스페이스")
+    func testJongsungCommitBackspace() {
+        // 모아치기 자판에서 종성만 입력 가능
+        let layoutMoachigi = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
+        let proc = HangulProcessor(layout: layoutMoachigi)
+
+        // x(종성ㄴ) = 종성만
+        proc.rawChar = "x"
+        var state = proc.한글조합()
+        #expect(state == CommitState.composing)
+
+        // z(종성ㅁ) = 새 종성 시도 (겹받침 안되면 커밋)
+        proc.rawChar = "z"
+        state = proc.한글조합()
+        // 종성+종성이 겹받침을 이루는지에 따라 결과가 다름
+
+        // 커밋된 경우 백스페이스 테스트
+        if state == CommitState.committed {
+            let count = proc.applyBackspace()
+            #expect(count == 0)
+            #expect(proc.getComposed() == nil)
+        }
+    }
+
+    @Test("우동 → 우도 → 우ㄷ → 우 시나리오")
+    func testUdongBackspaceScenario() {
+        // 신세벌P2: j(ㅇ) + o(ㅜ) = "우"
+        processor.rawChar = "j"
+        _ = processor.한글조합()
+        processor.rawChar = "o"
+        _ = processor.한글조합()
+        #expect(processor.getComposed() == "우")
+
+        // u(ㄷ) + v(ㅗ) + a(ㅇ) = "동" (새 글자)
+        processor.rawChar = "u"
+        var state = processor.한글조합()
+        #expect(state == CommitState.committed)  // "우" 커밋
+        #expect(processor.완성 == "우")
+        #expect(processor.getComposed() == "ㄷ")
+
+        processor.rawChar = "v"
+        _ = processor.한글조합()
+        #expect(processor.getComposed() == "도")
+
+        processor.rawChar = "a"
+        _ = processor.한글조합()
+        #expect(processor.getComposed() == "동")
+
+        // 백스페이스: "동" → "도"
+        var count = processor.applyBackspace()
+        #expect(count == 2)
+        #expect(processor.getComposed() == "도")
+
+        // 백스페이스: "도" → "ㄷ"
+        count = processor.applyBackspace()
+        #expect(count == 1)
+        #expect(processor.getComposed() == "ㄷ")
+
+        // 백스페이스: "ㄷ" → 빈 상태 (이전 "우"는 이미 커밋됨)
+        count = processor.applyBackspace()
+        #expect(count == 0)
+        #expect(processor.getComposed() == nil)
+        // keyHistory가 비어있어야 함 (이전 글자 키가 남아있지 않음)
+        #expect(processor.keyHistory.isEmpty)
+    }
+}

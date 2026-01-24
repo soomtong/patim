@@ -235,6 +235,7 @@ class HangulProcessor {
                 완성 = getComposed()
                 preedit.chosung = 초성(rawValue: 새초성코드)
                 resetComposing(rawChar)
+                keyHistory = [rawChar]  // 새 글자의 키만 유지
 
                 return CommitState.committed
             }
@@ -270,6 +271,7 @@ class HangulProcessor {
             if let 새중성코드 = hangulLayout.pickJungsung(by: rawChar) {
                 완성 = getComposed()
                 preedit.jungsung = 중성(rawValue: 새중성코드)
+                keyHistory = [rawChar]  // 새 글자의 키만 유지
 
                 return CommitState.committed
             }
@@ -327,6 +329,7 @@ class HangulProcessor {
             if let 새종성코드 = hangulLayout.pickJongsung(by: rawChar) {
                 완성 = getComposed()
                 preedit.jongsung = 종성(rawValue: 새종성코드)
+                keyHistory = [rawChar]  // 새 글자의 키만 유지
 
                 return CommitState.committed
             }
@@ -347,6 +350,7 @@ class HangulProcessor {
 
                 preedit.chosung = 초성(rawValue: 초성코드)
                 composing.append(rawChar)
+                keyHistory = [rawChar]  // 새 글자의 키만 유지
 
                 return CommitState.committed
             }
