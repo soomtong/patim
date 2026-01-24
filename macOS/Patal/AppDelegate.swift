@@ -5,8 +5,13 @@
 //  Created by EarthShaker on 2021/09/11.
 //
 
+import Carbon
 import Cocoa
 import InputMethodKit
+
+extension Notification.Name {
+    static let inputSourceChanged = Notification.Name("InputSourceChanged")
+}
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -30,9 +35,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let inputMethodID = getCurrentInputMethodID() {
             logger.info("자판 정보: \(inputMethodID)")
         }
+
+        // TIS 입력 소스 변경 알림 구독
+        DistributedNotificationCenter.default().addObserver(
+            self,
+            selector: #selector(handleInputSourceChanged),
+            name: NSNotification.Name(kTISNotifySelectedKeyboardInputSourceChanged as String),
+            object: nil
+        )
+        logger.debug("TIS 입력 소스 변경 알림 구독 완료")
+    }
+
+    @objc private func handleInputSourceChanged(_ notification: Notification) {
+        logger.debug("TIS 입력 소스 변경 감지")
+        NotificationCenter.default.post(name: .inputSourceChanged, object: nil)
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
+        DistributedNotificationCenter.default().removeObserver(self)
         logger.info("팥알 입력기 비활성화")
     }
 }

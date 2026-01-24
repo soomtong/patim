@@ -12,13 +12,18 @@ import InputMethodKit
 class InputController: IMKInputController {
     internal let logger = CustomLogger(category: "InputController")
 
-    // 클라이언트 하나 당 하나의 입력기 레이아웃 인스턴스가 사용됨
+    // 클라이언트 하나 당 하나의 입력기 레이아웃 인스턴스가 사용됨
     internal var layoutName: LayoutName
     internal var optionMenu: OptionMenu
 
     var processor: HangulProcessor
 
-    // 클래스 생성이 하나의 인스턴스에서 이루어지기 때문에 여러개의 Patal 입력기를 동시에 사용할 수 없음.
+    // 현재 컨트롤러가 활성 상태인지 추적
+    private var isControllerActivated: Bool = false
+    // 동기화 중복 방지 플래그
+    private var isInstanceSynced: Bool = false
+
+    // 클래스 생성이 하나의 인스턴스에서 이루어지기 때문에 여러개의 Patal 입력기를 동시에 사용할 수 없음.
     override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
         guard let inputMethodID = getCurrentInputMethodID() else {
             return nil
@@ -45,21 +50,46 @@ class InputController: IMKInputController {
         if let inputMethodVersion = getCurrentProjectVersion() {
             logger.debug("팥알 입력기 버전: \(inputMethodVersion)")
         }
+
+        // TIS 입력 소스 변경 알림 구독
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleInputSourceChanged),
+            name: .inputSourceChanged,
+            object: nil
+        )
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func handleInputSourceChanged(_ notification: Notification) {
+        guard isControllerActivated else { return }
+        syncLayoutIfNeeded()
+    }
+
+    private func syncLayoutIfNeeded() {
+        guard !isInstanceSynced else { return }
+        isInstanceSynced = true
+        defer { isInstanceSynced = false }
+
+        guard let inputMethodID = getCurrentInputMethodID() else { return }
+        let currentLayout = getInputLayoutID(id: inputMethodID)
+
+        if currentLayout != layoutName {
+            logger.debug("입력 소스 변경 동기화: \(layoutName) → \(currentLayout)")
+            updateLayout(to: currentLayout)
+        }
     }
 
     // 입력기가 전환될 때마다 호출됨
     override open func activateServer(_ sender: Any!) {
         super.activateServer(sender)
+        isControllerActivated = true
 
         // 자판 변경 감지 및 업데이트
-        if let inputMethodID = getCurrentInputMethodID() {
-            let currentLayout = getInputLayoutID(id: inputMethodID)
-
-            if currentLayout != layoutName {
-                logger.debug("자판 변경 감지: \(layoutName) → \(currentLayout)")
-                updateLayout(to: currentLayout)
-            }
-        }
+        syncLayoutIfNeeded()
 
         logger.debug("입력기 서버 시작: \(layoutName)")
     }
@@ -89,6 +119,7 @@ class InputController: IMKInputController {
     // 입력기가 비활성화 되면 호출됨
     override open func deactivateServer(_ sender: Any!) {
         super.deactivateServer(sender)
+        isControllerActivated = false
         logger.debug("입력기 서버 중단: \(layoutName)")
     }
 }
