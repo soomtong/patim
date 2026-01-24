@@ -12,7 +12,7 @@ SCHEME = Patal
 # Default target
 .DEFAULT_GOAL := help
 
-.PHONY: all format install package distribute clean build kill remove remove-root remove-user list help test test-only test-verbose
+.PHONY: all format install package distribute clean build kill remove remove-root remove-user unquarantine list help test test-only test-verbose
 
 all: format install package distribute
 
@@ -85,6 +85,11 @@ remove-user:
 	@rm -rf $(APP_USER)
 	@echo "Removed user Patal app."
 
+unquarantine:
+	@echo "Removing quarantine attribute..."
+	@sudo xattr -rd com.apple.quarantine /Library/Input\ Methods/Patal.app
+	@echo "Quarantine attribute removed."
+
 list:
 	@echo "Listing dist directory..."
 	@ls -l $(DIST_DIR)
@@ -102,6 +107,7 @@ help:
 	@echo "  remove      - Remove both root and user Patal apps"
 	@echo "  remove-root - Remove the root Patal app"
 	@echo "  remove-user - Remove the user Patal app"
+	@echo "  unquarantine- Remove quarantine attribute from Patal app"
 	@echo "  list        - List the contents of the dist directory"
 	@echo "  test        - Run tests with pretty formatting"
 	@echo "  test-only   - Run a single test (Usage: make test-only CLASS=AClass)"
