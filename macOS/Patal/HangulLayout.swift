@@ -85,9 +85,6 @@ protocol HangulAutomata {
     func pickJungsung(by char: String) -> unichar?
     func pickJongsung(by char: String) -> unichar?
     func pickNonSyllable(by char: String) -> String?
-    func getChosungRawString(by chosung: 초성) -> String
-    func getJungsungRawString(by jungsung: 중성) -> String
-    func getJongsungRawString(by jongsung: 종성) -> String
 }
 
 /// 각 레이아웃이 가져야할 프로토콜의 공용 구현
