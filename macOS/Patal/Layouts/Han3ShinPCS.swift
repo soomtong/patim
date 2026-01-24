@@ -113,6 +113,10 @@ struct Han3ShinPcsLayout: HangulAutomata {
     ]
 
     let nonSyllableMapWith수정기호: [String: String] = [
+        "Y": "]",
+        "U": "}",
+        "H": "[",
+        "J": "{",
         "N": "←",
         "M": "→",
     ]

@@ -19,9 +19,9 @@ class InputController: IMKInputController {
     var processor: HangulProcessor
 
     // 현재 컨트롤러가 활성 상태인지 추적
-    private var isControllerActivated: Bool = false
+    private(set) var isControllerActivated: Bool = false
     // 동기화 중복 방지 플래그
-    private var isInstanceSynced: Bool = false
+    private(set) var isInstanceSynced: Bool = false
 
     // 클래스 생성이 하나의 인스턴스에서 이루어지기 때문에 여러개의 Patal 입력기를 동시에 사용할 수 없음.
     override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
