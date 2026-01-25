@@ -288,3 +288,65 @@ struct CompositionStateMachineBackspaceTests {
         #expect(sm.buffer.isEmpty)
     }
 }
+
+@Suite("CompositionStateMachine Flush 테스트")
+struct CompositionStateMachineFlushTests {
+    @Test("flush: 조합 중인 글자 커밋")
+    func testFlushComposing() {
+        var layout = Han3ShinP2Layout()
+        layout.traits = []
+        var sm = CompositionStateMachine(layout: layout)
+
+        _ = sm.processInput("k")  // ㄱ
+        _ = sm.processInput("f")  // ㅏ
+        _ = sm.processInput("c")  // ㄱ (종성)
+
+        let flushed = sm.processFlush()
+
+        #expect(flushed == "각")
+        #expect(sm.buffer.isEmpty)
+        #expect(sm.currentState == .empty)
+    }
+
+    @Test("flush: 빈 버퍼")
+    func testFlushEmptyBuffer() {
+        var layout = Han3ShinP2Layout()
+        layout.traits = []
+        var sm = CompositionStateMachine(layout: layout)
+
+        let flushed = sm.processFlush()
+
+        #expect(flushed == nil)
+        #expect(sm.buffer.isEmpty)
+    }
+
+    @Test("flush: 초성만 있을 때")
+    func testFlushChosungOnly() {
+        var layout = Han3ShinP2Layout()
+        layout.traits = []
+        var sm = CompositionStateMachine(layout: layout)
+
+        _ = sm.processInput("k")  // ㄱ
+
+        let flushed = sm.processFlush()
+
+        // 초성만 있으면 NFD 형태로 출력
+        #expect(flushed != nil)
+        #expect(sm.buffer.isEmpty)
+    }
+
+    @Test("flush: 초성+중성 있을 때")
+    func testFlushConsonantVowel() {
+        var layout = Han3ShinP2Layout()
+        layout.traits = []
+        var sm = CompositionStateMachine(layout: layout)
+
+        _ = sm.processInput("k")  // ㄱ
+        _ = sm.processInput("f")  // ㅏ
+
+        let flushed = sm.processFlush()
+
+        #expect(flushed == "가")
+        #expect(sm.buffer.isEmpty)
+    }
+}

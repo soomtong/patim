@@ -620,6 +620,41 @@ class HangulProcessor {
 
     /// 버퍼에 있는 커밋이나 조합 중인 글자를 내보내기
     func flushCommit() -> [String] {
+        if useStateMachine {
+            return flushCommitStateMachine()
+        }
+        return flushCommitLegacy()
+    }
+
+    /// StateMachine 기반 flush 처리
+    private func flushCommitStateMachine() -> [String] {
+        var buffers: [String] = []
+
+        // 남은 완성 글자가 있는 경우 (드문 케이스)
+        if let commit = 완성 {
+            logger.debug("남은 완성 글자 내보내기: \(String(describing: commit))")
+            buffers.append(commit)
+        }
+
+        // StateMachine flush로 조합 중인 글자 처리
+        if let flushed = stateMachine.processFlush() {
+            logger.debug("StateMachine flush 결과: \(flushed)")
+            buffers.append(flushed)
+        }
+
+        // 비조합 문자 처리 (nonSyllable)
+        if let nonSyllable = getConverted() {
+            logger.debug("조합 불가한 글자 내보내기: \(String(describing: nonSyllable))")
+            buffers.append(nonSyllable)
+        }
+
+        clearBuffers()
+
+        return buffers
+    }
+
+    /// 레거시 flush 처리
+    private func flushCommitLegacy() -> [String] {
         var buffers: [String] = []
         // 남은 문자가 있는 경우 내보내자
         if let commit = 완성 {

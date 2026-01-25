@@ -1019,6 +1019,19 @@ struct CompositionStateMachine {
 
     // MARK: - 외부 접근
 
+    /// Flush 처리: 현재 버퍼 내용을 커밋하고 버퍼 초기화
+    /// - Returns: 커밋할 문자열 (버퍼가 비어있으면 nil)
+    mutating func processFlush() -> String? {
+        let output = handleFlush()
+
+        if case .commitAndContinue = output.action {
+            buffer = output.nextBuffer
+            return output.committed
+        }
+
+        return nil
+    }
+
     /// 현재 버퍼 상태 반환
     var currentState: CompositionState {
         return buffer.state
