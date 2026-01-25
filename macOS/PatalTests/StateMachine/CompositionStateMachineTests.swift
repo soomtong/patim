@@ -158,22 +158,23 @@ struct CompositionStateMachineMoachigiTests {
         #expect(sm.buffer.jungsung == .아)
     }
 
-    @Test("모아주기: 종성 → 중성 → 초성")
-    func testMoachigiFinalVowelChosung() {
-        // 신세벌P2에서 "c"는 초기 상태에서 초성이 아닌 것으로 체크되면
-        // 모아주기 모드에서 중성(에)로 매칭됨
+    @Test("모아주기: 중성 → 종성 → 초성")
+    func testMoachigiVowelFinalChosung() {
+        // 신세벌P2에서 모아주기 모드 동작:
+        // - "c" → 중성(에) (empty에서 중성 우선)
+        // - "f" → 종성(피읖) (vowelOnly에서 모아주기면 종성 우선)
+        // - "k" → 초성(기역) (vowelFinal에서 초성 입력)
         var layout = Han3ShinP2Layout()
         layout.traits = [.모아주기]
         var sm = CompositionStateMachine(layout: layout)
 
-        // empty 상태에서 "c"는 초성이 아니므로 중성(에)로 매칭
-        _ = sm.processInput("c")  // 중성(에)
-        _ = sm.processInput("f")  // ㅏ → 겹모음 시도 실패, 커밋 후 새 중성
-        let result = sm.processInput("k")  // ㄱ (초성)
+        _ = sm.processInput("c")  // 중성(에) → vowelOnly
+        _ = sm.processInput("f")  // 종성(피읖) → vowelFinal
+        let result = sm.processInput("k")  // 초성(기역) → consonantVowelFinal
 
-        // 최종적으로 consonantVowel 상태
+        // 최종적으로 consonantVowelFinal 상태 (초성+중성+종성 완성)
         #expect(result.isComposing)
-        #expect(sm.currentState == .consonantVowel)
+        #expect(sm.currentState == .consonantVowelFinal)
     }
 
     @Test("모아주기: 초성 → 종성 (중성과 겹치지 않는 키)")

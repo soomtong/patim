@@ -13,8 +13,8 @@ struct CompositionStateMachine {
     /// 현재 버퍼 상태
     private(set) var buffer: SyllableBuffer
 
-    /// 한글 자판 레이아웃
-    private let layout: HangulAutomata
+    /// 한글 자판 레이아웃 (traits 동기화를 위해 var)
+    var layout: HangulAutomata
 
     init(layout: HangulAutomata) {
         self.layout = layout
@@ -24,16 +24,22 @@ struct CompositionStateMachine {
     // MARK: - 메인 입력 처리
 
     /// rawKey를 받아 이벤트로 변환 후 처리
-    /// - Parameter rawKey: 입력된 키 문자열
+    /// - Parameters:
+    ///   - rawKey: 입력된 키 문자열
+    ///   - recordHistory: true면 keyHistory에 기록 (기본값), false면 리플레이용으로 기록 안 함
     /// - Returns: 상태 전이 결과
-    mutating func processInput(_ rawKey: String) -> TransitionResult {
-        // 키 히스토리에 추가
-        buffer.appendKeyHistory(rawKey)
+    mutating func processInput(_ rawKey: String, recordHistory: Bool = true) -> TransitionResult {
+        // 키 히스토리에 추가 (recordHistory가 true일 때만)
+        if recordHistory {
+            buffer.appendKeyHistory(rawKey)
+        }
 
         // rawKey를 InputEvent로 변환
         guard let event = createEvent(from: rawKey) else {
             // 이벤트 생성 실패 시 히스토리에서 제거하고 invalid 반환
-            buffer.removeLastKeyHistory()
+            if recordHistory {
+                buffer.removeLastKeyHistory()
+            }
             return .invalid
         }
 
@@ -46,11 +52,77 @@ struct CompositionStateMachine {
         let state = buffer.state
 
         // 상태에 따른 우선순위 결정
-        // 초성+중성 상태 또는 초성+중성+종성 상태에서는 종성을 먼저 체크
-        // (같은 키가 중성과 종성에 모두 매핑된 경우 대응)
         switch state {
-        case .consonantVowel, .consonantVowelFinal:
-            // 종성 우선
+        case .empty:
+            // 빈 상태: 레거시와 동일한 우선순위
+            // 초성 → (모아주기면 중성→종성, 아니면 종성→중성)
+            if let chosungCode = layout.pickChosung(by: rawKey),
+               let chosung = 초성(rawValue: chosungCode)
+            {
+                return .chosung(chosung)
+            }
+            if layout.can모아주기 {
+                // 모아주기: 중성 → 종성
+                if let jungsungCode = layout.pickJungsung(by: rawKey),
+                   let jungsung = 중성(rawValue: jungsungCode)
+                {
+                    return .jungsung(jungsung)
+                }
+                if let jongsungCode = layout.pickJongsung(by: rawKey),
+                   let jongsung = 종성(rawValue: jongsungCode)
+                {
+                    return .jongsung(jongsung)
+                }
+            } else {
+                // 일반: 종성 → 중성
+                if let jongsungCode = layout.pickJongsung(by: rawKey),
+                   let jongsung = 종성(rawValue: jongsungCode)
+                {
+                    return .jongsung(jongsung)
+                }
+                if let jungsungCode = layout.pickJungsung(by: rawKey),
+                   let jungsung = 중성(rawValue: jungsungCode)
+                {
+                    return .jungsung(jungsung)
+                }
+            }
+
+        case .consonantVowel:
+            // 초성+중성 상태: 초성(커밋) → 겹모음 → 종성 순서
+            // 레거시와 동일한 순서로 처리
+            if let chosungCode = layout.pickChosung(by: rawKey),
+               let chosung = 초성(rawValue: chosungCode)
+            {
+                return .chosung(chosung)
+            }
+            // 겹모음 확인: composingKeys와 결합해서 중성 맵에 있는지 체크
+            if !buffer.composingKeys.isEmpty {
+                let testComposing = buffer.composingKeys.joined() + rawKey
+                if let combinedCode = layout.pickJungsung(by: testComposing),
+                   중성(rawValue: combinedCode) != nil
+                {
+                    if let jungsungCode = layout.pickJungsung(by: rawKey),
+                       let jungsung = 중성(rawValue: jungsungCode)
+                    {
+                        return .jungsung(jungsung)
+                    }
+                }
+            }
+            // 종성 확인
+            if let jongsungCode = layout.pickJongsung(by: rawKey),
+               let jongsung = 종성(rawValue: jongsungCode)
+            {
+                return .jongsung(jongsung)
+            }
+            // 단독 중성 (겹모음 불가 시)
+            if let jungsungCode = layout.pickJungsung(by: rawKey),
+               let jungsung = 중성(rawValue: jungsungCode)
+            {
+                return .jungsung(jungsung)
+            }
+
+        case .consonantVowelFinal:
+            // 완성 상태: 종성 우선 (겹받침)
             if let jongsungCode = layout.pickJongsung(by: rawKey),
                let jongsung = 종성(rawValue: jongsungCode)
             {
@@ -62,7 +134,7 @@ struct CompositionStateMachine {
             {
                 return .chosung(chosung)
             }
-            // 중성 확인 (겹모음)
+            // 중성 확인
             if let jungsungCode = layout.pickJungsung(by: rawKey),
                let jungsung = 중성(rawValue: jungsungCode)
             {
@@ -71,20 +143,16 @@ struct CompositionStateMachine {
 
         case .initialConsonant:
             // 초성만 있을 때: 중성 우선
-            // 단, 모아주기 모드에서는 종성도 체크해야 함
-            // 중성과 종성이 같은 키에 매핑된 경우, 중성 우선 (기존 동작 유지)
             if let jungsungCode = layout.pickJungsung(by: rawKey),
                let jungsung = 중성(rawValue: jungsungCode)
             {
                 return .jungsung(jungsung)
             }
-            // 모아주기 모드에서 종성 허용 (중성에 매핑되지 않은 키)
-            if layout.can모아주기 {
-                if let jongsungCode = layout.pickJongsung(by: rawKey),
-                   let jongsung = 종성(rawValue: jongsungCode)
-                {
-                    return .jongsung(jongsung)
-                }
+            // 종성 허용 (핸들러에서 모아주기 여부에 따라 분기)
+            if let jongsungCode = layout.pickJongsung(by: rawKey),
+               let jongsung = 종성(rawValue: jongsungCode)
+            {
+                return .jongsung(jongsung)
             }
             // 겹자음 초성
             if let chosungCode = layout.pickChosung(by: rawKey),
@@ -93,31 +161,106 @@ struct CompositionStateMachine {
                 return .chosung(chosung)
             }
 
-        default:
-            // 기본: 초성 → 중성 → 종성 순서
+        case .vowelOnly:
+            // 중성만 있는 상태: 초성 → 종성(모아주기) → 겹모음 → 중성
+            // 레거시와 동일: 초성 체크 → 모아주기면 종성 체크 → 겹모음/중성
             if let chosungCode = layout.pickChosung(by: rawKey),
                let chosung = 초성(rawValue: chosungCode)
             {
                 return .chosung(chosung)
             }
+            // 모아주기면 종성 우선 (중성+종성 조합)
             if layout.can모아주기 {
-                if let jungsungCode = layout.pickJungsung(by: rawKey),
-                   let jungsung = 중성(rawValue: jungsungCode)
+                if let jongsungCode = layout.pickJongsung(by: rawKey),
+                   let jongsung = 종성(rawValue: jongsungCode)
                 {
-                    return .jungsung(jungsung)
+                    return .jongsung(jongsung)
                 }
             }
+            // 겹모음 확인
+            if !buffer.composingKeys.isEmpty {
+                let testComposing = buffer.composingKeys.joined() + rawKey
+                if let combinedCode = layout.pickJungsung(by: testComposing),
+                   중성(rawValue: combinedCode) != nil
+                {
+                    if let jungsungCode = layout.pickJungsung(by: rawKey),
+                       let jungsung = 중성(rawValue: jungsungCode)
+                    {
+                        return .jungsung(jungsung)
+                    }
+                }
+            }
+            // 단독 중성
+            if let jungsungCode = layout.pickJungsung(by: rawKey),
+               let jungsung = 중성(rawValue: jungsungCode)
+            {
+                return .jungsung(jungsung)
+            }
+            // 모아주기 아니면 종성
             if let jongsungCode = layout.pickJongsung(by: rawKey),
                let jongsung = 종성(rawValue: jongsungCode)
             {
                 return .jongsung(jongsung)
             }
-            if !layout.can모아주기 {
+
+        case .finalOnly:
+            // 종성만 있는 상태: 레거시와 동일
+            // 겹받침 확인 → 초성(모아주기) → 중성(모아주기) → 종성 → 초성(일반)
+            // 겹받침 확인: composingKeys와 결합해서 종성 맵에 있는지 체크
+            if !buffer.composingKeys.isEmpty {
+                let testComposing = buffer.composingKeys.joined() + rawKey
+                if let combinedCode = layout.pickJongsung(by: testComposing),
+                   종성(rawValue: combinedCode) != nil
+                {
+                    if let jongsungCode = layout.pickJongsung(by: rawKey),
+                       let jongsung = 종성(rawValue: jongsungCode)
+                    {
+                        return .jongsung(jongsung)
+                    }
+                }
+            }
+            // 모아주기면 초성, 중성 허용
+            if layout.can모아주기 {
+                if let chosungCode = layout.pickChosung(by: rawKey),
+                   let chosung = 초성(rawValue: chosungCode)
+                {
+                    return .chosung(chosung)
+                }
                 if let jungsungCode = layout.pickJungsung(by: rawKey),
                    let jungsung = 중성(rawValue: jungsungCode)
                 {
                     return .jungsung(jungsung)
                 }
+            }
+            // 새 종성 (겹받침 불가 시 커밋)
+            if let jongsungCode = layout.pickJongsung(by: rawKey),
+               let jongsung = 종성(rawValue: jongsungCode)
+            {
+                return .jongsung(jongsung)
+            }
+            // 일반 모드에서 초성 입력 시 커밋
+            if let chosungCode = layout.pickChosung(by: rawKey),
+               let chosung = 초성(rawValue: chosungCode)
+            {
+                return .chosung(chosung)
+            }
+
+        default:
+            // 기타 상태: 초성 → 중성 → 종성 순서
+            if let chosungCode = layout.pickChosung(by: rawKey),
+               let chosung = 초성(rawValue: chosungCode)
+            {
+                return .chosung(chosung)
+            }
+            if let jungsungCode = layout.pickJungsung(by: rawKey),
+               let jungsung = 중성(rawValue: jungsungCode)
+            {
+                return .jungsung(jungsung)
+            }
+            if let jongsungCode = layout.pickJongsung(by: rawKey),
+               let jongsung = 종성(rawValue: jongsungCode)
+            {
+                return .jongsung(jongsung)
             }
         }
 
@@ -269,16 +412,12 @@ struct CompositionStateMachine {
         return TransitionOutput(action: .updateBuffer, nextBuffer: newBuffer)
     }
 
-    /// Empty → VowelOnly 전이 (모아주기 전용)
-    /// - 예시: [] + ㅏ → [ㅏ] (모아주기 활성화)
-    /// - 조건: 모아주기 모드에서 중성 단독 입력
-    /// - 결과 (성공): 버퍼에 중성 추가
-    /// - 결과 (실패): 모아주기 비활성화 시 버퍼 유지 (무시)
+    /// Empty → VowelOnly 전이
+    /// - 예시: [] + ㅏ → [ㅏ]
+    /// - 조건: 버퍼가 비어있을 때 중성 입력
+    /// - 결과: 버퍼에 중성 추가, composingKeys 업데이트
+    /// - 참고: 세벌식에서는 중성만 단독 입력이 가능
     private func handleEmptyJungsung(_ jung: 중성, rawKey: String?) -> TransitionOutput {
-        guard layout.can모아주기 else {
-            // 모아주기가 아니면 invalid
-            return TransitionOutput(action: .updateBuffer, nextBuffer: buffer)
-        }
         var newBuffer = buffer
         newBuffer.jungsung = jung
         if let key = rawKey {
@@ -855,25 +994,24 @@ struct CompositionStateMachine {
             return .composing(.empty)
         }
 
-        let savedHistory = buffer.keyHistory
-        buffer = .empty
-
         // 히스토리에서 마지막 하나 제외하고 재생
-        let replayHistory = Array(savedHistory.dropLast())
+        let replayHistory = Array(buffer.keyHistory.dropLast())
+        buffer = .empty
 
         if replayHistory.isEmpty {
             return .composing(.empty)
         }
 
+        // 리플레이: recordHistory=false로 keyHistory 중복 방지
         for key in replayHistory {
-            let result = processInput(key)
+            let result = processInput(key, recordHistory: false)
             // 커밋이 발생하면 무시 (백스페이스 중간 결과)
             if case .commit = result {
                 // 커밋된 문자는 버리고 버퍼 상태만 유지
             }
         }
 
-        // keyHistory를 재생된 키들로 복원
+        // keyHistory를 재생된 키들로 설정
         buffer.keyHistory = replayHistory
 
         return .composing(buffer)

@@ -65,7 +65,7 @@ class HangulProcessor {
     private var stateMachine: CompositionStateMachine
 
     /// StateMachine 사용 여부 (점진적 전환용)
-    var useStateMachine: Bool = false
+    var useStateMachine: Bool = true
 
     let managableModifiers = [ModifierCode.NONE.rawValue, ModifierCode.SHIFT.rawValue]
 
@@ -177,6 +177,8 @@ class HangulProcessor {
 
     /// StateMachine 기반 한글 조합
     private func 한글조합StateMachine() -> CommitState {
+        // layout traits 동기화 (테스트에서 동적으로 traits 변경 시 필요)
+        stateMachine.layout = hangulLayout
         let result = stateMachine.processInput(rawChar)
 
         switch result {
