@@ -40,7 +40,7 @@
 				<key>tsInputModeAlternateMenuIconFileKey</key>
 				<string>han3-p.png</string>
 				<key>tsInputModeDefaultStateKey</key>
-				<true/>
+				<false/>
 				<key>tsInputModeIsVisibleKey</key>
 				<true/>
 				<key>tsInputModeMenuIconFileKey</key>
@@ -68,7 +68,7 @@
 				<key>tsInputModeAlternateMenuIconFileKey</key>
 				<string>han3-shin-p2.png</string>
 				<key>tsInputModeDefaultStateKey</key>
-				<true/>
+				<false/>
 				<key>tsInputModeIsVisibleKey</key>
 				<true/>
 				<key>tsInputModeMenuIconFileKey</key>
