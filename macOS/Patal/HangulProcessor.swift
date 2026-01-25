@@ -29,28 +29,54 @@ class HangulProcessor {
     var rawChar: String
 
     /// preedit 에 처리중인 rawChar 배열: 겹낱자나 느슨한 조합을 위한 버퍼
-    var composing: [String]
+    var composing: [String] {
+        get { stateMachine.buffer.composingKeys }
+        set {
+            var newBuffer = stateMachine.buffer
+            newBuffer.composingKeys = newValue
+            stateMachine.setBuffer(newBuffer)
+        }
+    }
     /// 키 입력 히스토리: 백스페이스 시 정확한 복원을 위해 키 1회 입력 = 1원소
-    var keyHistory: [String]
+    var keyHistory: [String] {
+        get { stateMachine.buffer.keyHistory }
+        set {
+            var newBuffer = stateMachine.buffer
+            newBuffer.keyHistory = newValue
+            stateMachine.setBuffer(newBuffer)
+        }
+    }
     /// previous 를 한글 처리된 문자
-    var preedit: 조합자
+    var preedit: 조합자 {
+        get { stateMachine.buffer.to조합자() }
+        set {
+            var newBuffer = SyllableBuffer(from: newValue)
+            newBuffer.composingKeys = stateMachine.buffer.composingKeys
+            newBuffer.keyHistory = stateMachine.buffer.keyHistory
+            stateMachine.setBuffer(newBuffer)
+        }
+    }
     /// 조합 종료된 한글
     var 완성: String?
 
     var hangulLayout: HangulAutomata
+
+    /// StateMachine 인스턴스
+    private var stateMachine: CompositionStateMachine
+
+    /// StateMachine 사용 여부 (점진적 전환용)
+    var useStateMachine: Bool = false
 
     let managableModifiers = [ModifierCode.NONE.rawValue, ModifierCode.SHIFT.rawValue]
 
     init(layout: HangulAutomata) {
         layoutName = String(describing: type(of: layout))
         hangulLayout = layout
+        stateMachine = CompositionStateMachine(layout: layout)
 
         logger.debug("입력키 처리 클래스 초기화: \(layoutName)")
 
         rawChar = ""
-        composing = []
-        keyHistory = []
-        preedit = 조합자()
     }
 
     deinit {
@@ -142,12 +168,30 @@ class HangulProcessor {
     /// previous=raw char 조합, preedit=조합중인 한글, commit=조합된 한글
     /// todo: return (previous, preedit, commitState) 튜플로 개선
     func 한글조합() -> CommitState {
-        keyHistory.append(rawChar)
-        return 한글조합내부()
+        if useStateMachine {
+            return 한글조합StateMachine()
+        }
+        stateMachine.appendKeyHistory(rawChar)
+        return 한글조합Legacy()
+    }
+
+    /// StateMachine 기반 한글 조합
+    private func 한글조합StateMachine() -> CommitState {
+        let result = stateMachine.processInput(rawChar)
+
+        switch result {
+        case .composing:
+            return .composing
+        case .commit(let committed, _):
+            완성 = committed
+            return .committed
+        case .invalid:
+            return .none
+        }
     }
 
     /// 내부 조합 로직: 히스토리 관리 없이 순수 조합만 수행 (리플레이용)
-    private func 한글조합내부() -> CommitState {
+    private func 한글조합Legacy() -> CommitState {
         logger.debug("- 이전: \(composing) 프리에딧: \(String(describing: preedit))")
         logger.debug("- 입력: \(rawChar)")
 
@@ -485,12 +529,16 @@ class HangulProcessor {
 
     /// 백스페이스가 들어오면 키 히스토리에서 마지막 입력을 제거하고 재조합
     func applyBackspace() -> Int {
+        if useStateMachine {
+            return applyBackspaceStateMachine()
+        }
+
         guard !keyHistory.isEmpty else {
             logger.debug("백스페이스: 히스토리 비어있음")
             return 0
         }
 
-        keyHistory.removeLast()
+        stateMachine.removeLastKeyHistory()
         logger.debug("백스페이스: 히스토리에서 제거 후 \(keyHistory)")
 
         if keyHistory.isEmpty {
@@ -505,43 +553,49 @@ class HangulProcessor {
         return countComposable()
     }
 
+    /// StateMachine 기반 백스페이스 처리
+    private func applyBackspaceStateMachine() -> Int {
+        let result = stateMachine.applyBackspace()
+
+        switch result {
+        case .composing(let buffer):
+            return buffer.composableCount
+        default:
+            return 0
+        }
+    }
+
     func resetComposing(_ s: String) {
-        composing.removeAll()
-        composing.append(s)
+        stateMachine.resetComposingKeys(s)
     }
 
     func clearPreedit() {
-        preedit.chosung = nil
-        preedit.jungsung = nil
-        preedit.jongsung = nil
-        composing.removeAll()
-        keyHistory.removeAll()
+        stateMachine.reset()
     }
 
     /// preedit 상태만 초기화 (keyHistory 유지)
     private func resetPreeditState() {
-        preedit.chosung = nil
-        preedit.jungsung = nil
-        preedit.jongsung = nil
-        composing.removeAll()
+        let savedHistory = stateMachine.keyHistory
+        stateMachine.clearPreedit()
+        stateMachine.setKeyHistory(savedHistory)
         완성 = nil
     }
 
     /// 키 히스토리를 기반으로 preedit 상태를 재계산
     /// 백스페이스 후 정확한 중간 상태 복원에 사용
     func recomputeFromHistory() {
-        let savedHistory = keyHistory
+        let savedHistory = stateMachine.keyHistory
         resetPreeditState()
-        keyHistory.removeAll()
+        stateMachine.clearKeyHistory()
 
         for key in savedHistory {
             rawChar = key
-            let state = 한글조합내부()
+            let state = 한글조합Legacy()
             if state == .committed {
                 완성 = nil
             }
         }
-        keyHistory = savedHistory
+        stateMachine.setKeyHistory(savedHistory)
     }
 
     func clearBuffers() {
