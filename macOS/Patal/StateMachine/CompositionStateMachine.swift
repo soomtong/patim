@@ -13,8 +13,8 @@ struct CompositionStateMachine {
     /// 현재 버퍼 상태
     private(set) var buffer: SyllableBuffer
 
-    /// 한글 자판 레이아웃 (traits 동기화를 위해 var)
-    var layout: HangulAutomata
+    /// 한글 자판 레이아웃 (초기화 후 변경 불가)
+    let layout: HangulAutomata
 
     init(layout: HangulAutomata) {
         self.layout = layout

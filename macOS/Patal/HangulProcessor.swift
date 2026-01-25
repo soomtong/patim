@@ -59,10 +59,21 @@ class HangulProcessor {
     /// 조합 종료된 한글
     var 완성: String?
 
-    var hangulLayout: HangulAutomata
+    var hangulLayout: HangulAutomata {
+        didSet {
+            recreateStateMachinePreservingBuffer()
+        }
+    }
 
     /// StateMachine 인스턴스
     private var stateMachine: CompositionStateMachine
+
+    /// traits 변경 시 StateMachine을 재생성하면서 버퍼 상태 보존
+    private func recreateStateMachinePreservingBuffer() {
+        let savedBuffer = stateMachine.buffer
+        stateMachine = CompositionStateMachine(layout: hangulLayout)
+        stateMachine.setBuffer(savedBuffer)
+    }
 
     /// StateMachine 사용 여부 (점진적 전환용)
     var useStateMachine: Bool = true
@@ -177,8 +188,7 @@ class HangulProcessor {
 
     /// StateMachine 기반 한글 조합
     private func 한글조합StateMachine() -> CommitState {
-        // layout traits 동기화 (테스트에서 동적으로 traits 변경 시 필요)
-        stateMachine.layout = hangulLayout
+        // layout은 hangulLayout didSet에서 자동 동기화됨
         let result = stateMachine.processInput(rawChar)
 
         switch result {
