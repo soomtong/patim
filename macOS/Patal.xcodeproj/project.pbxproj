@@ -28,6 +28,11 @@
 		E24856192D20F0A300AC78AF /* PatalInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24856182D20F0A300AC78AF /* PatalInputController.swift */; };
 		E258567D2D18134A006FD5E7 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = E258567C2D18134A006FD5E7 /* Extention.swift */; };
 		E284B61B2CFDF4F20009DE1C /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = E284B61A2CFDF4F20009DE1C /* Util.swift */; };
+		E29299A62F25DAE20041869A /* TransitionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29299A42F25DAE20041869A /* TransitionResult.swift */; };
+		E29299A72F25DAE20041869A /* SyllableBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29299A32F25DAE20041869A /* SyllableBuffer.swift */; };
+		E29299A82F25DAE20041869A /* CompositionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29299A12F25DAE20041869A /* CompositionState.swift */; };
+		E29299A92F25DAE20041869A /* InputEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29299A22F25DAE20041869A /* InputEvent.swift */; };
+		E29299AA2F25DB000041869A /* CompositionStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29299AB2F25DB000041869A /* CompositionStateMachine.swift */; };
 		E2972D032CDF8C18001278E3 /* HangulLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2972D022CDF8C11001278E3 /* HangulLayout.swift */; };
 		E299CA4F2D008F2F00E2FD0D /* HangulComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */; };
 		E2B1644B2CDFAFD4003FCE85 /* HangulCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */; };
@@ -75,6 +80,11 @@
 		E258567C2D18134A006FD5E7 /* Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extention.swift; sourceTree = "<group>"; };
 		E284B61A2CFDF4F20009DE1C /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		E289CD4C2CE9CD3D00E309D8 /* PatalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PatalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E29299A12F25DAE20041869A /* CompositionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionState.swift; sourceTree = "<group>"; };
+		E29299A22F25DAE20041869A /* InputEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputEvent.swift; sourceTree = "<group>"; };
+		E29299A32F25DAE20041869A /* SyllableBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyllableBuffer.swift; sourceTree = "<group>"; };
+		E29299A42F25DAE20041869A /* TransitionResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionResult.swift; sourceTree = "<group>"; };
+		E29299AB2F25DB000041869A /* CompositionStateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionStateMachine.swift; sourceTree = "<group>"; };
 		E2972D022CDF8C11001278E3 /* HangulLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulLayout.swift; sourceTree = "<group>"; };
 		E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulComposer.swift; sourceTree = "<group>"; };
 		E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulCode.swift; sourceTree = "<group>"; };
@@ -140,6 +150,7 @@
 		46E67F4F26EC5505005EC052 /* Patal */ = {
 			isa = PBXGroup;
 			children = (
+				E29299A52F25DAE20041869A /* StateMachine */,
 				469C537E2B91E1C200446511 /* Logger.swift */,
 				46E67F5026EC5505005EC052 /* AppDelegate.swift */,
 				134356FF27DDFF850074E691 /* InputController.swift */,
@@ -177,6 +188,18 @@
 				1343570527DE0BEB0074E691 /* InfoPlist.strings */,
 			);
 			path = Resource;
+			sourceTree = "<group>";
+		};
+		E29299A52F25DAE20041869A /* StateMachine */ = {
+			isa = PBXGroup;
+			children = (
+				E29299A12F25DAE20041869A /* CompositionState.swift */,
+				E29299A22F25DAE20041869A /* InputEvent.swift */,
+				E29299A32F25DAE20041869A /* SyllableBuffer.swift */,
+				E29299A42F25DAE20041869A /* TransitionResult.swift */,
+				E29299AB2F25DB000041869A /* CompositionStateMachine.swift */,
+			);
+			path = StateMachine;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -311,6 +334,11 @@
 				464092AA2B92EDA800F5D81D /* HangulProcessor.swift in Sources */,
 				E24856192D20F0A300AC78AF /* PatalInputController.swift in Sources */,
 				E2972D032CDF8C18001278E3 /* HangulLayout.swift in Sources */,
+				E29299A62F25DAE20041869A /* TransitionResult.swift in Sources */,
+				E29299A72F25DAE20041869A /* SyllableBuffer.swift in Sources */,
+				E29299A82F25DAE20041869A /* CompositionState.swift in Sources */,
+				E29299A92F25DAE20041869A /* InputEvent.swift in Sources */,
+				E29299AA2F25DB000041869A /* CompositionStateMachine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,7 +520,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.4.1;
+				CURRENT_PROJECT_VERSION = 1.4.2;
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Patal/Info.plist;
@@ -504,7 +532,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.4.1;
+				MARKETING_VERSION = 1.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.Patal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 6.0;
@@ -522,7 +550,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.4.1;
+				CURRENT_PROJECT_VERSION = 1.4.2;
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Patal/Info.plist;
@@ -534,7 +562,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.4.1;
+				MARKETING_VERSION = 1.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.Patal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 6.0;
