@@ -256,6 +256,10 @@ struct CompositionStateMachine {
 
     // MARK: - Empty 상태 핸들러
 
+    /// Empty → InitialConsonant 전이
+    /// - 예시: [] + ㄱ → [ㄱ]
+    /// - 조건: 버퍼가 비어있을 때 초성 입력
+    /// - 결과: 버퍼에 초성 추가, composingKeys 업데이트
     private func handleEmptyChosung(_ cho: 초성, rawKey: String?) -> TransitionOutput {
         var newBuffer = buffer
         newBuffer.chosung = cho
@@ -265,6 +269,11 @@ struct CompositionStateMachine {
         return TransitionOutput(action: .updateBuffer, nextBuffer: newBuffer)
     }
 
+    /// Empty → VowelOnly 전이 (모아주기 전용)
+    /// - 예시: [] + ㅏ → [ㅏ] (모아주기 활성화)
+    /// - 조건: 모아주기 모드에서 중성 단독 입력
+    /// - 결과 (성공): 버퍼에 중성 추가
+    /// - 결과 (실패): 모아주기 비활성화 시 버퍼 유지 (무시)
     private func handleEmptyJungsung(_ jung: 중성, rawKey: String?) -> TransitionOutput {
         guard layout.can모아주기 else {
             // 모아주기가 아니면 invalid
@@ -278,6 +287,10 @@ struct CompositionStateMachine {
         return TransitionOutput(action: .updateBuffer, nextBuffer: newBuffer)
     }
 
+    /// Empty → FinalOnly 전이
+    /// - 예시: [] + ㄱ(종성) → [ㄱ]
+    /// - 조건: 버퍼가 비어있을 때 종성 입력 (특수 자판 배열)
+    /// - 결과: 버퍼에 종성 추가, composingKeys 업데이트
     private func handleEmptyJongsung(_ jong: 종성, rawKey: String?) -> TransitionOutput {
         var newBuffer = buffer
         newBuffer.jongsung = jong
@@ -289,6 +302,10 @@ struct CompositionStateMachine {
 
     // MARK: - InitialConsonant 상태 핸들러
 
+    /// InitialConsonant → ConsonantVowel 전이
+    /// - 예시: [ㄱ] + ㅏ → [가]
+    /// - 조건: 초성만 있는 상태에서 중성 입력
+    /// - 결과: 버퍼에 중성 추가, composingKeys 리셋
     private func handleInitialConsonantJungsung(_ jung: 중성, rawKey: String?) -> TransitionOutput {
         var newBuffer = buffer
         newBuffer.jungsung = jung
@@ -296,6 +313,11 @@ struct CompositionStateMachine {
         return TransitionOutput(action: .updateBuffer, nextBuffer: newBuffer)
     }
 
+    /// InitialConsonant → ConsonantFinal 전이 (모아주기) 또는 커밋 후 새 초성
+    /// - 예시 (모아주기): [ㄱ] + ㄴ(종성) → [ㄱ+ㄴ] (초성+종성)
+    /// - 예시 (일반): [ㄱ] + ㄴ(종성) → 커밋 "ㄱ" + [ㄴ]
+    /// - 조건 (모아주기): 종성을 그대로 추가
+    /// - 조건 (일반): 종성→초성 변환 후 커밋, 새 버퍼에 초성 설정
     private func handleInitialConsonantJongsung(_ jong: 종성, rawKey: String?) -> TransitionOutput {
         if layout.can모아주기 {
             var newBuffer = buffer
@@ -321,6 +343,11 @@ struct CompositionStateMachine {
         return TransitionOutput(action: .updateBuffer, nextBuffer: buffer)
     }
 
+    /// InitialConsonant → InitialConsonant 전이 (겹자음) 또는 커밋 후 새 초성
+    /// - 예시 (겹자음 성공): [ㄱ] + ㄱ → [ㄲ]
+    /// - 예시 (겹자음 실패): [ㄱ] + ㄴ → 커밋 "ㄱ" + [ㄴ]
+    /// - 조건 (성공): composingKeys 결합이 유효한 겹자음일 때
+    /// - 조건 (실패): 결합 불가 시 현재 글자 커밋, 새 버퍼에 초성 설정
     private func handleInitialConsonantChosung(_ cho: 초성, rawKey: String?) -> TransitionOutput {
         // 겹자음 시도
         var testComposing = buffer.composingKeys
@@ -354,12 +381,21 @@ struct CompositionStateMachine {
 
     // MARK: - VowelOnly 상태 핸들러 (모아주기)
 
+    /// VowelOnly → ConsonantVowel 전이 (모아주기)
+    /// - 예시: [ㅏ] + ㄱ → [가]
+    /// - 조건: 중성만 있는 상태에서 초성 입력
+    /// - 결과: 버퍼에 초성 추가 (모아주기로 초+중 완성)
     private func handleVowelOnlyChosung(_ cho: 초성, rawKey: String?) -> TransitionOutput {
         var newBuffer = buffer
         newBuffer.chosung = cho
         return TransitionOutput(action: .updateBuffer, nextBuffer: newBuffer)
     }
 
+    /// VowelOnly → VowelFinal 전이 (모아주기) 또는 커밋 후 새 종성
+    /// - 예시 (모아주기): [ㅏ] + ㄱ(종성) → [ㅏ+ㄱ] (중성+종성)
+    /// - 예시 (일반): [ㅏ] + ㄱ(종성) → 커밋 "ㅏ" + [ㄱ]
+    /// - 조건 (모아주기): 종성 추가
+    /// - 조건 (일반): 현재 글자 커밋, 새 버퍼에 종성 설정
     private func handleVowelOnlyJongsung(_ jong: 종성, rawKey: String?) -> TransitionOutput {
         if layout.can모아주기 {
             var newBuffer = buffer
@@ -380,6 +416,11 @@ struct CompositionStateMachine {
         )
     }
 
+    /// VowelOnly → VowelOnly 전이 (겹모음) 또는 커밋 후 새 중성
+    /// - 예시 (겹모음 성공): [ㅗ] + ㅏ → [ㅘ]
+    /// - 예시 (겹모음 실패): [ㅏ] + ㅓ → 커밋 "ㅏ" + [ㅓ]
+    /// - 조건 (성공): composingKeys 결합이 유효한 겹모음일 때
+    /// - 조건 (실패): 결합 불가 시 현재 글자 커밋, 새 버퍼에 중성 설정
     private func handleVowelOnlyJungsung(_ jung: 중성, rawKey: String?) -> TransitionOutput {
         // 겹모음 시도
         var testComposing = buffer.composingKeys
@@ -413,6 +454,11 @@ struct CompositionStateMachine {
 
     // MARK: - FinalOnly 상태 핸들러 (종성만)
 
+    /// FinalOnly → FinalOnly 전이 (겹받침) 또는 커밋 후 새 종성
+    /// - 예시 (겹받침 성공): [ㄱ] + ㅅ → [ㄳ]
+    /// - 예시 (겹받침 실패): [ㄱ] + ㄴ → 커밋 "ㄱ" + [ㄴ]
+    /// - 조건 (성공): composingKeys 결합이 유효한 겹받침일 때
+    /// - 조건 (실패): 결합 불가 시 현재 글자 커밋, 새 버퍼에 종성 설정
     private func handleFinalOnlyJongsung(_ jong: 종성, rawKey: String?) -> TransitionOutput {
         // 겹받침 시도
         var testComposing = buffer.composingKeys
@@ -444,6 +490,11 @@ struct CompositionStateMachine {
         )
     }
 
+    /// FinalOnly → ConsonantFinal 전이 (모아주기) 또는 커밋 후 새 초성
+    /// - 예시 (모아주기): [ㄱ(종성)] + ㄴ(초성) → [ㄴ+ㄱ] (초성+종성)
+    /// - 예시 (일반): [ㄱ(종성)] + ㄴ(초성) → 커밋 "ㄱ" + [ㄴ]
+    /// - 조건 (모아주기): 초성 추가
+    /// - 조건 (일반): 현재 글자 커밋, 새 버퍼에 초성 설정
     private func handleFinalOnlyChosung(_ cho: 초성, rawKey: String?) -> TransitionOutput {
         if layout.can모아주기 {
             var newBuffer = buffer
@@ -464,6 +515,11 @@ struct CompositionStateMachine {
         )
     }
 
+    /// FinalOnly → VowelFinal 전이 (모아주기) 또는 커밋 후 새 중성
+    /// - 예시 (모아주기): [ㄱ(종성)] + ㅏ → [ㅏ+ㄱ] (중성+종성)
+    /// - 예시 (일반): [ㄱ(종성)] + ㅏ → 커밋 "ㄱ" + [ㅏ]
+    /// - 조건 (모아주기): 중성 추가
+    /// - 조건 (일반): 현재 글자 커밋, 새 버퍼에 중성 설정
     private func handleFinalOnlyJungsung(_ jung: 중성, rawKey: String?) -> TransitionOutput {
         if layout.can모아주기 {
             var newBuffer = buffer
@@ -486,6 +542,10 @@ struct CompositionStateMachine {
 
     // MARK: - ConsonantVowel 상태 핸들러 (초성+중성)
 
+    /// ConsonantVowel → InitialConsonant 전이 (커밋 후 새 초성)
+    /// - 예시: [가] + ㄴ(초성) → 커밋 "가" + [ㄴ]
+    /// - 조건: 초성+중성 상태에서 새 초성 입력
+    /// - 결과: 현재 글자 커밋, 새 버퍼에 초성 설정
     private func handleConsonantVowelChosung(_ cho: 초성, rawKey: String?) -> TransitionOutput {
         // 초성+중성 상태에서 새 초성: 커밋 후 새 글자
         let committed = composeString(from: buffer)
@@ -502,6 +562,11 @@ struct CompositionStateMachine {
         )
     }
 
+    /// ConsonantVowel → ConsonantVowel 전이 (겹모음) 또는 커밋 후 새 중성
+    /// - 예시 (겹모음 성공): [고] + ㅏ → [과]
+    /// - 예시 (겹모음 실패, 모아주기): [가] + ㅓ → 커밋 "가" + [ㅓ]
+    /// - 조건 (성공): composingKeys 결합이 유효한 겹모음일 때
+    /// - 조건 (실패): 결합 불가 시 모아주기면 커밋, 아니면 무시
     private func handleConsonantVowelJungsung(_ jung: 중성, rawKey: String?) -> TransitionOutput {
         // 겹모음 시도
         if buffer.composingKeys.count > 0 {
@@ -539,6 +604,10 @@ struct CompositionStateMachine {
         return TransitionOutput(action: .updateBuffer, nextBuffer: buffer)
     }
 
+    /// ConsonantVowel → ConsonantVowelFinal 전이
+    /// - 예시: [가] + ㄴ(종성) → [간]
+    /// - 조건: 초성+중성 상태에서 종성 입력
+    /// - 결과: 버퍼에 종성 추가, composingKeys 리셋
     private func handleConsonantVowelJongsung(_ jong: 종성, rawKey: String?) -> TransitionOutput {
         var newBuffer = buffer
         newBuffer.jongsung = jong
@@ -548,6 +617,10 @@ struct CompositionStateMachine {
 
     // MARK: - VowelFinal 상태 핸들러 (중성+종성 - 모아주기)
 
+    /// VowelFinal → ConsonantVowelFinal 전이 (모아주기)
+    /// - 예시: [ㅏ+ㄱ] + ㄴ(초성) → [난] (중성+종성에 초성 결합)
+    /// - 조건: 중성+종성 상태에서 초성 입력 (모아주기)
+    /// - 결과: 버퍼에 초성 추가하여 완성된 글자
     private func handleVowelFinalChosung(_ cho: 초성, rawKey: String?) -> TransitionOutput {
         var newBuffer = buffer
         newBuffer.chosung = cho
@@ -556,6 +629,10 @@ struct CompositionStateMachine {
 
     // MARK: - ConsonantFinal 상태 핸들러 (초성+종성 - 모아주기)
 
+    /// ConsonantFinal → ConsonantVowelFinal 전이 (모아주기)
+    /// - 예시: [ㄱ+ㄴ] + ㅏ → [간] (초성+종성에 중성 결합)
+    /// - 조건: 초성+종성 상태에서 중성 입력 (모아주기)
+    /// - 결과: 버퍼에 중성 추가하여 완성된 글자
     private func handleConsonantFinalJungsung(_ jung: 중성, rawKey: String?) -> TransitionOutput {
         var newBuffer = buffer
         newBuffer.jungsung = jung
@@ -564,6 +641,11 @@ struct CompositionStateMachine {
 
     // MARK: - ConsonantVowelFinal 상태 핸들러 (초성+중성+종성)
 
+    /// ConsonantVowelFinal → ConsonantVowelFinal 전이 (겹받침) 또는 커밋 후 새 종성
+    /// - 예시 (겹받침 성공): [간] + ㅅ → [값] (ㄴ+ㅅ=ㄵ)
+    /// - 예시 (겹받침 실패): [간] + ㄱ → 커밋 "간" + [ㄱ]
+    /// - 조건 (성공): composingKeys 결합이 유효한 겹받침일 때
+    /// - 조건 (실패): 결합 불가 시 현재 글자 커밋, 새 버퍼에 종성 설정
     private func handleConsonantVowelFinalJongsung(
         _ jong: 종성,
         rawKey: String?
@@ -598,6 +680,11 @@ struct CompositionStateMachine {
         )
     }
 
+    /// ConsonantVowelFinal → VowelOnly 전이 (커밋 후 새 중성)
+    /// - 예시: [간] + ㅏ → 커밋 "간" + [ㅏ]
+    /// - 조건: 완성된 글자에서 중성 입력 (세벌식)
+    /// - 결과: 현재 글자 커밋, 새 버퍼에 중성 설정
+    /// - 참고: 세벌식은 종성 분리 없음 (두벌식과 다름)
     private func handleConsonantVowelFinalJungsung(
         _ jung: 중성,
         rawKey: String?
@@ -616,6 +703,10 @@ struct CompositionStateMachine {
         )
     }
 
+    /// ConsonantVowelFinal → InitialConsonant 전이 (커밋 후 새 초성)
+    /// - 예시: [간] + ㄱ(초성) → 커밋 "간" + [ㄱ]
+    /// - 조건: 완성된 글자에서 초성 입력
+    /// - 결과: 현재 글자 커밋, 새 버퍼에 초성 설정
     private func handleConsonantVowelFinalChosung(
         _ cho: 초성,
         rawKey: String?
@@ -637,6 +728,10 @@ struct CompositionStateMachine {
 
     // MARK: - 공통 핸들러
 
+    /// 모든 상태 → Empty 전이 (버퍼 플러시)
+    /// - 예시: [간] + flush → 커밋 "간" + []
+    /// - 조건: flush 이벤트 발생 (Enter, 포커스 이동 등)
+    /// - 결과: 현재 버퍼 내용 커밋, 버퍼 초기화
     private func handleFlush() -> TransitionOutput {
         let committed = composeString(from: buffer)
         return TransitionOutput(
@@ -646,6 +741,11 @@ struct CompositionStateMachine {
         )
     }
 
+    /// 백스페이스 처리 (키 히스토리 기반)
+    /// - 예시: [간] + backspace → [가] (히스토리 재계산)
+    /// - 예시: [ㄱ] + backspace → []
+    /// - 조건: backspace 이벤트 발생
+    /// - 결과: 키 히스토리에서 마지막 제거, 외부에서 재계산 필요
     private func handleBackspace() -> TransitionOutput {
         // 키 히스토리에서 마지막 제거 후 재계산
         // 실제 구현은 recomputeFromHistory 패턴 사용
@@ -662,6 +762,10 @@ struct CompositionStateMachine {
         return TransitionOutput(action: .updateBuffer, nextBuffer: newBuffer)
     }
 
+    /// 유효하지 않은 전이 처리 (커밋 후 새 글자)
+    /// - 예시: [ㅏ+ㄱ] + ㅓ → 커밋 "ㅏㄱ" + [ㅓ] (VowelFinal에서 중성 입력)
+    /// - 조건: 현재 상태에서 허용되지 않는 입력
+    /// - 결과: 현재 버퍼 커밋, 새 버퍼에 입력 이벤트 설정
     private func handleInvalidWithCommit(event: InputEvent) -> TransitionOutput {
         let committed = composeString(from: buffer)
         var newBuffer = SyllableBuffer.empty

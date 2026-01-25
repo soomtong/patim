@@ -85,6 +85,9 @@ struct TransitionOutput: Equatable {
     let committed: String?
 
     /// 이월 이벤트 (재처리 필요한 경우)
+    /// - Note: 현재 구현에서는 사용되지 않음 (항상 nil)
+    ///         모든 TransitionOutput 생성 시 carryoverEvent를 명시하지 않아 기본값 nil 사용
+    ///         향후 복잡한 입력 처리(예: 특수키 조합)가 필요할 때를 대비한 예비 기능
     let carryoverEvent: InputEvent?
 
     init(
