@@ -9,84 +9,109 @@ import Testing
 
 @testable import Patal
 
-@Suite("레이아웃 테스트", .serialized)
+// MARK: - 레이아웃 테스트 데이터
+struct ChosungTestCase: Sendable, CustomTestStringConvertible {
+    let key: String
+    let expected: 초성
+    var testDescription: String { "\(key) → \(expected)" }
+}
+
+struct JungsungTestCase: Sendable, CustomTestStringConvertible {
+    let key: String
+    let expected: 중성
+    var testDescription: String { "\(key) → \(expected)" }
+}
+
+struct JongsungTestCase: Sendable, CustomTestStringConvertible {
+    let key: String
+    let expected: 종성
+    var testDescription: String { "\(key) → \(expected)" }
+}
+
+@Suite("레이아웃 테스트")
 struct Han3ShinPcsLayoutTests {
-    var layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
-    let 초성기역 = String(
-        utf16CodeUnits: [초성.기역.rawValue],
-        count: [초성.기역.rawValue].count
-    )
+    let layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
 
-    @Test()
-    func pickChosung() {
-        let chosung1 = layout.pickChosung(by: "k")
-        #expect(chosung1 == 초성.기역.rawValue)
+    // MARK: - 초성 테스트
+    static let chosungCases: [ChosungTestCase] = [
+        ChosungTestCase(key: "k", expected: .기역),
+        ChosungTestCase(key: "h", expected: .니은),
+    ]
 
-        let chosung2 = layout.pickChosung(by: "h")
-        #expect(chosung2 == 초성.니은.rawValue)
+    static let doubleChosungCases: [ChosungTestCase] = [
+        ChosungTestCase(key: "kk", expected: .쌍기역),
+        ChosungTestCase(key: ";;", expected: .쌍비읍),
+    ]
+
+    @Test("초성 선택", arguments: chosungCases)
+    func pickChosung(testCase: ChosungTestCase) {
+        let result = layout.pickChosung(by: testCase.key)
+        #expect(result == testCase.expected.rawValue)
     }
 
-    @Test()
-    func pickDoubleChosung() {
-        let doubleChosung1 = layout.pickChosung(by: "kk")
-        #expect(doubleChosung1 == 초성.쌍기역.rawValue)
-
-        let doubleChosung2 = layout.pickChosung(by: ";;")
-        #expect(doubleChosung2 == 초성.쌍비읍.rawValue)
+    @Test("겹초성 선택", arguments: doubleChosungCases)
+    func pickDoubleChosung(testCase: ChosungTestCase) {
+        let result = layout.pickChosung(by: testCase.key)
+        #expect(result == testCase.expected.rawValue)
     }
 
-    @Test(.disabled())
+    @Test("삼중 초성 선택", .disabled())
     func pickTripleChosung() {
-        let doubleChosung1 = layout.pickChosung(by: "kkk")
-        #expect(doubleChosung1 == 초성.키읔.rawValue)
+        let result = layout.pickChosung(by: "kkk")
+        #expect(result == 초성.키읔.rawValue)
     }
 
-    @Test()
-    func pickJungsung() {
-        let jungsung1 = layout.pickJungsung(by: "f")
-        #expect(jungsung1 == 중성.아.rawValue)
+    // MARK: - 중성 테스트
+    static let jungsungCases: [JungsungTestCase] = [
+        JungsungTestCase(key: "f", expected: .아),
+        JungsungTestCase(key: "e", expected: .애),
+    ]
 
-        let jungsung2 = layout.pickJungsung(by: "e")
-        #expect(jungsung2 == 중성.애.rawValue)
+    static let doubleJungsungCases: [JungsungTestCase] = [
+        JungsungTestCase(key: "pf", expected: .와),
+        JungsungTestCase(key: "od", expected: .위),
+        JungsungTestCase(key: "z", expected: .의),
+    ]
+
+    @Test("중성 선택", arguments: jungsungCases)
+    func pickJungsung(testCase: JungsungTestCase) {
+        let result = layout.pickJungsung(by: testCase.key)
+        #expect(result == testCase.expected.rawValue)
     }
 
-    @Test()
-    func pickDoubleJungsung() {
-        let doubleJungsung1 = layout.pickJungsung(by: "pf")
-        #expect(doubleJungsung1 == 중성.와.rawValue)
-
-        let doubleJungsung2 = layout.pickJungsung(by: "od")
-        #expect(doubleJungsung2 == 중성.위.rawValue)
-
-        let doubleJungsung3 = layout.pickJungsung(by: "z")
-        #expect(doubleJungsung3 == 중성.의.rawValue)
+    @Test("겹중성 선택", arguments: doubleJungsungCases)
+    func pickDoubleJungsung(testCase: JungsungTestCase) {
+        let result = layout.pickJungsung(by: testCase.key)
+        #expect(result == testCase.expected.rawValue)
     }
 
-    @Test()
-    func pickJongsung() {
-        let jongsung1 = layout.pickJongsung(by: "a")
-        #expect(jongsung1 == 종성.이응.rawValue)
+    // MARK: - 종성 테스트
+    static let jongsungCases: [JongsungTestCase] = [
+        JongsungTestCase(key: "a", expected: .이응),
+        JongsungTestCase(key: "s", expected: .니은),
+    ]
 
-        let jongsung2 = layout.pickJongsung(by: "s")
-        #expect(jongsung2 == 종성.니은.rawValue)
+    static let doubleJongsungCases: [JongsungTestCase] = [
+        JongsungTestCase(key: "cc", expected: .쌍기역),
+        JongsungTestCase(key: "sd", expected: .니은히읗),
+        JongsungTestCase(key: "we", expected: .리을비읍),
+        JongsungTestCase(key: "x", expected: .쌍시옷),
+    ]
+
+    @Test("종성 선택", arguments: jongsungCases)
+    func pickJongsung(testCase: JongsungTestCase) {
+        let result = layout.pickJongsung(by: testCase.key)
+        #expect(result == testCase.expected.rawValue)
     }
 
-    @Test()
-    func pickDoubleJongsung() {
-        let doubleJongsung1 = layout.pickJongsung(by: "cc")
-        #expect(doubleJongsung1 == 종성.쌍기역.rawValue)
-
-        let doubleJongsung2 = layout.pickJongsung(by: "sd")
-        #expect(doubleJongsung2 == 종성.니은히읗.rawValue)
-
-        let doubleJongsung3 = layout.pickJongsung(by: "we")
-        #expect(doubleJongsung3 == 종성.리을비읍.rawValue)
-
-        let doubleJongsung4 = layout.pickJongsung(by: "x")
-        #expect(doubleJongsung4 == 종성.쌍시옷.rawValue)
+    @Test("겹종성 선택", arguments: doubleJongsungCases)
+    func pickDoubleJongsung(testCase: JongsungTestCase) {
+        let result = layout.pickJongsung(by: testCase.key)
+        #expect(result == testCase.expected.rawValue)
     }
 
-    @Suite("레이아웃 특성 테스트", .serialized)
+    // MARK: - 레이아웃 특성 테스트
+    @Suite("레이아웃 특성 테스트")
     struct LayoutTraitTests {
         var layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
         var processor: HangulProcessor!

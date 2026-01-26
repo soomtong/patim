@@ -9,66 +9,74 @@ import Testing
 
 @testable import Patal
 
+// MARK: - CompositionState 테스트 데이터
+struct StateTestCase: Sendable, CustomTestStringConvertible {
+    let hasChosung: Bool
+    let hasJungsung: Bool
+    let hasJongsung: Bool
+    let expected: CompositionState
+    let isComposing: Bool?
+    let canComposeModernHangul: Bool?
+    let requiresMoachigi: Bool?
+
+    var testDescription: String { String(describing: expected) }
+
+    init(
+        _ cho: Bool, _ jung: Bool, _ jong: Bool,
+        expected: CompositionState,
+        isComposing: Bool? = nil,
+        canComposeModernHangul: Bool? = nil,
+        requiresMoachigi: Bool? = nil
+    ) {
+        self.hasChosung = cho
+        self.hasJungsung = jung
+        self.hasJongsung = jong
+        self.expected = expected
+        self.isComposing = isComposing
+        self.canComposeModernHangul = canComposeModernHangul
+        self.requiresMoachigi = requiresMoachigi
+    }
+
+    static let allCases: [StateTestCase] = [
+        StateTestCase(false, false, false, expected: .empty,
+                      isComposing: false, canComposeModernHangul: false, requiresMoachigi: false),
+        StateTestCase(true, false, false, expected: .initialConsonant,
+                      isComposing: true, canComposeModernHangul: false),
+        StateTestCase(false, true, false, expected: .vowelOnly,
+                      requiresMoachigi: true),
+        StateTestCase(false, false, true, expected: .finalOnly,
+                      requiresMoachigi: true),
+        StateTestCase(true, true, false, expected: .consonantVowel,
+                      canComposeModernHangul: true, requiresMoachigi: false),
+        StateTestCase(true, true, true, expected: .consonantVowelFinal,
+                      canComposeModernHangul: true),
+        StateTestCase(false, true, true, expected: .vowelFinal,
+                      requiresMoachigi: true),
+        StateTestCase(true, false, true, expected: .consonantFinal,
+                      requiresMoachigi: true),
+    ]
+}
+
 @Suite("CompositionState 테스트")
 struct CompositionStateTests {
-    @Test("상태 생성: empty")
-    func testEmptyState() {
-        let state = CompositionState.from(hasChosung: false, hasJungsung: false, hasJongsung: false)
-        #expect(state == .empty)
-        #expect(!state.isComposing)
-        #expect(!state.canComposeModernHangul)
-        #expect(!state.requiresMoachigi)
-    }
+    @Test("상태 생성", arguments: StateTestCase.allCases)
+    func testStateCreation(testCase: StateTestCase) {
+        let state = CompositionState.from(
+            hasChosung: testCase.hasChosung,
+            hasJungsung: testCase.hasJungsung,
+            hasJongsung: testCase.hasJongsung
+        )
+        #expect(state == testCase.expected)
 
-    @Test("상태 생성: initialConsonant")
-    func testInitialConsonantState() {
-        let state = CompositionState.from(hasChosung: true, hasJungsung: false, hasJongsung: false)
-        #expect(state == .initialConsonant)
-        #expect(state.isComposing)
-        #expect(!state.canComposeModernHangul)
-    }
-
-    @Test("상태 생성: vowelOnly (모아주기)")
-    func testVowelOnlyState() {
-        let state = CompositionState.from(hasChosung: false, hasJungsung: true, hasJongsung: false)
-        #expect(state == .vowelOnly)
-        #expect(state.requiresMoachigi)
-    }
-
-    @Test("상태 생성: finalOnly (모아주기)")
-    func testFinalOnlyState() {
-        let state = CompositionState.from(hasChosung: false, hasJungsung: false, hasJongsung: true)
-        #expect(state == .finalOnly)
-        #expect(state.requiresMoachigi)
-    }
-
-    @Test("상태 생성: consonantVowel")
-    func testConsonantVowelState() {
-        let state = CompositionState.from(hasChosung: true, hasJungsung: true, hasJongsung: false)
-        #expect(state == .consonantVowel)
-        #expect(state.canComposeModernHangul)
-        #expect(!state.requiresMoachigi)
-    }
-
-    @Test("상태 생성: consonantVowelFinal")
-    func testConsonantVowelFinalState() {
-        let state = CompositionState.from(hasChosung: true, hasJungsung: true, hasJongsung: true)
-        #expect(state == .consonantVowelFinal)
-        #expect(state.canComposeModernHangul)
-    }
-
-    @Test("상태 생성: vowelFinal (모아주기)")
-    func testVowelFinalState() {
-        let state = CompositionState.from(hasChosung: false, hasJungsung: true, hasJongsung: true)
-        #expect(state == .vowelFinal)
-        #expect(state.requiresMoachigi)
-    }
-
-    @Test("상태 생성: consonantFinal (모아주기)")
-    func testConsonantFinalState() {
-        let state = CompositionState.from(hasChosung: true, hasJungsung: false, hasJongsung: true)
-        #expect(state == .consonantFinal)
-        #expect(state.requiresMoachigi)
+        if let isComposing = testCase.isComposing {
+            #expect(state.isComposing == isComposing)
+        }
+        if let canCompose = testCase.canComposeModernHangul {
+            #expect(state.canComposeModernHangul == canCompose)
+        }
+        if let requiresMoachigi = testCase.requiresMoachigi {
+            #expect(state.requiresMoachigi == requiresMoachigi)
+        }
     }
 }
 

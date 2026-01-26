@@ -9,7 +9,7 @@ import Testing
 
 @testable import Patal
 
-@Suite("한글 유니코드 조합", .serialized)
+@Suite("한글 유니코드 조합")
 struct HangulCompositionTest {
     @Test("오프셋 값")
     func verifyOffsets() {
@@ -18,135 +18,101 @@ struct HangulCompositionTest {
         #expect(jongsungOffset28 == 28)
     }
 
+    // MARK: - 조합 테스트 데이터
+    struct ConsonantTestCase: Sendable, CustomTestStringConvertible {
+        let chosung: 초성
+        let expected: Character
+        var testDescription: String { String(expected) }
+    }
+
+    struct VowelTestCase: Sendable, CustomTestStringConvertible {
+        let jungsung: 중성
+        let expected: Character
+        var testDescription: String { String(expected) }
+    }
+
+    struct SyllableTestCase: Sendable, CustomTestStringConvertible {
+        let chosung: 초성
+        let jungsung: 중성
+        let expected: Character
+        var testDescription: String { String(expected) }
+    }
+
+    struct FullSyllableTestCase: Sendable, CustomTestStringConvertible {
+        let chosung: 초성
+        let jungsung: 중성
+        let jongsung: 종성
+        let expected: Character
+        var testDescription: String { String(expected) }
+    }
+
     @Suite("조합")
     struct getSyllableTest {
-        @Test("닿소리")
-        func consonantTest() {
-            if let composition = HangulComposer(
-                chosungPoint: 초성.기역,
-                jungsungPoint: nil,
-                jongsungPoint: nil
-            ) {
-                let _: Character = "\u{1100}"
-                let 호환_ㄱ: Character = "ㄱ"
-                #expect(composition.getSyllable() == 호환_ㄱ)
-                //#expect(composition.chosungCode == 초성.기역)
-                //#expect(composition.jungsungCode == nil)
-                //#expect(composition.jongsungCode == nil)
-            }
+        // MARK: - 닿소리 테스트
+        static let consonantCases: [ConsonantTestCase] = [
+            ConsonantTestCase(chosung: .기역, expected: "ㄱ"),
+            ConsonantTestCase(chosung: .히읗, expected: "ㅎ"),
+        ]
 
-            if let composition = HangulComposer(
-                chosungPoint: 초성.히읗,
+        @Test("닿소리", arguments: consonantCases)
+        func consonantTest(testCase: ConsonantTestCase) throws {
+            let composition = try #require(HangulComposer(
+                chosungPoint: testCase.chosung,
                 jungsungPoint: nil,
                 jongsungPoint: nil
-            ) {
-                let _: Character = "\u{1112}"
-                let 호환_ㅎ: Character = "ㅎ"
-                #expect(composition.getSyllable() == 호환_ㅎ)
-                //#expect(composition.chosungCode == 초성.히읗)
-                //#expect(composition.jungsungCode == nil)
-                //#expect(composition.jongsungCode == nil)
-            }
+            ))
+            #expect(composition.getSyllable() == testCase.expected)
         }
 
-        @Test("홀소리")
-        func vowelTest() {
-            if let composition = HangulComposer(
+        // MARK: - 홀소리 테스트
+        static let vowelCases: [VowelTestCase] = [
+            VowelTestCase(jungsung: .아, expected: "ㅏ"),
+        ]
+
+        @Test("홀소리", arguments: vowelCases)
+        func vowelTest(testCase: VowelTestCase) throws {
+            let composition = try #require(HangulComposer(
                 chosungPoint: nil,
-                jungsungPoint: 중성.아,
+                jungsungPoint: testCase.jungsung,
                 jongsungPoint: nil
-            ) {
-                let _: Character = "\u{1161}"
-                let 호환_ㅏ: Character = "ㅏ"
-                #expect(composition.getSyllable() == 호환_ㅏ)
-                //#expect(composition.chosungCode == nil)
-                //#expect(composition.jungsungCode == 중성.아)
-                //#expect(composition.jongsungCode == nil)
-            }
+            ))
+            #expect(composition.getSyllable() == testCase.expected)
         }
 
-        @Test("초성+중성")
-        func chosungAndJungsung() {
-            if let composition = HangulComposer(
-                chosungPoint: 초성.init(rawValue: 0x1100),
-                jungsungPoint: 중성.init(rawValue: 0x1161),
+        // MARK: - 초성+중성 테스트
+        static let syllableCases: [SyllableTestCase] = [
+            SyllableTestCase(chosung: .기역, jungsung: .아, expected: "가"),
+            SyllableTestCase(chosung: .니은, jungsung: .아, expected: "나"),
+            SyllableTestCase(chosung: .니은, jungsung: .어, expected: "너"),
+            SyllableTestCase(chosung: .쌍디귿, jungsung: .우, expected: "뚜"),
+        ]
+
+        @Test("초성+중성", arguments: syllableCases)
+        func chosungAndJungsung(testCase: SyllableTestCase) throws {
+            let composition = try #require(HangulComposer(
+                chosungPoint: testCase.chosung,
+                jungsungPoint: testCase.jungsung,
                 jongsungPoint: nil
-            ) {
-                #expect(composition.getSyllable() == Character("가"))
-                //#expect(composition.chosungCode == 초성.기역)
-                //#expect(composition.jungsungCode == 중성.아)
-                //#expect(composition.jongsungCode == nil)
-            }
-            if let composition = HangulComposer(
-                chosungPoint: 초성.기역,
-                jungsungPoint: 중성.아,
-                jongsungPoint: nil
-            ) {
-                #expect(composition.getSyllable() == Character("가"))
-            }
-            if let composition = HangulComposer(
-                chosungPoint: 초성.니은,
-                jungsungPoint: 중성.아,
-                jongsungPoint: nil
-            ) {
-                #expect(composition.getSyllable() == Character("나"))
-            }
-            if let composition = HangulComposer(
-                chosungPoint: 초성.니은,
-                jungsungPoint: 중성.어,
-                jongsungPoint: nil
-            ) {
-                #expect(composition.getSyllable() == Character("너"))
-            }
-            if let composition = HangulComposer(
-                chosungPoint: 초성.쌍디귿,
-                jungsungPoint: 중성.우,
-                jongsungPoint: nil
-            ) {
-                #expect(composition.getSyllable() == Character("뚜"))
-            }
+            ))
+            #expect(composition.getSyllable() == testCase.expected)
         }
 
-        @Test("초성+중성+종성")
-        func chosungAndJungsungAndJongsung() {
-            if let composition = HangulComposer(
-                chosungPoint: 초성.기역,
-                jungsungPoint: 중성.아,
-                jongsungPoint: 종성.이응
-            ) {
-                #expect(composition.getSyllable() == Character("강"))
-                //#expect(composition.chosungCode == 초성.기역)
-                //#expect(composition.jungsungCode == 중성.아)
-                //#expect(composition.jongsungCode == 종성.이응)
-            }
-            if let composition = HangulComposer(
-                chosungPoint: 초성.시옷,
-                jungsungPoint: 중성.아,
-                jongsungPoint: 종성.니은
-            ) {
-                #expect(composition.getSyllable() == Character("산"))
-                //#expect(composition.chosungCode == 초성.시옷)
-                //#expect(composition.jungsungCode == 중성.아)
-                //#expect(composition.jongsungCode == 종성.니은)
-            }
-            if let composition = HangulComposer(
-                chosungPoint: 초성.이응,
-                jungsungPoint: 중성.와,
-                jongsungPoint: 종성.이응
-            ) {
-                #expect(composition.getSyllable() == Character("왕"))
-            }
+        // MARK: - 초성+중성+종성 테스트
+        static let fullSyllableCases: [FullSyllableTestCase] = [
+            FullSyllableTestCase(chosung: .기역, jungsung: .아, jongsung: .이응, expected: "강"),
+            FullSyllableTestCase(chosung: .시옷, jungsung: .아, jongsung: .니은, expected: "산"),
+            FullSyllableTestCase(chosung: .이응, jungsung: .와, jongsung: .이응, expected: "왕"),
+            FullSyllableTestCase(chosung: .이응, jungsung: .아, jongsung: .리을미음, expected: "앎"),
+        ]
 
-            if let composition = HangulComposer(
-                chosungPoint: 초성.이응,
-                jungsungPoint: 중성.아,
-                jongsungPoint: 종성.리을미음
-            ) {
-                #expect(composition.getSyllable() == Character("앎"))
-                //#expect(composition.chosungCode == 초성.이응)
-                //#expect(composition.jungsungCode == 중성.아)
-                //#expect(composition.jongsungCode == 종성.리을미음)
-            }
+        @Test("초성+중성+종성", arguments: fullSyllableCases)
+        func chosungAndJungsungAndJongsung(testCase: FullSyllableTestCase) throws {
+            let composition = try #require(HangulComposer(
+                chosungPoint: testCase.chosung,
+                jungsungPoint: testCase.jungsung,
+                jongsungPoint: testCase.jongsung
+            ))
+            #expect(composition.getSyllable() == testCase.expected)
         }
     }
 

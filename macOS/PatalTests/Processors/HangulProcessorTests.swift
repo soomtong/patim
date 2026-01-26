@@ -497,7 +497,7 @@ struct CommittedBackspaceTests {
 
         // u(ㄷ) + v(ㅗ) + a(ㅇ) = "동" (새 글자)
         processor.rawChar = "u"
-        var state = processor.한글조합()
+        let state = processor.한글조합()
         #expect(state == CommitState.committed)  // "우" 커밋
         #expect(processor.완성 == "우")
         #expect(processor.getComposed() == "ㄷ")
