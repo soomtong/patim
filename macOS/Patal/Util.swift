@@ -29,7 +29,7 @@ func loadActiveOptions(traitKey: String) -> Set<LayoutTrait>? {
 
 func keepUserTraits(traitKey: String, traitValue: String) {
     UserDefaults.standard.set(traitValue, forKey: traitKey)
-    UserDefaults.standard.synchronize()
+    // synchronize() 제거 - deprecated API, 현대 macOS에서 자동 저장됨
 }
 
 func retrieveUserTraits(traitKey: String) -> String? {
