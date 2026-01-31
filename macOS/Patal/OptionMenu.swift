@@ -33,5 +33,19 @@ class OptionMenu {
 
             menu.addItem(item)
         }
+
+        // 구분선 추가
+        let separator = NSMenuItem.separator()
+        menu.addItem(separator)
+
+        // 버전 정보 아이템 추가
+        let versionItem = NSMenuItem()
+        if let version = getMarketingVersion() {
+            versionItem.title = "팥알입력기 v\(version)"
+        } else {
+            versionItem.title = "팥알입력기"
+        }
+        versionItem.isEnabled = false  // 클릭 불가, 표시만
+        menu.addItem(versionItem)
     }
 }

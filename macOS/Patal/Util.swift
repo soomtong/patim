@@ -73,6 +73,11 @@ func getCurrentProjectVersion() -> String? {
     return Bundle.main.infoDictionary?["CFBundleVersion"] as? String
 }
 
+func getMarketingVersion() -> String? {
+    // Retrieve the marketing version from the Info.plist
+    return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+}
+
 // function returns char: Int map with sequenced number from 0
 func generateOffsetDictionary<T: Hashable>(_ array: [T]) -> [T: Int] {
     var map: [T: Int] = [:]
