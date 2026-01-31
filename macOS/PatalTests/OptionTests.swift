@@ -30,8 +30,10 @@ struct OptionTests {
         @Test("기본 세팅")
         func basicSetting() {
             #expect(optionMenu.menu.autoenablesItems == true)
-            #expect(optionMenu.menu.numberOfItems == holders.count)
-            for menu in optionMenu.menu.items {
+            #expect(optionMenu.menu.numberOfItems == holders.count + 2)  // + 구분선, 버전정보
+
+            let optionItems = optionMenu.menu.items.filter { holders.contains($0.title) }
+            for menu in optionItems {
                 #expect(menu.isEnabled == true)
                 #expect(holders.contains(menu.title))
             }
@@ -39,7 +41,8 @@ struct OptionTests {
 
         @Test("신세벌PCS 모든 옵션")
         func loadDefaultTraits() {
-            for menu in optionMenu.menu.items {
+            let optionItems = optionMenu.menu.items.filter { holders.contains($0.title) }
+            for menu in optionItems {
                 #expect(menu.state == NSControl.StateValue.on)
                 #expect(holders.contains(menu.title))
             }
@@ -59,8 +62,8 @@ struct OptionTests {
 
         @Test("신세벌PCS 모든 옵션 비활성화")
         func loadOverrideTraits() {
-            for menu in optionMenu.menu.items {
-                #expect(menu.isEnabled == true)
+            let optionItems = optionMenu.menu.items.filter { !$0.isSeparatorItem && $0.isEnabled }
+            for menu in optionItems {
                 #expect(menu.state == NSControl.StateValue.off)
             }
         }

@@ -197,6 +197,8 @@ class HangulProcessor {
     }
 
     /// StateMachine 기반 한글 조합
+    @_optimize(speed)
+    @inline(__always)
     private func 한글조합StateMachine() -> CommitState {
         // layout은 hangulLayout didSet에서 자동 동기화됨
         let result = stateMachine.processInput(rawChar)

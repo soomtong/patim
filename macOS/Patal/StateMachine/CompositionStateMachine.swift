@@ -28,6 +28,8 @@ struct CompositionStateMachine {
     ///   - rawKey: 입력된 키 문자열
     ///   - recordHistory: true면 keyHistory에 기록 (기본값), false면 리플레이용으로 기록 안 함
     /// - Returns: 상태 전이 결과
+    @_optimize(speed)
+    @inline(__always)
     mutating func processInput(_ rawKey: String, recordHistory: Bool = true) -> TransitionResult {
         // 키 히스토리에 추가 (recordHistory가 true일 때만)
         if recordHistory {
@@ -48,6 +50,7 @@ struct CompositionStateMachine {
 
     /// rawKey를 InputEvent로 변환
     /// 현재 상태에 따라 검색 우선순위가 달라짐
+    @inline(__always)
     private func createEvent(from rawKey: String) -> InputEvent? {
         let state = buffer.state
 
@@ -274,6 +277,8 @@ struct CompositionStateMachine {
     ///   - event: 입력 이벤트
     ///   - rawKey: 원본 키 (composing 버퍼용)
     /// - Returns: 상태 전이 결과
+    @_optimize(speed)
+    @inline(__always)
     private mutating func processEvent(_ event: InputEvent, rawKey: String) -> TransitionResult {
         var currentEvent: InputEvent? = event
         var currentRawKey: String? = rawKey
@@ -974,11 +979,72 @@ struct CompositionStateMachine {
     // MARK: - 백스페이스 리플레이
 
     /// 키 히스토리를 기반으로 상태 재계산
+    @_optimize(speed)
     mutating func applyBackspace() -> TransitionResult {
         guard !buffer.keyHistory.isEmpty else {
             return .composing(.empty)
         }
 
+        // Fast path: 간단한 케이스는 증분 업데이트 (O(1))
+        if let incrementalResult = tryIncrementalBackspace() {
+            return incrementalResult
+        }
+
+        // Slow path: 복잡한 케이스는 전체 리플레이 (O(n))
+        return applyBackspaceWithReplay()
+    }
+
+    /// 증분 백스페이스 시도 (간단한 케이스만)
+    @inline(__always)
+    private mutating func tryIncrementalBackspace() -> TransitionResult? {
+        let state = buffer.state
+
+        // composingKeys가 있으면 겹자음/겹모음 가능성 → 리플레이 필요
+        guard buffer.composingKeys.isEmpty else {
+            return nil
+        }
+
+        // 간단한 단일 자모 제거 케이스만 처리
+        switch state {
+        case .consonantVowelFinal:
+            // 종성 제거
+            buffer.jongsung = nil
+            buffer.keyHistory.removeLast()
+            return .composing(buffer)
+
+        case .consonantVowel:
+            // 중성 제거
+            buffer.jungsung = nil
+            buffer.keyHistory.removeLast()
+            return .composing(buffer)
+
+        case .initialConsonant:
+            // 초성 제거
+            buffer.chosung = nil
+            buffer.keyHistory.removeLast()
+            return .composing(buffer)
+
+        case .vowelOnly where layout.can모아주기:
+            // 모아주기: 중성만 제거
+            buffer.jungsung = nil
+            buffer.keyHistory.removeLast()
+            return .composing(buffer)
+
+        case .finalOnly where layout.can모아주기:
+            // 모아주기: 종성만 제거
+            buffer.jongsung = nil
+            buffer.keyHistory.removeLast()
+            return .composing(buffer)
+
+        default:
+            // 복잡한 케이스: 리플레이 필요
+            return nil
+        }
+    }
+
+    /// 전체 리플레이 방식 백스페이스
+    @inline(__always)
+    private mutating func applyBackspaceWithReplay() -> TransitionResult {
         // 히스토리에서 마지막 하나 제외하고 재생
         let replayHistory = Array(buffer.keyHistory.dropLast())
         buffer = .empty
