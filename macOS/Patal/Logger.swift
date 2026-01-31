@@ -17,7 +17,7 @@ final class CustomLogger: Sendable {
 
     func debug(_ message: String = "") {
         #if DEBUG
-        debugLogger.debug("\(message, privacy: .public)")
+            debugLogger.debug("\(message, privacy: .public)")
         #endif
     }
 

@@ -9,13 +9,13 @@ import Foundation
 import InputMethodKit
 
 #if DEBUG
-@inline(__always)
-private func debugLog(_ message: String) {
-    print(message)
-}
+    @inline(__always)
+    private func debugLog(_ message: String) {
+        print(message)
+    }
 #else
-@inline(__always)
-private func debugLog(_ message: String) {}
+    @inline(__always)
+    private func debugLog(_ message: String) {}
 #endif
 
 /// 조합 처리 후 결과를 담고 있음; 처리 과정의 상태는 preedit 의 상태를 판단하면 됨
