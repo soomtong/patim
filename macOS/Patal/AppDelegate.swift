@@ -47,8 +47,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func handleInputSourceChanged(_ notification: Notification) {
-        logger.debug("TIS 입력 소스 변경 감지")
-        NotificationCenter.default.post(name: .inputSourceChanged, object: nil)
+        PerformanceTracerCompat.measure("AppDelegate.handleInputSourceChanged") {
+            logger.debug("TIS 입력 소스 변경 감지")
+            NotificationCenter.default.post(name: .inputSourceChanged, object: nil)
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

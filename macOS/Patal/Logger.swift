@@ -16,11 +16,9 @@ final class CustomLogger: Sendable {
     }
 
     func debug(_ message: String = "") {
-        // 프로덕션 배포하는 경우에는 false 로 전환하여 빌드
-        let isDebug = false
-        if isDebug {
-            debugLogger.debug("\(message, privacy: .public)")
-        }
+        #if DEBUG
+        debugLogger.debug("\(message, privacy: .public)")
+        #endif
     }
 
     func info(_ message: String = "") {

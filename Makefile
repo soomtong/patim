@@ -12,7 +12,7 @@ SCHEME = Patal
 # Default target
 .DEFAULT_GOAL := help
 
-.PHONY: all format install package distribute clean build kill remove remove-root remove-user unquarantine list help test test-only test-verbose
+.PHONY: all format install package distribute clean build debug log perf-log kill remove remove-root remove-user unquarantine list help test test-only test-verbose
 
 all: format install package distribute
 
@@ -49,6 +49,19 @@ build-verbose:
 build:
 	@echo "Building the project..."
 	@cd $(SRC_DIR) && xcodebuild -verbose -scheme Patal -configuration Release build | xcpretty
+
+debug:
+	@echo "Building Debug version and monitoring logs..."
+	@cd $(SRC_DIR) && xcodebuild -scheme $(SCHEME) -configuration Debug build
+	@echo "Debug build completed. Start log monitoring with: make log"
+
+log:
+	@echo "Monitoring Patal logs..."
+	@log stream --predicate 'subsystem == "com.soomtong.inputmethod"' --level debug
+
+perf-log:
+	@echo "Monitoring performance logs..."
+	@log stream --predicate 'subsystem == "com.soomtong.inputmethod" AND category == "Performance"' --level info
 
 install:
 	@echo "Running install script..."
@@ -99,6 +112,9 @@ help:
 	@echo "  all         - Run format, install, package, and distribute"
 	@echo "  format      - Run the format script"
 	@echo "  build       - Build the project using xcodebuild"
+	@echo "  debug       - Build Debug version (with debug logging enabled)"
+	@echo "  log         - Monitor all Patal logs in real-time"
+	@echo "  perf-log    - Monitor performance logs only"
 	@echo "  install     - Run the install script"
 	@echo "  package     - Run the packaging script"
 	@echo "  distribute  - Run the distribute script"

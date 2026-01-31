@@ -65,6 +65,9 @@ class InputController: IMKInputController {
     }
 
     @objc private func handleInputSourceChanged(_ notification: Notification) {
+        let endTotal = PerformanceTracerCompat.measureAsync("InputSourceChanged.Total")
+        defer { endTotal() }
+
         guard isControllerActivated else { return }
         syncLayoutIfNeeded()
     }
@@ -74,8 +77,12 @@ class InputController: IMKInputController {
         isInstanceSynced = true
         defer { isInstanceSynced = false }
 
-        guard let inputMethodID = getCurrentInputMethodID() else { return }
-        let currentLayout = getInputLayoutID(id: inputMethodID)
+        let inputMethodID = PerformanceTracerCompat.measure("TIS.getCurrentInputMethodID") {
+            getCurrentInputMethodID()
+        }
+
+        guard let id = inputMethodID else { return }
+        let currentLayout = getInputLayoutID(id: id)
 
         if currentLayout != layoutName {
             logger.debug("입력 소스 변경 동기화: \(layoutName) → \(currentLayout)")
@@ -96,24 +103,37 @@ class InputController: IMKInputController {
 
     // 자판 변경 시 레이아웃 업데이트
     private func updateLayout(to newLayout: LayoutName) {
+        let endTotal = PerformanceTracerCompat.measureAsync("updateLayout.Total")
+        defer { endTotal() }
+
         // 1. 기존 조합 상태 flush (결과는 사용하지 않음 - 이미 deactivate 시 처리됨)
-        let _ = processor.flushCommit()
+        PerformanceTracerCompat.measure("updateLayout.flushCommit") {
+            let _ = processor.flushCommit()
+        }
 
         // 2. 새 레이아웃으로 교체
         layoutName = newLayout
-        let hangulLayout = createLayoutInstance(name: layoutName)
-        processor = HangulProcessor(layout: hangulLayout)
+        let hangulLayout = PerformanceTracerCompat.measure("updateLayout.createLayoutInstance") {
+            createLayoutInstance(name: layoutName)
+        }
+        processor = PerformanceTracerCompat.measure("updateLayout.HangulProcessor.init") {
+            HangulProcessor(layout: hangulLayout)
+        }
 
         // 3. 저장된 특성 로드
         let traitKey = buildTraitKey(name: layoutName)
-        if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
-            processor.hangulLayout.traits = loadedTraits
-        } else {
-            processor.hangulLayout.traits = processor.hangulLayout.availableTraits
+        PerformanceTracerCompat.measure("updateLayout.loadActiveOptions") {
+            if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
+                processor.hangulLayout.traits = loadedTraits
+            } else {
+                processor.hangulLayout.traits = processor.hangulLayout.availableTraits
+            }
         }
 
         // 4. 메뉴 업데이트
-        optionMenu = OptionMenu(layout: processor.hangulLayout)
+        optionMenu = PerformanceTracerCompat.measure("updateLayout.OptionMenu.init") {
+            OptionMenu(layout: processor.hangulLayout)
+        }
     }
 
     // 입력기가 비활성화 되면 호출됨
