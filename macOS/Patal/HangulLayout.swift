@@ -89,26 +89,32 @@ protocol HangulAutomata {
 
 /// 각 레이아웃이 가져야할 프로토콜의 공용 구현
 extension HangulAutomata {
+    @inlinable
     var can모아주기: Bool {
         return traits.contains(LayoutTrait.모아주기)
     }
 
+    @inlinable
     var has수정기호: Bool {
         return traits.contains(LayoutTrait.수정기호)
     }
 
+    @inlinable
     var has아래아: Bool {
         return traits.contains(LayoutTrait.아래아)
     }
 
+    @inlinable
     var has두줄숫자: Bool {
         return traits.contains(LayoutTrait.두줄숫자)
     }
 
+    @inlinable
     var can글자단위삭제: Bool {
         return traits.contains(LayoutTrait.글자단위삭제)
     }
 
+    @inlinable
     func pickChosung(by char: String) -> unichar? {
         guard let chosung = chosungMap[char] else {
             return nil
@@ -117,6 +123,7 @@ extension HangulAutomata {
         return chosung.rawValue
     }
 
+    @inlinable
     func pickJungsung(by char: String) -> unichar? {
         guard let jungsung = jungsungMap[char] else {
             return nil
@@ -125,6 +132,7 @@ extension HangulAutomata {
         return jungsung.rawValue
     }
 
+    @inlinable
     func pickJongsung(by char: String) -> unichar? {
         guard let jongsung = jongsungMap[char] else {
             return nil
@@ -133,6 +141,7 @@ extension HangulAutomata {
         return jongsung.rawValue
     }
 
+    @inlinable
     func pickNonSyllable(by char: String) -> String? {
         guard let nonSyllable = nonSyllableMap[char] else {
             return nil

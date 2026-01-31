@@ -97,7 +97,7 @@ struct CompositionStateMachine {
             }
             // 겹모음 확인: composingKeys와 결합해서 중성 맵에 있는지 체크
             if !buffer.composingKeys.isEmpty {
-                let testComposing = buffer.composingKeys.joined() + rawKey
+                let testComposing = buffer.composedKey + rawKey
                 if let combinedCode = layout.pickJungsung(by: testComposing),
                    중성(rawValue: combinedCode) != nil
                 {
@@ -179,7 +179,7 @@ struct CompositionStateMachine {
             }
             // 겹모음 확인
             if !buffer.composingKeys.isEmpty {
-                let testComposing = buffer.composingKeys.joined() + rawKey
+                let testComposing = buffer.composedKey + rawKey
                 if let combinedCode = layout.pickJungsung(by: testComposing),
                    중성(rawValue: combinedCode) != nil
                 {
@@ -208,7 +208,7 @@ struct CompositionStateMachine {
             // 겹받침 확인 → 초성(모아주기) → 중성(모아주기) → 종성 → 초성(일반)
             // 겹받침 확인: composingKeys와 결합해서 종성 맵에 있는지 체크
             if !buffer.composingKeys.isEmpty {
-                let testComposing = buffer.composingKeys.joined() + rawKey
+                let testComposing = buffer.composedKey + rawKey
                 if let combinedCode = layout.pickJongsung(by: testComposing),
                    종성(rawValue: combinedCode) != nil
                 {
@@ -489,12 +489,9 @@ struct CompositionStateMachine {
     /// - 조건 (실패): 결합 불가 시 현재 글자 커밋, 새 버퍼에 초성 설정
     private func handleInitialConsonantChosung(_ cho: 초성, rawKey: String?) -> TransitionOutput {
         // 겹자음 시도
-        var testComposing = buffer.composingKeys
-        if let key = rawKey {
-            testComposing.append(key)
-        }
+        let testComposed = buffer.composedKey + (rawKey ?? "")
 
-        if let combinedCode = layout.pickChosung(by: testComposing.joined()),
+        if let combinedCode = layout.pickChosung(by: testComposed),
            let combined = 초성(rawValue: combinedCode)
         {
             var newBuffer = buffer
@@ -562,12 +559,9 @@ struct CompositionStateMachine {
     /// - 조건 (실패): 결합 불가 시 현재 글자 커밋, 새 버퍼에 중성 설정
     private func handleVowelOnlyJungsung(_ jung: 중성, rawKey: String?) -> TransitionOutput {
         // 겹모음 시도
-        var testComposing = buffer.composingKeys
-        if let key = rawKey {
-            testComposing.append(key)
-        }
+        let testComposed = buffer.composedKey + (rawKey ?? "")
 
-        if let combinedCode = layout.pickJungsung(by: testComposing.joined()),
+        if let combinedCode = layout.pickJungsung(by: testComposed),
            let combined = 중성(rawValue: combinedCode)
         {
             var newBuffer = buffer
@@ -600,12 +594,9 @@ struct CompositionStateMachine {
     /// - 조건 (실패): 결합 불가 시 현재 글자 커밋, 새 버퍼에 종성 설정
     private func handleFinalOnlyJongsung(_ jong: 종성, rawKey: String?) -> TransitionOutput {
         // 겹받침 시도
-        var testComposing = buffer.composingKeys
-        if let key = rawKey {
-            testComposing.append(key)
-        }
+        let testComposed = buffer.composedKey + (rawKey ?? "")
 
-        if let combinedCode = layout.pickJongsung(by: testComposing.joined()),
+        if let combinedCode = layout.pickJongsung(by: testComposed),
            let combined = 종성(rawValue: combinedCode)
         {
             var newBuffer = buffer
@@ -709,12 +700,9 @@ struct CompositionStateMachine {
     private func handleConsonantVowelJungsung(_ jung: 중성, rawKey: String?) -> TransitionOutput {
         // 겹모음 시도
         if buffer.composingKeys.count > 0 {
-            var testComposing = buffer.composingKeys
-            if let key = rawKey {
-                testComposing.append(key)
-            }
+            let testComposed = buffer.composedKey + (rawKey ?? "")
 
-            if let combinedCode = layout.pickJungsung(by: testComposing.joined()),
+            if let combinedCode = layout.pickJungsung(by: testComposed),
                let combined = 중성(rawValue: combinedCode)
             {
                 var newBuffer = buffer
@@ -790,12 +778,9 @@ struct CompositionStateMachine {
         rawKey: String?
     ) -> TransitionOutput {
         // 겹받침 시도
-        var testComposing = buffer.composingKeys
-        if let key = rawKey {
-            testComposing.append(key)
-        }
+        let testComposed = buffer.composedKey + (rawKey ?? "")
 
-        if let combinedCode = layout.pickJongsung(by: testComposing.joined()),
+        if let combinedCode = layout.pickJongsung(by: testComposed),
            let combined = 종성(rawValue: combinedCode)
         {
             var newBuffer = buffer

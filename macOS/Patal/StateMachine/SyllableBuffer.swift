@@ -24,6 +24,9 @@ struct SyllableBuffer: Equatable {
     /// 백스페이스 복원용 키 히스토리 (기존 keyHistory 역할)
     var keyHistory: [String]
 
+    /// composingKeys.joined() 캐시 (성능 최적화)
+    private var _composedKey: String = ""
+
     /// 빈 버퍼
     static let empty = SyllableBuffer(
         chosung: nil,
@@ -45,6 +48,12 @@ struct SyllableBuffer: Equatable {
         self.jongsung = jongsung
         self.composingKeys = composingKeys
         self.keyHistory = keyHistory
+        self._composedKey = composingKeys.joined()
+    }
+
+    /// composingKeys의 joined() 캐시 (O(1) 접근)
+    var composedKey: String {
+        return _composedKey
     }
 
     /// 현재 상태 (computed)
@@ -109,11 +118,13 @@ extension SyllableBuffer {
     mutating func resetComposingKeys(_ key: String) {
         composingKeys.removeAll()
         composingKeys.append(key)
+        _composedKey = key
     }
 
     /// composingKeys에 키 추가
     mutating func appendComposingKey(_ key: String) {
         composingKeys.append(key)
+        _composedKey.append(key)
     }
 
     /// keyHistory에 키 추가
@@ -135,6 +146,7 @@ extension SyllableBuffer {
         jongsung = nil
         composingKeys.removeAll()
         keyHistory.removeAll()
+        _composedKey = ""
     }
 
     /// preedit만 초기화 (keyHistory 유지)
@@ -143,6 +155,7 @@ extension SyllableBuffer {
         jungsung = nil
         jongsung = nil
         composingKeys.removeAll()
+        _composedKey = ""
     }
 }
 
