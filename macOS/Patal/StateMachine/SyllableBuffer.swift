@@ -8,7 +8,7 @@
 import Foundation
 
 /// 조합 중인 음절 데이터
-struct SyllableBuffer: Equatable {
+struct SyllableBuffer: Equatable, Sendable {
     /// 초성
     var chosung: 초성?
 

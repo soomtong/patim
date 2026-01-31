@@ -8,7 +8,7 @@
 import Foundation
 
 /// 상태 전이 결과
-enum TransitionResult: Equatable {
+enum TransitionResult: Equatable, Sendable {
     /// 조합 중 (아직 완성되지 않음)
     case composing(SyllableBuffer)
 
@@ -74,7 +74,7 @@ extension TransitionResult {
 // MARK: - 내부 전이 출력
 
 /// 단일 전이의 내부 결과 (carryoverEvent 패턴용)
-struct TransitionOutput: Equatable {
+struct TransitionOutput: Equatable, Sendable {
     /// 전이 액션
     let action: TransitionAction
 
@@ -104,7 +104,7 @@ struct TransitionOutput: Equatable {
 }
 
 /// 전이 액션 종류
-enum TransitionAction: Equatable {
+enum TransitionAction: Equatable, Sendable {
     /// 버퍼만 업데이트 (커밋 없음)
     case updateBuffer
 

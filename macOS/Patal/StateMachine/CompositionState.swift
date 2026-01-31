@@ -9,7 +9,7 @@ import Foundation
 
 /// 한글 조합의 8가지 명시적 상태
 /// 초성/중성/종성의 존재 여부 조합으로 결정됨
-enum CompositionState: Equatable, Hashable {
+enum CompositionState: Equatable, Hashable, Sendable {
     /// 빈 상태: (nil, nil, nil)
     case empty
 

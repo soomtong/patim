@@ -61,6 +61,22 @@ final class PerformanceTracer: Sendable {
     func log(_ message: String) {
         logger.info("\(message, privacy: .public)")
     }
+
+    // MARK: - 비동기 로깅 (hot path 최적화)
+
+    /// 비동기로 성능 메트릭을 기록 (hot path에서 블로킹 제거)
+    func recordAsync(_ label: String, latency: Double) {
+        Task.detached(priority: .background) { [logger] in
+            logger.info("[\(label, privacy: .public)] \(latency, format: .fixed(precision: 3))ms")
+        }
+    }
+
+    /// 비동기로 메시지를 로깅
+    func logAsync(_ message: String) {
+        Task.detached(priority: .background) { [logger] in
+            logger.info("\(message, privacy: .public)")
+        }
+    }
 }
 
 // MARK: - 하위 버전 호환용 Fallback

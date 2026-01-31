@@ -9,7 +9,7 @@ import Foundation
 
 /// 한글 조합 입력 이벤트
 /// 자소 타입별로 분리하여 패턴 매칭 활용
-enum InputEvent: Equatable {
+enum InputEvent: Equatable, Sendable {
     /// 초성 입력
     case chosung(초성)
 
@@ -50,7 +50,7 @@ extension InputEvent {
 }
 
 /// 입력 이벤트 종류 (패턴 매칭용)
-enum InputEventKind: Equatable {
+enum InputEventKind: Equatable, Sendable {
     case chosung
     case jungsung
     case jongsung
