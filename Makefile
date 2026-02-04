@@ -12,7 +12,7 @@ SCHEME = Patal
 # Default target
 .DEFAULT_GOAL := help
 
-.PHONY: all format install package distribute clean build debug log perf-log kill remove remove-root remove-user unquarantine list help test test-only test-verbose
+.PHONY: all format install install-debug package distribute clean build debug log perf-log kill remove remove-root remove-user unquarantine list help test test-only test-verbose
 
 all: format install package distribute
 
@@ -51,21 +51,31 @@ build:
 	@cd $(SRC_DIR) && xcodebuild -verbose -scheme Patal -configuration Release build | xcpretty
 
 debug:
-	@echo "Building Debug version and monitoring logs..."
-	@cd $(SRC_DIR) && xcodebuild -scheme $(SCHEME) -configuration Debug build
+	@echo "Building Debug version..."
+	@cd $(SRC_DIR) && xcodebuild -scheme $(SCHEME) -configuration Debug build CONFIGURATION_BUILD_DIR=$(CURDIR)/$(SRC_DIR)/build/Debug
 	@echo "Debug build completed. Start log monitoring with: make log"
 
 log:
 	@echo "Monitoring Patal logs..."
-	@log stream --predicate 'subsystem == "com.soomtong.inputmethod"' --level debug
+	@log stream --predicate 'process == "Patal"' --level debug
 
 perf-log:
 	@echo "Monitoring performance logs..."
-	@log stream --predicate 'subsystem == "com.soomtong.inputmethod" AND category == "Performance"' --level info
+	@log stream --predicate 'process == "Patal"' --level debug AND category == "Performance"' --level info
+
 
 install:
 	@echo "Running install script..."
 	@cd $(SCRIPT_DIR) && sh install.sh
+	@killall Patal 2>/dev/null || true
+	@echo "Patal process restarted."
+
+install-debug: debug
+	@echo "Installing Debug build..."
+	@rm -rf $(APP_USER)
+	@cp -R $(SRC_DIR)/build/Debug/Patal.app $(APP_USER)
+	@killall Patal 2>/dev/null || true
+	@echo "Debug build installed. Start log monitoring with: make log"
 
 package:
 	@echo "Running packaging script..."
@@ -116,6 +126,7 @@ help:
 	@echo "  log         - Monitor all Patal logs in real-time"
 	@echo "  perf-log    - Monitor performance logs only"
 	@echo "  install     - Run the install script"
+	@echo "  install-debug - Build and install Debug version"
 	@echo "  package     - Run the packaging script"
 	@echo "  distribute  - Run the distribute script"
 	@echo "  clean       - Clean up the dist directory"
