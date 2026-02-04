@@ -29,6 +29,18 @@ enum CommitState {
 enum InputStrategy {
     case directInsert
     case swapMarked
+
+    /// validAttributesForMarkedText 결과로 입력 전략을 결정
+    static func determine(from attributes: [String]) -> InputStrategy {
+        // Sok 입력기 참고
+        if attributes.contains("NSTextAlternatives")
+            || attributes.contains("NSMarkedClauseSegment") && attributes.contains("NSFont")
+            || attributes.contains("NSMarkedClauseSegment") && attributes.contains("NSGlyphInfo")
+        {
+            return .directInsert
+        }
+        return .swapMarked
+    }
 }
 
 class HangulProcessor {
@@ -118,16 +130,7 @@ class HangulProcessor {
         // 클라이언트에 따라서 setMarkedText 를 사용할 것인지 insertText 를 사용할 것인지 판단
         let attributes = client.validAttributesForMarkedText() as? [String] ?? []
         // logger.debug("validAttributesForMarkedText: \(attributes)")
-
-        // Sok 입력기 참고
-        if attributes.contains("NSTextAlternatives")
-            || attributes.contains("NSMarkedClauseSegment") && attributes.contains("NSFont")
-            || attributes.contains("NSMarkedClauseSegment") && attributes.contains("NSGlyphInfo")
-        {
-            return InputStrategy.directInsert
-        }
-
-        return InputStrategy.swapMarked
+        return InputStrategy.determine(from: attributes)
     }
 
     /// 처리 가능한 입력인지 검증한다.

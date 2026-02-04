@@ -47,9 +47,9 @@ extension InputController {
         }
         // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
         let strategy = processor.getInputStrategy(client: client)
-        // if let bundleId = client.bundleIdentifier() {
-        //    logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
-        // }
+        if let bundleId = client.bundleIdentifier() {
+            logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
+        }
 
         if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: flags) {
             // 엔터 같은 특수 키코드 처리
