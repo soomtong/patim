@@ -40,6 +40,9 @@
 		E2DEB0722F24A82D0078431E /* han3-p.png in Resources */ = {isa = PBXBuildFile; fileRef = E2DEB0702F24A82D0078431E /* han3-p.png */; };
 		E2DEB0732F24A82D0078431E /* han3-p@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2DEB0712F24A82D0078431E /* han3-p@2x.png */; };
 		E2FE77C02E65C28E00D5B355 /* KeyCodeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE77BF2E65C28E00D5B355 /* KeyCodeMapper.swift */; };
+		E2KEYLAYOUT0000000000001 /* Han3P3.keylayout in Resources */ = {isa = PBXBuildFile; fileRef = E2KEYLAYOUTREF00000001 /* Han3P3.keylayout */; };
+		E2KEYLAYOUT0000000000002 /* Han3ShinP2.keylayout in Resources */ = {isa = PBXBuildFile; fileRef = E2KEYLAYOUTREF00000002 /* Han3ShinP2.keylayout */; };
+		E2KEYLAYOUT0000000000003 /* Han3ShinPCS.keylayout in Resources */ = {isa = PBXBuildFile; fileRef = E2KEYLAYOUTREF00000003 /* Han3ShinPCS.keylayout */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +96,9 @@
 		E2DEB0702F24A82D0078431E /* han3-p.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-p.png"; sourceTree = "<group>"; };
 		E2DEB0712F24A82D0078431E /* han3-p@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-p@2x.png"; sourceTree = "<group>"; };
 		E2FE77BF2E65C28E00D5B355 /* KeyCodeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCodeMapper.swift; sourceTree = "<group>"; };
+		E2KEYLAYOUTREF00000001 /* Han3P3.keylayout */ = {isa = PBXFileReference; lastKnownFileType = file; path = Han3P3.keylayout; sourceTree = "<group>"; };
+		E2KEYLAYOUTREF00000002 /* Han3ShinP2.keylayout */ = {isa = PBXFileReference; lastKnownFileType = file; path = Han3ShinP2.keylayout; sourceTree = "<group>"; };
+		E2KEYLAYOUTREF00000003 /* Han3ShinPCS.keylayout */ = {isa = PBXFileReference; lastKnownFileType = file; path = Han3ShinPCS.keylayout; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -189,6 +195,9 @@
 				462EBD162B3F3DF400BD94B2 /* Korean.tiff */,
 				46E67F7F26EC5CFA005EC052 /* icon.tiff */,
 				1343570527DE0BEB0074E691 /* InfoPlist.strings */,
+				E2KEYLAYOUTREF00000001 /* Han3P3.keylayout */,
+				E2KEYLAYOUTREF00000002 /* Han3ShinP2.keylayout */,
+				E2KEYLAYOUTREF00000003 /* Han3ShinPCS.keylayout */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -309,6 +318,9 @@
 				46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */,
 				461A81592B49B030005E7725 /* han3-shin-pcs@2x.png in Resources */,
 				46E67F8226EC5CFA005EC052 /* icon.tiff in Resources */,
+				E2KEYLAYOUT0000000000001 /* Han3P3.keylayout in Resources */,
+				E2KEYLAYOUT0000000000002 /* Han3ShinP2.keylayout in Resources */,
+				E2KEYLAYOUT0000000000003 /* Han3ShinPCS.keylayout in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
