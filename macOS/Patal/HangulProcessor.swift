@@ -129,7 +129,8 @@ class HangulProcessor {
     func getInputStrategy(client: IMKTextInput) -> InputStrategy {
         // 클라이언트에 따라서 setMarkedText 를 사용할 것인지 insertText 를 사용할 것인지 판단
         let attributes = client.validAttributesForMarkedText() as? [String] ?? []
-        // logger.debug("validAttributesForMarkedText: \(attributes)")
+        let bundleId = client.bundleIdentifier() ?? "unknown"
+        logger.debug("[\(bundleId)] validAttributes: \(attributes)")
         return InputStrategy.determine(from: attributes)
     }
 

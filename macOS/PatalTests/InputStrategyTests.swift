@@ -178,3 +178,125 @@ struct FlushPathTests {
         #expect(processor.countComposable() == 0)
     }
 }
+
+// MARK: - 실제 측정 기반 테스트
+
+/// 실제 앱에서 측정한 validAttributesForMarkedText 값을 기반으로 작성된 테스트
+/// 측정 데이터: misc/client-attributes.md 참조
+/// 최종 측정: 2026-02-05 (macOS 15.7.2 Sequoia)
+@Suite("실제 클라이언트 측정 기반 테스트")
+struct RealWorldMeasuredTests {
+
+    // MARK: - 브라우저
+
+    @Suite("웹 브라우저")
+    struct BrowserTests {
+
+        @Test("Chrome (com.google.Chrome) → swapMarked")
+        func testChromeStrategy() {
+            // 기존 ClientStrategyTests와 중복이지만 카테고리화를 위해 포함
+            let chromeAttributes = ["NSMarkedClauseSegment"]
+            #expect(InputStrategy.determine(from: chromeAttributes) == .swapMarked)
+        }
+
+        @Test("Safari (com.apple.Safari) → directInsert")
+        func testSafariStrategy() {
+            let attributes = ["NSFont", "NSUnderline", "NSColor", "NSBackgroundColor", "NSUnderlineColor", 
+                            "NSMarkedClauseSegment", "NSLanguage", "NSTextInputReplacementRangeAttributeName", 
+                            "NSTextAlternatives", "NSTextInsertionUndoable", "NSDictationHiliteMarkedText"]
+            #expect(InputStrategy.determine(from: attributes) == .directInsert)
+        }
+
+        @Test("Firefox (org.mozilla.firefox) → swapMarked")
+        func testFirefoxStrategy() {
+            let attributes = ["NSUnderline", "NSUnderlineColor", "NSMarkedClauseSegment", 
+                            "NSTextInputReplacementRangeAttributeName", "NSDictationHiliteMarkedText"]
+            #expect(InputStrategy.determine(from: attributes) == .swapMarked)
+        }
+    }
+
+    // MARK: - 개발 도구
+
+    @Suite("개발 도구")
+    struct DeveloperToolTests {
+
+        @Test("Xcode (com.apple.dt.Xcode) → directInsert")
+        func testXcodeStrategy() {
+            let attributes = ["NSMarkedClauseSegment", "NSGlyphInfo", "NSDictationHiliteMarkedText"]
+            #expect(InputStrategy.determine(from: attributes) == .directInsert)
+        }
+
+        @Test("Terminal.app (com.apple.Terminal) → swapMarked")
+        func testTerminalStrategy() {
+            let attributes = ["NSUnderline", "NSBackgroundColor", "NSDictationHiliteMarkedText"]
+            #expect(InputStrategy.determine(from: attributes) == .swapMarked)
+        }
+
+        @Test("iTerm2 (com.googlecode.iterm2) → swapMarked")
+        func testITerm2Strategy() {
+            let attributes = ["NSColor", "NSBackgroundColor", "NSUnderline", "NSFont", "NSDictationHiliteMarkedText"]
+            #expect(InputStrategy.determine(from: attributes) == .swapMarked)
+        }
+    }
+
+    // MARK: - 텍스트 편집기
+
+    @Suite("텍스트 편집기")
+    struct TextEditorTests {
+
+        @Test("TextEdit (com.apple.TextEdit) → directInsert")
+        func testTextEditStrategy() {
+            let attributes = ["NSFont", "NSUnderline", "NSColor", "NSBackgroundColor", "NSUnderlineColor", 
+                            "NSMarkedClauseSegment", "NSLanguage", "NSTextInputReplacementRangeAttributeName", 
+                            "NSGlyphInfo", "NSTextAlternatives", "NSTextInsertionUndoable", "NSAttachment", 
+                            "NSDictationHiliteMarkedText"]
+            #expect(InputStrategy.determine(from: attributes) == .directInsert)
+        }
+
+        @Test("Pages (com.apple.iWork.Pages) → directInsert")
+        func testPagesStrategy() {
+            let attributes = ["NSBackgroundColor", "NSUnderline", "NSUnderlineColor", "NSColor", "NSFont", 
+                            "NSMarkedClauseSegment", "NSDictationHiliteMarkedText"]
+            #expect(InputStrategy.determine(from: attributes) == .directInsert)
+        }
+
+        @Test("Notes (com.apple.Notes) → directInsert")
+        func testNotesStrategy() {
+            let attributes = ["NSFont", "NSUnderline", "NSColor", "NSBackgroundColor", "NSUnderlineColor", 
+                            "NSMarkedClauseSegment", "NSLanguage", "NSTextInputReplacementRangeAttributeName", 
+                            "NSGlyphInfo", "NSTextAlternatives", "NSTextInsertionUndoable", "NSAttachment", 
+                            "NSDictationHiliteMarkedText"]
+            #expect(InputStrategy.determine(from: attributes) == .directInsert)
+        }
+    }
+
+    // MARK: - Electron 앱
+
+    @Suite("Electron 기반 앱")
+    struct ElectronAppTests {
+
+        @Test("VS Code (com.microsoft.VSCode) → swapMarked")
+        func testVSCodeStrategy() {
+            // Chromium 기반이지만 Chrome보다 풍부 (5개 vs 1개)
+            let attributes = ["NSUnderline", "NSUnderlineColor", "NSMarkedClauseSegment", 
+                            "NSTextInputReplacementRangeAttributeName", "NSDictationHiliteMarkedText"]
+            #expect(InputStrategy.determine(from: attributes) == .swapMarked)
+        }
+
+        @Test("Slack (com.tinyspeck.slackmacgap) → swapMarked")
+        func testSlackStrategy() {
+            // Firefox, VS Code, Discord와 동일
+            let attributes = ["NSUnderline", "NSUnderlineColor", "NSMarkedClauseSegment", 
+                            "NSTextInputReplacementRangeAttributeName", "NSDictationHiliteMarkedText"]
+            #expect(InputStrategy.determine(from: attributes) == .swapMarked)
+        }
+
+        @Test("Discord (com.hnc.Discord) → swapMarked")
+        func testDiscordStrategy() {
+            // Bundle ID가 com.hnc.Discord (한글과컴퓨터 버전)
+            let attributes = ["NSUnderline", "NSUnderlineColor", "NSMarkedClauseSegment", 
+                            "NSTextInputReplacementRangeAttributeName", "NSDictationHiliteMarkedText"]
+            #expect(InputStrategy.determine(from: attributes) == .swapMarked)
+        }
+    }
+}
