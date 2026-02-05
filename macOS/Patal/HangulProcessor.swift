@@ -38,24 +38,24 @@ enum InputStrategy {
     /// 측정 완료된 앱의 전략 맵
     private static let knownApps: [String: InputStrategy] = [
         // 브라우저
-        "com.apple.Safari": .directInsert,          // NSTextAlternatives 포함
-        "com.google.Chrome": .swapMarked,           // NSMarkedClauseSegment만
-        "org.mozilla.firefox": .swapMarked,         // NSMarkedClauseSegment만 (NSFont 없음)
+        "com.apple.Safari": .directInsert,  // NSTextAlternatives 포함
+        "com.google.Chrome": .swapMarked,  // NSMarkedClauseSegment만
+        "org.mozilla.firefox": .swapMarked,  // NSMarkedClauseSegment만 (NSFont 없음)
         "com.duckduckgo.macos.browser": .directInsert,  // NSTextAlternatives 포함 (Sok 참고)
 
         // 개발 도구
-        "com.apple.dt.Xcode": .directInsert,        // NSMarkedClauseSegment + NSGlyphInfo
-        "com.apple.Terminal": .swapMarked,          // NSMarkedClauseSegment 없음
-        "com.googlecode.iterm2": .swapMarked,       // NSMarkedClauseSegment 없음
-        "io.alacritty": .swapMarked,                // Sok 참고
-        "com.google.android.studio": .swapMarked,   // Sok 참고
-        "com.sublimetext.4": .swapMarked,           // Sok 참고
+        "com.apple.dt.Xcode": .directInsert,  // NSMarkedClauseSegment + NSGlyphInfo
+        "com.apple.Terminal": .swapMarked,  // NSMarkedClauseSegment 없음
+        "com.googlecode.iterm2": .swapMarked,  // NSMarkedClauseSegment 없음
+        "io.alacritty": .swapMarked,  // Sok 참고
+        "com.google.android.studio": .swapMarked,  // Sok 참고
+        "com.sublimetext.4": .swapMarked,  // Sok 참고
         "com.sublimetext.3": .swapMarked,
 
         // Apple 텍스트 편집기
-        "com.apple.TextEdit": .directInsert,        // NSTextAlternatives + NSGlyphInfo
-        "com.apple.Notes": .directInsert,           // NSTextAlternatives + NSGlyphInfo
-        "com.apple.Stickies": .directInsert,        // Sok 참고: NSTextAlternatives 포함
+        "com.apple.TextEdit": .directInsert,  // NSTextAlternatives + NSGlyphInfo
+        "com.apple.Notes": .directInsert,  // NSTextAlternatives + NSGlyphInfo
+        "com.apple.Stickies": .directInsert,  // Sok 참고: NSTextAlternatives 포함
 
         // iWork 앱 (Sok 참고: NSMarkedClauseSegment + NSFont)
         "com.apple.iWork.Pages": .directInsert,
@@ -63,32 +63,32 @@ enum InputStrategy {
         // ⚠️ Numbers는 휴리스틱과 반대로 작동 - overrideApps에서 처리
 
         // Microsoft Office (Sok 참고)
-        "com.microsoft.Word": .directInsert,        // NSFont + NSMarkedClauseSegment
+        "com.microsoft.Word": .directInsert,  // NSFont + NSMarkedClauseSegment
         "com.microsoft.Powerpoint": .directInsert,
-        "com.microsoft.Excel": .swapMarked,         // Sok 참고: 예외
+        "com.microsoft.Excel": .swapMarked,  // Sok 참고: 예외
 
         // Electron 기반 앱
-        "com.microsoft.VSCode": .swapMarked,        // NSMarkedClauseSegment만 (NSFont 없음)
+        "com.microsoft.VSCode": .swapMarked,  // NSMarkedClauseSegment만 (NSFont 없음)
         "com.tinyspeck.slackmacgap": .swapMarked,
         "com.hnc.Discord": .swapMarked,
 
         // 메신저/SNS
-        "jp.naver.line.mac": .swapMarked,           // Sok 참고
+        "jp.naver.line.mac": .swapMarked,  // Sok 참고
 
         // 기타
-        "org.gimp.gimp-2.10": .swapMarked,          // Sok 참고
+        "org.gimp.gimp-2.10": .swapMarked,  // Sok 참고
     ]
 
     /// 휴리스틱과 반대로 작동하는 앱 (명시적 오버라이드)
     /// Numbers: NSFont + NSMarkedClauseSegment를 반환하지만 swapMarked가 필요 (Sok 참고)
     private static let overrideApps: [String: InputStrategy] = [
-        "com.apple.iWork.Numbers": .swapMarked,
+        "com.apple.iWork.Numbers": .swapMarked
     ]
 
     /// prefix 기반 매칭이 필요한 앱 (Sok 참고)
     /// 한컴오피스: 한글, 한셀, 한쇼 등 모두 동일 prefix
     private static let prefixRules: [(prefix: String, strategy: InputStrategy)] = [
-        ("com.hancom.office.hwp", .swapMarked),
+        ("com.hancom.office.hwp", .swapMarked)
     ]
 
     // MARK: - 전략 결정

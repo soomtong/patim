@@ -51,6 +51,27 @@ extension InputController {
             logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
         }
 
+        // ESC 키 처리: 영문 자판 전환 옵션이 활성화된 경우
+        if keyCode == KeyCode.ESC.rawValue && flags == ModifierCode.NONE.rawValue {
+            if processor.hangulLayout.canESC영문전환 {
+                // 1. 조합 중인 한글 확정
+                let flushed = processor.flushCommit()
+                if !flushed.isEmpty {
+                    logger.debug("ESC: 조합 중인 글자 확정: \(flushed)")
+                    flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
+                }
+
+                // 2. 영문 자판으로 전환
+                if switchToEnglishInputSource() {
+                    logger.debug("ESC: 영문 자판으로 전환 완료")
+                } else {
+                    logger.debug("ESC: 영문 자판 전환 실패 (설치된 영문 자판 없음)")
+                }
+            }
+            // 3. ESC 이벤트는 앱에 전달 (return false)
+            return false
+        }
+
         if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: flags) {
             // 엔터 같은 특수 키코드 처리
             let flushed = processor.flushCommit()
