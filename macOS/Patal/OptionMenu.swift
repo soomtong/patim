@@ -41,7 +41,11 @@ class OptionMenu {
         // 버전 정보 아이템 추가
         let versionItem = NSMenuItem()
         if let version = getMarketingVersion() {
-            versionItem.title = "팥알입력기 v\(version)"
+            if let commitHash = getCurrentProjectVersion() {
+                versionItem.title = "팥알입력기 v\(version) (\(commitHash))"
+            } else {
+                versionItem.title = "팥알입력기 v\(version)"
+            }
         } else {
             versionItem.title = "팥알입력기"
         }
