@@ -75,9 +75,10 @@ private let englishInputSourcePriority = [
     "com.apple.keylayout.Dvorak-Right",
 ]
 
-/// 설치된 영문 자판 중 우선순위가 가장 높은 것으로 전환
-/// - Returns: 전환 성공 여부
-func switchToEnglishInputSource() -> Bool {
+/// 설치된 영문 자판 중 우선순위가 가장 높은 것의 ID를 반환
+/// - Returns: 영문 자판 ID (예: "com.apple.keylayout.ABC") 또는 nil
+/// - Note: IMKTextInput.overrideKeyboard(withKeyboardNamed:)에서 사용
+func findFirstAvailableEnglishKeyboard() -> String? {
     // 현재 활성화된 입력 소스 목록 가져오기
     let properties: [CFString: Any] = [
         kTISPropertyInputSourceCategory: kTISCategoryKeyboardInputSource!,
@@ -86,9 +87,9 @@ func switchToEnglishInputSource() -> Bool {
 
     guard
         let sources = TISCreateInputSourceList(properties as CFDictionary, false)?
-            .takeUnretainedValue() as? [TISInputSource]
+            .takeRetainedValue() as? [TISInputSource]
     else {
-        return false
+        return nil
     }
 
     // 설치된 입력 소스 ID 목록 추출
@@ -102,25 +103,11 @@ func switchToEnglishInputSource() -> Bool {
     // 우선순위에 따라 영문 자판 찾기
     for targetID in englishInputSourcePriority {
         if installedIDs.contains(targetID) {
-            return selectInputSource(withID: targetID)
+            return targetID
         }
     }
 
-    return false
-}
-
-private func selectInputSource(withID sourceID: String) -> Bool {
-    let properties: [CFString: Any] = [kTISPropertyInputSourceID: sourceID]
-
-    guard
-        let sources = TISCreateInputSourceList(properties as CFDictionary, false)?
-            .takeUnretainedValue() as? [TISInputSource],
-        let source = sources.first
-    else {
-        return false
-    }
-
-    return TISSelectInputSource(source) == noErr
+    return nil
 }
 
 func getInputLayoutID(id: String) -> LayoutName {

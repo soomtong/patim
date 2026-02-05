@@ -61,9 +61,10 @@ extension InputController {
                     flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
                 }
 
-                // 2. 영문 자판으로 전환
-                if switchToEnglishInputSource() {
-                    logger.debug("ESC: 영문 자판으로 전환 완료")
+                // 2. 영문 자판으로 전환 (IMKTextInput의 overrideKeyboard 사용)
+                if let keyboardID = findFirstAvailableEnglishKeyboard() {
+                    client.overrideKeyboard(withKeyboardNamed: keyboardID)
+                    logger.debug("ESC: 영문 자판으로 전환 완료 (\(keyboardID))")
                 } else {
                     logger.debug("ESC: 영문 자판 전환 실패 (설치된 영문 자판 없음)")
                 }
