@@ -30,9 +30,108 @@ enum InputStrategy {
     case directInsert
     case swapMarked
 
-    /// validAttributesForMarkedText 결과로 입력 전략을 결정
+    // MARK: - Bundle ID 기반 전략 캐시
+    // 측정 데이터: misc/client-attributes.md 참조
+    // Sok 입력기 참고: https://github.com/kiding/SokIM/blob/main/SokIM/Strategy.swift
+    // validAttributesForMarkedText() 호출 없이 바로 전략 결정 → 성능 최적화
+
+    /// 측정 완료된 앱의 전략 맵
+    private static let knownApps: [String: InputStrategy] = [
+        // 브라우저
+        "com.apple.Safari": .directInsert,          // NSTextAlternatives 포함
+        "com.google.Chrome": .swapMarked,           // NSMarkedClauseSegment만
+        "org.mozilla.firefox": .swapMarked,         // NSMarkedClauseSegment만 (NSFont 없음)
+        "com.duckduckgo.macos.browser": .directInsert,  // NSTextAlternatives 포함 (Sok 참고)
+
+        // 개발 도구
+        "com.apple.dt.Xcode": .directInsert,        // NSMarkedClauseSegment + NSGlyphInfo
+        "com.apple.Terminal": .swapMarked,          // NSMarkedClauseSegment 없음
+        "com.googlecode.iterm2": .swapMarked,       // NSMarkedClauseSegment 없음
+        "io.alacritty": .swapMarked,                // Sok 참고
+        "com.google.android.studio": .swapMarked,   // Sok 참고
+        "com.sublimetext.4": .swapMarked,           // Sok 참고
+        "com.sublimetext.3": .swapMarked,
+
+        // Apple 텍스트 편집기
+        "com.apple.TextEdit": .directInsert,        // NSTextAlternatives + NSGlyphInfo
+        "com.apple.Notes": .directInsert,           // NSTextAlternatives + NSGlyphInfo
+        "com.apple.Stickies": .directInsert,        // Sok 참고: NSTextAlternatives 포함
+
+        // iWork 앱 (Sok 참고: NSMarkedClauseSegment + NSFont)
+        "com.apple.iWork.Pages": .directInsert,
+        "com.apple.iWork.Keynote": .directInsert,
+        // ⚠️ Numbers는 휴리스틱과 반대로 작동 - overrideApps에서 처리
+
+        // Microsoft Office (Sok 참고)
+        "com.microsoft.Word": .directInsert,        // NSFont + NSMarkedClauseSegment
+        "com.microsoft.Powerpoint": .directInsert,
+        "com.microsoft.Excel": .swapMarked,         // Sok 참고: 예외
+
+        // Electron 기반 앱
+        "com.microsoft.VSCode": .swapMarked,        // NSMarkedClauseSegment만 (NSFont 없음)
+        "com.tinyspeck.slackmacgap": .swapMarked,
+        "com.hnc.Discord": .swapMarked,
+
+        // 메신저/SNS
+        "jp.naver.line.mac": .swapMarked,           // Sok 참고
+
+        // 기타
+        "org.gimp.gimp-2.10": .swapMarked,          // Sok 참고
+    ]
+
+    /// 휴리스틱과 반대로 작동하는 앱 (명시적 오버라이드)
+    /// Numbers: NSFont + NSMarkedClauseSegment를 반환하지만 swapMarked가 필요 (Sok 참고)
+    private static let overrideApps: [String: InputStrategy] = [
+        "com.apple.iWork.Numbers": .swapMarked,
+    ]
+
+    /// prefix 기반 매칭이 필요한 앱 (Sok 참고)
+    /// 한컴오피스: 한글, 한셀, 한쇼 등 모두 동일 prefix
+    private static let prefixRules: [(prefix: String, strategy: InputStrategy)] = [
+        ("com.hancom.office.hwp", .swapMarked),
+    ]
+
+    // MARK: - 전략 결정
+
+    /// Bundle ID로 전략 결정 (측정된 앱은 빠른 경로)
+    @inline(__always)
+    static func determineFast(bundleId: String) -> InputStrategy? {
+        // 1. 오버라이드 앱 (휴리스틱과 반대로 작동하는 앱)
+        if let override = overrideApps[bundleId] {
+            return override
+        }
+
+        // 2. prefix 규칙 확인 (한컴오피스 등)
+        for rule in prefixRules {
+            if bundleId.hasPrefix(rule.prefix) {
+                return rule.strategy
+            }
+        }
+
+        // 3. 측정된 앱 캐시
+        return knownApps[bundleId]
+    }
+
+    /// Bundle ID와 validAttributesForMarkedText 결과로 입력 전략을 결정
+    static func determine(bundleId: String, attributes: [String]) -> InputStrategy {
+        // 1. 빠른 경로 (오버라이드/prefix/캐시)
+        if let fast = determineFast(bundleId: bundleId) {
+            return fast
+        }
+
+        // 2. 미측정 앱은 휴리스틱 적용
+        return determineFromAttributes(attributes)
+    }
+
+    /// validAttributesForMarkedText 결과만으로 전략 결정 (하위 호환성)
     static func determine(from attributes: [String]) -> InputStrategy {
-        // Sok 입력기 참고
+        return determineFromAttributes(attributes)
+    }
+
+    /// 속성 기반 휴리스틱 (Sok 입력기 참고)
+    private static func determineFromAttributes(_ attributes: [String]) -> InputStrategy {
+        // - NSTextAlternatives: 대체 텍스트 지원 → 네이티브 텍스트 시스템
+        // - NSMarkedClauseSegment + NSFont/NSGlyphInfo: 풍부한 조합 문자 렌더링 지원
         if attributes.contains("NSTextAlternatives")
             || attributes.contains("NSMarkedClauseSegment") && attributes.contains("NSFont")
             || attributes.contains("NSMarkedClauseSegment") && attributes.contains("NSGlyphInfo")
@@ -125,13 +224,23 @@ class HangulProcessor {
         return count
     }
 
-    /// 입력 방식 강제 지정
+    /// 클라이언트에 적합한 입력 전략 결정
+    /// - setMarkedText의 replacementRange 처리 방식에 따라 directInsert/swapMarked 구분
+    /// - 측정된 앱(knownApps)은 validAttributesForMarkedText 호출 없이 바로 결정 (성능 최적화)
+    @inline(__always)
     func getInputStrategy(client: IMKTextInput) -> InputStrategy {
-        // 클라이언트에 따라서 setMarkedText 를 사용할 것인지 insertText 를 사용할 것인지 판단
-        let attributes = client.validAttributesForMarkedText() as? [String] ?? []
         let bundleId = client.bundleIdentifier() ?? "unknown"
+
+        // 측정된 앱은 빠른 경로 (validAttributesForMarkedText 호출 생략)
+        if let strategy = InputStrategy.determineFast(bundleId: bundleId) {
+            logger.debug("[\(bundleId)] 전략: \(strategy) (캐시)")
+            return strategy
+        }
+
+        // 미측정 앱은 휴리스틱 적용
+        let attributes = client.validAttributesForMarkedText() as? [String] ?? []
         logger.debug("[\(bundleId)] validAttributes: \(attributes)")
-        return InputStrategy.determine(from: attributes)
+        return InputStrategy.determine(bundleId: bundleId, attributes: attributes)
     }
 
     /// 처리 가능한 입력인지 검증한다.

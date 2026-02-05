@@ -85,6 +85,215 @@ struct InputStrategyDetermineTests {
     }
 }
 
+// MARK: - 빠른 경로 테스트 (knownApps 캐시)
+//
+// InputStrategy.determineFast(bundleId:)는 측정 완료된 앱에 대해
+// validAttributesForMarkedText() 호출 없이 바로 전략을 반환한다.
+// Sok 입력기 참고: https://github.com/kiding/SokIM/blob/main/SokIM/Strategy.swift
+
+@Suite("빠른 경로 테스트 (knownApps)")
+struct FastPathTests {
+
+    // MARK: - determineFast 기본 테스트
+
+    @Test("측정된 앱: Safari → directInsert")
+    func testFastPathSafari() {
+        let strategy = InputStrategy.determineFast(bundleId: "com.apple.Safari")
+        #expect(strategy == .directInsert)
+    }
+
+    @Test("측정된 앱: Chrome → swapMarked")
+    func testFastPathChrome() {
+        let strategy = InputStrategy.determineFast(bundleId: "com.google.Chrome")
+        #expect(strategy == .swapMarked)
+    }
+
+    @Test("측정된 앱: Xcode → directInsert")
+    func testFastPathXcode() {
+        let strategy = InputStrategy.determineFast(bundleId: "com.apple.dt.Xcode")
+        #expect(strategy == .directInsert)
+    }
+
+    @Test("측정된 앱: VS Code → swapMarked")
+    func testFastPathVSCode() {
+        let strategy = InputStrategy.determineFast(bundleId: "com.microsoft.VSCode")
+        #expect(strategy == .swapMarked)
+    }
+
+    @Test("미측정 앱 → nil (휴리스틱 폴백)")
+    func testFastPathUnknown() {
+        let strategy = InputStrategy.determineFast(bundleId: "com.example.unknown")
+        #expect(strategy == nil)
+    }
+
+    // MARK: - 원래 12개 앱 검증 (Patal 측정)
+
+    @Test("Patal 측정 12개 앱 전략 검증")
+    func testPatalMeasuredApps() {
+        // directInsert 앱 (5개)
+        #expect(InputStrategy.determineFast(bundleId: "com.apple.Safari") == .directInsert)
+        #expect(InputStrategy.determineFast(bundleId: "com.apple.dt.Xcode") == .directInsert)
+        #expect(InputStrategy.determineFast(bundleId: "com.apple.TextEdit") == .directInsert)
+        #expect(InputStrategy.determineFast(bundleId: "com.apple.iWork.Pages") == .directInsert)
+        #expect(InputStrategy.determineFast(bundleId: "com.apple.Notes") == .directInsert)
+
+        // swapMarked 앱 (7개)
+        #expect(InputStrategy.determineFast(bundleId: "com.google.Chrome") == .swapMarked)
+        #expect(InputStrategy.determineFast(bundleId: "org.mozilla.firefox") == .swapMarked)
+        #expect(InputStrategy.determineFast(bundleId: "com.apple.Terminal") == .swapMarked)
+        #expect(InputStrategy.determineFast(bundleId: "com.googlecode.iterm2") == .swapMarked)
+        #expect(InputStrategy.determineFast(bundleId: "com.microsoft.VSCode") == .swapMarked)
+        #expect(InputStrategy.determineFast(bundleId: "com.tinyspeck.slackmacgap") == .swapMarked)
+        #expect(InputStrategy.determineFast(bundleId: "com.hnc.Discord") == .swapMarked)
+    }
+
+    // MARK: - Sok 입력기 참고 추가 앱
+
+    @Test("Sok 참고: iWork 앱")
+    func testSokIWorkApps() {
+        #expect(InputStrategy.determineFast(bundleId: "com.apple.iWork.Pages") == .directInsert)
+        #expect(InputStrategy.determineFast(bundleId: "com.apple.iWork.Keynote") == .directInsert)
+        // Numbers는 overrideApps에서 처리 (아래 테스트)
+    }
+
+    @Test("Sok 참고: Microsoft Office 앱")
+    func testSokMicrosoftOffice() {
+        #expect(InputStrategy.determineFast(bundleId: "com.microsoft.Word") == .directInsert)
+        #expect(InputStrategy.determineFast(bundleId: "com.microsoft.Powerpoint") == .directInsert)
+        #expect(InputStrategy.determineFast(bundleId: "com.microsoft.Excel") == .swapMarked)
+    }
+
+    @Test("Sok 참고: 개발 도구")
+    func testSokDevTools() {
+        #expect(InputStrategy.determineFast(bundleId: "io.alacritty") == .swapMarked)
+        #expect(InputStrategy.determineFast(bundleId: "com.google.android.studio") == .swapMarked)
+        #expect(InputStrategy.determineFast(bundleId: "com.sublimetext.4") == .swapMarked)
+        #expect(InputStrategy.determineFast(bundleId: "com.sublimetext.3") == .swapMarked)
+    }
+
+    @Test("Sok 참고: 기타 앱")
+    func testSokOtherApps() {
+        #expect(InputStrategy.determineFast(bundleId: "com.apple.Stickies") == .directInsert)
+        #expect(InputStrategy.determineFast(bundleId: "com.duckduckgo.macos.browser") == .directInsert)
+        #expect(InputStrategy.determineFast(bundleId: "jp.naver.line.mac") == .swapMarked)
+        #expect(InputStrategy.determineFast(bundleId: "org.gimp.gimp-2.10") == .swapMarked)
+    }
+}
+
+// MARK: - 오버라이드 테스트 (휴리스틱과 반대로 작동하는 앱)
+//
+// Numbers는 NSFont + NSMarkedClauseSegment를 반환하지만 swapMarked가 필요
+// Sok 입력기에서 발견된 예외 케이스
+
+@Suite("오버라이드 테스트")
+struct OverrideTests {
+
+    @Test("Numbers: 휴리스틱과 반대 (directInsert 조건이지만 swapMarked)")
+    func testNumbersOverride() {
+        // Numbers는 NSFont + NSMarkedClauseSegment를 반환하지만 swapMarked 필요
+        let strategy = InputStrategy.determineFast(bundleId: "com.apple.iWork.Numbers")
+        #expect(strategy == .swapMarked)
+    }
+
+    @Test("Numbers: attributes와 무관하게 오버라이드")
+    func testNumbersIgnoresAttributes() {
+        // 휴리스틱으로는 directInsert가 되어야 하는 조건
+        let attributes = ["NSFont", "NSMarkedClauseSegment", "NSTextAlternatives"]
+        let strategy = InputStrategy.determine(bundleId: "com.apple.iWork.Numbers", attributes: attributes)
+        #expect(strategy == .swapMarked)  // 오버라이드로 swapMarked
+    }
+}
+
+// MARK: - Prefix 매칭 테스트 (한컴오피스 등)
+//
+// 한컴오피스는 한글, 한셀, 한쇼 등 여러 앱이 있으며
+// 모두 com.hancom.office.hwp prefix를 공유
+
+@Suite("Prefix 매칭 테스트")
+struct PrefixMatchTests {
+
+    @Test("한컴오피스 한글 → swapMarked")
+    func testHancomHangul() {
+        let strategy = InputStrategy.determineFast(bundleId: "com.hancom.office.hwp.mac")
+        #expect(strategy == .swapMarked)
+    }
+
+    @Test("한컴오피스 한셀 → swapMarked")
+    func testHancomHancel() {
+        let strategy = InputStrategy.determineFast(bundleId: "com.hancom.office.hwp.hancel")
+        #expect(strategy == .swapMarked)
+    }
+
+    @Test("한컴오피스 한쇼 → swapMarked")
+    func testHancomHanshow() {
+        let strategy = InputStrategy.determineFast(bundleId: "com.hancom.office.hwp.hanshow")
+        #expect(strategy == .swapMarked)
+    }
+
+    @Test("한컴오피스 prefix 일치")
+    func testHancomPrefix() {
+        // 다양한 한컴오피스 변형
+        #expect(InputStrategy.determineFast(bundleId: "com.hancom.office.hwp") == .swapMarked)
+        #expect(InputStrategy.determineFast(bundleId: "com.hancom.office.hwp.2020") == .swapMarked)
+        #expect(InputStrategy.determineFast(bundleId: "com.hancom.office.hwp.mac.v2") == .swapMarked)
+    }
+
+    @Test("한컴오피스가 아닌 앱은 prefix 매칭 안 됨")
+    func testNonHancom() {
+        // com.hancom으로 시작하지만 hwp가 아닌 경우
+        let strategy = InputStrategy.determineFast(bundleId: "com.hancom.other.app")
+        #expect(strategy == nil)  // 캐시에 없으므로 nil
+    }
+}
+
+// MARK: - 하이브리드 API 테스트
+//
+// InputStrategy.determine(bundleId:attributes:)는 측정된 앱은 캐시에서,
+// 미측정 앱은 휴리스틱으로 전략을 결정한다.
+
+@Suite("하이브리드 API 테스트")
+struct HybridApiTests {
+
+    @Test("미측정 앱: 휴리스틱 결과 유지")
+    func testHybridApiDefaultBehavior() {
+        // 미측정 앱은 휴리스틱 결과 사용
+        let attributes = ["NSMarkedClauseSegment"]
+        let strategy = InputStrategy.determine(bundleId: "com.example.unknown", attributes: attributes)
+        #expect(strategy == .swapMarked)
+    }
+
+    @Test("미측정 앱: NSTextAlternatives 포함 시 directInsert")
+    func testHybridApiWithTextAlternatives() {
+        let attributes = ["NSTextAlternatives", "NSMarkedClauseSegment"]
+        let strategy = InputStrategy.determine(bundleId: "com.example.app", attributes: attributes)
+        #expect(strategy == .directInsert)
+    }
+
+    @Test("미측정 앱: 빈 attributes → swapMarked")
+    func testHybridApiEmptyAttributes() {
+        let strategy = InputStrategy.determine(bundleId: "com.example.unknown", attributes: [])
+        #expect(strategy == .swapMarked)
+    }
+
+    // MARK: - 측정된 앱은 attributes 무시
+
+    @Test("측정된 앱: attributes와 무관하게 캐시 결과 반환")
+    func testKnownAppIgnoresAttributes() {
+        // Chrome은 swapMarked로 측정됨
+        // NSTextAlternatives를 전달해도 캐시된 swapMarked 반환
+        let attributes = ["NSTextAlternatives", "NSMarkedClauseSegment"]
+        let strategy = InputStrategy.determine(bundleId: "com.google.Chrome", attributes: attributes)
+        #expect(strategy == .swapMarked)
+    }
+
+    @Test("측정된 앱: 빈 attributes도 캐시 결과 반환")
+    func testKnownAppWithEmptyAttributes() {
+        // Safari는 directInsert로 측정됨
+        let strategy = InputStrategy.determine(bundleId: "com.apple.Safari", attributes: [])
+        #expect(strategy == .directInsert)
+    }
+}
+
 // MARK: - 실제 클라이언트별 예상 전략 테스트
 //
 // 실제 앱의 validAttributesForMarkedText 반환값을 기반으로 전략이 올바르게 판별되는지 검증.
