@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8"?>
 <!DOCTYPE keyboard SYSTEM "file://localhost/System/Library/DTDs/KeyboardLayout.dtd">
-<keyboard group="126" id="-17410" name="3SetShinHangul" maxout="1">
+<keyboard group="126" id="-19412" name="Han3ShinPCS" maxout="1">
     <layouts>
         <layout first="0" last="17" mapSet="ANSI" modifiers="common"/>
         <layout first="18" last="18" mapSet="JIS" modifiers="common"/>
@@ -19,16 +19,13 @@
             <modifier keys="anyShift caps?"/>
         </keyMapSelect>
         <keyMapSelect mapIndex="2">
-            <!-- command or option -->
             <modifier keys="anyShift? caps? anyOption? command"/>
             <modifier keys="caps? anyOption"/>
         </keyMapSelect>
         <keyMapSelect mapIndex="3">
-            <!-- shift option -->
             <modifier keys="anyShift caps? anyOption"/>
         </keyMapSelect>
         <keyMapSelect mapIndex="4">
-            <!-- control -->
             <modifier keys="shift? caps? option? command? control"/>
             <modifier keys="shift? rightShift caps? option? command? control"/>
             <modifier keys="shift? caps? option? rightOption command? control"/>
@@ -38,61 +35,68 @@
         </keyMapSelect>
     </modifierMap>
     <keyMapSet id="ANSI">
+        <!-- index 0: 일반 키 (Shift 없음) -->
+        <!-- Han3ShinPCS 신세벌식 PCS 자판 배열 -->
+        <!-- 50% 이하 키보드용: 우측 새끼손가락 키('; /) 없음 -->
         <keyMap index="0">
-            <key code="0" output="a"/>
-            <key code="1" output="s"/>
-            <key code="2" output="d"/>
-            <key code="3" output="f"/>
-            <key code="4" output="ᄂ"/>
-            <key code="5" output="ᅳ"/>
-            <key code="6" output="ᆷ"/>
-            <key code="7" output="ᆨ"/>
-            <key code="8" output="ᅦ"/>
-            <key code="9" output="ᅩ"/>
-            <key code="10" output="§"/>
-            <key code="11" output="ᅮ"/>
-            <key code="12" output="ᆺ"/>
-            <key code="13" output="ᆯ"/>
-            <key code="14" output="ᅧ"/>
-            <key code="15" output="ᅢ"/>
-            <key code="16" output="ᄅ"/>
-            <key code="17" output="ᅥ"/>
-            <key code="18" output="ᇂ"/>
-            <key code="19" output="ᆻ"/>
-            <key code="20" output="ᆸ"/>
-            <key code="21" output="ᅭ"/>
-            <key code="22" output="ᅣ"/>
-            <key code="23" output="ᅲ"/>
-            <key code="24" output="&#x003E;"/>
-            <key code="25" output="ᅮ"/>
-            <key code="26" output="ᅨ"/>
-            <key code="27" output=")"/>
-            <key code="28" output="ᅴ"/>
-            <key code="29" output="ᄏ"/>
-            <key code="30" output="&#x003C;"/>
-            <key code="31" output="ᄎ"/>
-            <key code="32" output="ᄃ"/>
-            <key code="33" output="("/>
-            <key code="34" output="ᄆ"/>
-            <key code="35" output="ᄑ"/>
-            <key code="36" output="&#x000D;"/>
-            <key code="37" output="ᄌ"/>
-            <key code="38" output="ᄋ"/>
-            <key code="39" output="ᄐ"/>
-            <key code="40" output="ᄀ"/>
-            <key code="41" output="ᄇ"/>
-            <key code="42" output=":"/>
-            <key code="43" output=","/>
-            <key code="44" output="ᅩ"/>
-            <key code="45" output="ᄉ"/>
-            <key code="46" output="ᄒ"/>
-            <key code="47" output="."/>
-            <key code="48" output="&#x0009;"/>
-            <key code="49" output=" "/>
-            <key code="50" output="*"/>
-            <key code="51" output="&#x0008;"/>
-            <key code="52" output="&#x0003;"/>
-            <key code="53" output="&#x001B;"/>
+            <!-- 종성 영역 (좌측 하단) -->
+            <key code="0" output="ᆼ"/>         <!-- a: 종성 이응 -->
+            <key code="1" output="ᆫ"/>         <!-- s: 종성 니은 -->
+            <key code="2" output="ᅵ"/>         <!-- d: 중성 이 -->
+            <key code="3" output="ᅡ"/>         <!-- f: 중성 아 -->
+            <key code="6" output="ᆷ"/>         <!-- z: 종성 미음 -->
+            <key code="7" output="ᆨ"/>         <!-- x: 종성 기역/중성 요 -->
+            <key code="8" output="ᅦ"/>         <!-- c: 중성 에 -->
+            <key code="9" output="ᅩ"/>         <!-- v: 중성 오 -->
+            <key code="12" output="ᆺ"/>        <!-- q: 종성 시옷/중성 얘 -->
+            <key code="13" output="ᆯ"/>        <!-- w: 종성 리을/중성 야 -->
+            <key code="14" output="ᅢ"/>        <!-- e: 중성 애 -->
+            <key code="15" output="ᅥ"/>        <!-- r: 중성 어 -->
+            <!-- 중성 영역 -->
+            <key code="4" output="ᄂ"/>         <!-- h: 초성 니은 -->
+            <key code="5" output="ᅳ"/>         <!-- g: 중성 으 -->
+            <key code="11" output="ᅮ"/>        <!-- b: 중성 우 -->
+            <key code="16" output="ᄅ"/>        <!-- y: 초성 리을 -->
+            <key code="17" output="ᅧ"/>        <!-- t: 중성 여 -->
+            <!-- 숫자 행 -->
+            <key code="18" output="ᆮ"/>        <!-- 1: 종성 디귿 -->
+            <key code="19" output="ᆸ"/>        <!-- 2: 종성 비읍 -->
+            <key code="20" output="ᆻ"/>        <!-- 3: 쌍시옷 -->
+            <key code="21" output="ᅲ"/>        <!-- 4: 중성 유 -->
+            <key code="22" output="ᇀ"/>        <!-- 6: 종성 티읕 -->
+            <key code="23" output="ᆹ"/>        <!-- 5: 비읍시옷 -->
+            <key code="24" output="&#x003E;"/>  <!-- =: > -->
+            <key code="25" output="ᆾ"/>        <!-- 9: 치읓 -->
+            <key code="26" output="ᆿ"/>        <!-- 7: 키읔 -->
+            <key code="27" output=")"/>        <!-- -: ) -->
+            <key code="28" output="ᇁ"/>        <!-- 8: 피읖 -->
+            <key code="29" output="ᇂ"/>        <!-- 0: 히읗 -->
+            <key code="30" output="&#x003C;"/>  <!-- [: < -->
+            <!-- 초성 영역 (우측) -->
+            <key code="31" output="ᄎ"/>        <!-- o: 초성 치읓/중성 우 -->
+            <key code="32" output="ᄃ"/>        <!-- u: 초성 디귿 -->
+            <key code="33" output="("/>        <!-- ]: ( -->
+            <key code="34" output="ᄆ"/>        <!-- i: 초성 미음/중성 으 -->
+            <key code="35" output="ᄑ"/>        <!-- p: 초성 피읖/중성 오 -->
+            <key code="36" output="&#x000D;"/>  <!-- Return -->
+            <key code="37" output="ᄌ"/>        <!-- l: 초성 지읒 -->
+            <key code="38" output="ᄋ"/>        <!-- j: 초성 이응 -->
+            <key code="39" output=":"/>        <!-- ': : (PCS용 특수) -->
+            <key code="40" output="ᄀ"/>        <!-- k: 초성 기역 -->
+            <key code="41" output="ᄇ"/>        <!-- ;: 초성 비읍 -->
+            <key code="42" output="*"/>        <!-- \: * -->
+            <key code="43" output="ᄐ"/>        <!-- ,: 초성 티읕 (PCS용) -->
+            <key code="44" output=";"/>        <!-- /: ; (PCS용 특수) -->
+            <key code="45" output="ᄉ"/>        <!-- n: 초성 시옷 -->
+            <key code="46" output="ᄒ"/>        <!-- m: 초성 히읗 -->
+            <key code="47" output="ᄏ"/>        <!-- .: 초성 키읔 (PCS용) -->
+            <key code="48" output="&#x0009;"/>  <!-- Tab -->
+            <key code="49" output=" "/>        <!-- Space -->
+            <key code="50" output="*"/>        <!-- `: * -->
+            <key code="51" output="&#x0008;"/>  <!-- Delete -->
+            <key code="52" output="&#x0003;"/>  <!-- Enter -->
+            <key code="53" output="&#x001B;"/>  <!-- Escape -->
+            <!-- 기능키 영역 -->
             <key code="65" output="."/>
             <key code="66" output="&#x001D;"/>
             <key code="67" output="*"/>
@@ -147,61 +151,64 @@
             <key code="125" output="&#x001F;"/>
             <key code="126" output="&#x001E;"/>
         </keyMap>
+        <!-- index 1: Shift 키 -->
         <keyMap index="1">
-            <key code="0" output="ㅇ"/>
-            <key code="1" output="ㄴ"/>
-            <key code="2" output="ㅎ"/>
-            <key code="3" output="ㅍ"/>
-            <key code="4" output="0"/>
-            <key code="5" output="ᅤ"/>
-            <key code="6" output="ᆾ"/>
-            <key code="7" output="ᆹ"/>
-            <key code="8" output="ᆿ"/>
-            <key code="9" output="ᆪ"/>
-            <key code="10" output="±"/>
-            <key code="11" output="?"/>
-            <key code="12" output="ᇁ"/>
-            <key code="13" output="ᇀ"/>
-            <key code="14" output="ᆬ"/>
-            <key code="15" output="ᆶ"/>
-            <key code="16" output="5"/>
-            <key code="17" output="ᆳ"/>
-            <key code="18" output="ᆩ"/>
-            <key code="19" output="ᆰ"/>
-            <key code="20" output="ᆽ"/>
-            <key code="21" output="ᆵ"/>
-            <key code="22" output="="/>
-            <key code="23" output="ᆴ"/>
-            <key code="24" output="+"/>
-            <key code="25" output="&#x0027;"/>
-            <key code="26" output="“"/>
-            <key code="27" output=";"/>
-            <key code="28" output="”"/>
-            <key code="29" output="~"/>
-            <key code="30" output="/"/>
-            <key code="31" output="8"/>
-            <key code="32" output="6"/>
-            <key code="33" output="%"/>
-            <key code="34" output="7"/>
-            <key code="35" output="9"/>
-            <key code="36" output="&#x000D;"/>
-            <key code="37" output="3"/>
-            <key code="38" output="1"/>
-            <key code="39" output="·"/>
-            <key code="40" output="2"/>
-            <key code="41" output="4"/>
-            <key code="42" output="￦"/>
-            <key code="43" output=","/>
-            <key code="44" output="!"/>
-            <key code="45" output="-"/>
-            <key code="46" output="&#x0022;"/>
-            <key code="47" output="."/>
-            <key code="48" output="&#x0009;"/>
-            <key code="49" output=" "/>
-            <key code="50" output="※"/>
-            <key code="51" output="&#x0008;"/>
-            <key code="52" output="&#x0003;"/>
-            <key code="53" output="&#x001B;"/>
+            <!-- Shift + 문자 키 -->
+            <key code="0" output="ᅲ"/>         <!-- A: 중성 유 -->
+            <key code="1" output="ᅨ"/>         <!-- S: 중성 예 -->
+            <key code="2" output="ᅴ"/>         <!-- D: 중성 의 -->
+            <key code="3" output="ᅡ"/>         <!-- F: 중성 아 -->
+            <key code="6" output="ᅴ"/>         <!-- Z: 중성 의 -->
+            <key code="7" output="ᅭ"/>         <!-- X: 중성 요 -->
+            <key code="8" output="ᅦ"/>         <!-- C: 중성 에 -->
+            <key code="9" output="ᅩ"/>         <!-- V: 중성 오 -->
+            <key code="12" output="ᅤ"/>        <!-- Q: 중성 얘 -->
+            <key code="13" output="ᅣ"/>        <!-- W: 중성 야 -->
+            <key code="14" output="ᅢ"/>        <!-- E: 중성 애 -->
+            <key code="15" output="ᅥ"/>        <!-- R: 중성 어 -->
+            <!-- Shift + 중성/초성 영역 -->
+            <key code="4" output="["/>         <!-- H: [ -->
+            <key code="5" output="ᅳ"/>         <!-- G: 중성 으 -->
+            <key code="11" output="ᅮ"/>        <!-- B: 중성 우 -->
+            <key code="16" output="{"/>        <!-- Y: { -->
+            <key code="17" output="ᅧ"/>        <!-- T: 중성 여 -->
+            <!-- Shift + 숫자 행 -->
+            <key code="18" output="!"/>        <!-- !: ! -->
+            <key code="19" output="@"/>        <!-- @: @ -->
+            <key code="20" output="#"/>        <!-- #: # -->
+            <key code="21" output="$"/>        <!-- $: $ -->
+            <key code="22" output="^"/>        <!-- ^: ^ -->
+            <key code="23" output="%"/>        <!-- %: % -->
+            <key code="24" output="+"/>        <!-- +: + -->
+            <key code="25" output="("/>        <!-- (: ( -->
+            <key code="26" output="&#x0026;"/> <!-- &: & -->
+            <key code="27" output="_"/>        <!-- _: _ -->
+            <key code="28" output="*"/>        <!-- *: * -->
+            <key code="29" output=")"/>        <!-- ): ) -->
+            <key code="30" output="{"/>        <!-- {: { -->
+            <key code="31" output="&#x0022;"/> <!-- O: " -->
+            <key code="32" output="}"/>        <!-- U: } -->
+            <key code="33" output="}"/>        <!-- }: } -->
+            <key code="34" output="&#x0027;"/> <!-- I: ' -->
+            <key code="35" output=";"/>        <!-- P: ; -->
+            <key code="36" output="&#x000D;"/>  <!-- Return -->
+            <key code="37" output="."/>        <!-- L: . -->
+            <key code="38" output="]"/>        <!-- J: ] -->
+            <key code="39" output=":"/>        <!-- ": : -->
+            <key code="40" output=","/>        <!-- K: , -->
+            <key code="41" output=":"/>        <!-- :: : -->
+            <key code="42" output="|"/>        <!-- |: | -->
+            <key code="43" output="&#x003C;"/> <!-- <: < -->
+            <key code="44" output="?"/>        <!-- ?: ? -->
+            <key code="45" output="("/>        <!-- N: ( -->
+            <key code="46" output=")"/>        <!-- M: ) -->
+            <key code="47" output="&#x003E;"/> <!-- >: > -->
+            <key code="48" output="&#x0009;"/>  <!-- Tab -->
+            <key code="49" output=" "/>        <!-- Space -->
+            <key code="50" output="~"/>        <!-- ~: ~ -->
+            <key code="51" output="&#x0008;"/>  <!-- Delete -->
+            <key code="52" output="&#x0003;"/>  <!-- Enter -->
+            <key code="53" output="&#x001B;"/>  <!-- Escape -->
             <key code="65" output="."/>
             <key code="66" output="*"/>
             <key code="67" output="*"/>
@@ -256,6 +263,7 @@
             <key code="125" output="&#x001F;"/>
             <key code="126" output="&#x001E;"/>
         </keyMap>
+        <!-- index 2: Option/Command -->
         <keyMap index="2">
             <key code="0" output="a"/>
             <key code="1" output="s"/>
@@ -365,6 +373,7 @@
             <key code="125" output="&#x001F;"/>
             <key code="126" output="&#x001E;"/>
         </keyMap>
+        <!-- index 3: Shift+Option -->
         <keyMap index="3">
             <key code="0" output="A"/>
             <key code="1" output="S"/>
@@ -419,7 +428,7 @@
             <key code="50" output="~"/>
             <key code="51" output="&#x0008;"/>
             <key code="52" output="&#x0003;"/>
-            <key code="53" output="‌"/>
+            <key code="53" output="&#x001B;"/>
             <key code="65" output="."/>
             <key code="66" output="*"/>
             <key code="67" output="*"/>
@@ -474,6 +483,7 @@
             <key code="125" output="&#x001F;"/>
             <key code="126" output="&#x001E;"/>
         </keyMap>
+        <!-- index 4: Control -->
         <keyMap index="4">
             <key code="0" output="&#x0001;"/>
             <key code="1" output="&#x0013;"/>
@@ -583,6 +593,7 @@
             <key code="125" output="&#x001F;"/>
             <key code="126" output="&#x001E;"/>
         </keyMap>
+        <!-- index 5: Shift+Command -->
         <keyMap index="5">
             <key code="0" output="A"/>
             <key code="1" output="S"/>
@@ -692,7 +703,6 @@
     </keyMapSet>
     <keyMapSet id="JIS">
         <keyMap index="0" baseMapSet="ANSI" baseIndex="0">
-            <!-- plain -->
             <key code="93" output="¥"/>
             <key code="94" output="_"/>
             <key code="95" output=","/>
@@ -700,7 +710,6 @@
             <key code="104" output=" "/>
         </keyMap>
         <keyMap index="1" baseMapSet="ANSI" baseIndex="1">
-            <!-- shifted -->
             <key code="93" output="|"/>
             <key code="94" output="_"/>
             <key code="95" output=","/>
@@ -708,7 +717,6 @@
             <key code="104" output=" "/>
         </keyMap>
         <keyMap index="2" baseMapSet="ANSI" baseIndex="2">
-            <!-- command or option -->
             <key code="93" output="¥"/>
             <key code="94" output="_"/>
             <key code="95" output=","/>
@@ -716,7 +724,6 @@
             <key code="104" output=" "/>
         </keyMap>
         <keyMap index="3" baseMapSet="ANSI" baseIndex="3">
-            <!-- shift-option -->
             <key code="93" output="\"/>
             <key code="94" output="`"/>
             <key code="95" output=","/>
@@ -724,7 +731,6 @@
             <key code="104" output=" "/>
         </keyMap>
         <keyMap index="4" baseMapSet="ANSI" baseIndex="4">
-            <!-- control -->
             <key code="93" output="|"/>
             <key code="94" output="_"/>
             <key code="95" output=","/>
