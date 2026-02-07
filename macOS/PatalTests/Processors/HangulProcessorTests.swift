@@ -543,6 +543,7 @@ struct NavigationKeyFlushTests {
     /// flushComposition 동작 시뮬레이션
     private mutating func simulateFlush() -> [String] {
         let flushed = processor.flushCommit()
+        processor.clearPreedit()
         processor.clearBuffers()
         return flushed
     }

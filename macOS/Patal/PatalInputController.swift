@@ -46,6 +46,7 @@ extension InputController {
         if keyCode == KeyCode.ESC.rawValue {
             if processor.countComposable() > 0 {
                 flushComposition(client: client)
+                processor.clearPreedit()
                 processor.clearBuffers()
                 return true
             }
