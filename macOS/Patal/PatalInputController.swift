@@ -19,39 +19,101 @@ extension InputController {
         }
     }
 
-    // 화살표, ESC 등 네비게이션 키: 조합을 먼저 커밋하고 시스템에 넘김
-    // inputText 는 화살표 키 이벤트를 받지 못할 수 있으므로 handle 에서 처리
+    // 모든 키 이벤트를 handle 에서 처리 (Apple SDK 권장: 이벤트 수신 방식은 하나만 선택)
     override func handle(_ event: NSEvent!, client sender: Any!) -> Bool {
-        let keyCode = Int(event.keyCode)
         guard event.type == .keyDown else {
-            return super.handle(event, client: sender)
+            return false
         }
+        guard let client = sender as? IMKTextInput else {
+            return false
+        }
+
+        let keyCode = Int(event.keyCode)
+        let flags = Int(event.modifierFlags.intersection(.deviceIndependentFlagsMask).rawValue)
+        let s = event.characters ?? ""
 
         // 화살표 키: flush 후 시스템에 넘김 (커서 이동)
         if (123...126).contains(keyCode) {
             if processor.countComposable() > 0 {
-                if let client = sender as? IMKTextInput {
-                    flushComposition(client: client)
-                    processor.clearBuffers()
-                }
+                flushComposition(client: client)
+                processor.clearBuffers()
             }
             return false
         }
 
         // ESC: flush 후 조합 중이었으면 소비, 아니면 시스템에 넘김
-        // inputText 로 넘어가면 ESC 문자(0x1B)가 삽입되므로 조합 중에는 여기서 소비
+        // ESC 문자(0x1B)가 삽입되지 않도록 조합 중에는 여기서 소비
         if keyCode == KeyCode.ESC.rawValue {
             if processor.countComposable() > 0 {
-                if let client = sender as? IMKTextInput {
-                    flushComposition(client: client)
-                    processor.clearBuffers()
-                }
+                flushComposition(client: client)
+                processor.clearBuffers()
                 return true
             }
             return false
         }
 
-        return super.handle(event, client: sender)
+        // 처리 가능 여부 검증
+        let strategy = processor.getInputStrategy(client: client)
+        if let bundleId = client.bundleIdentifier() {
+            logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
+        }
+
+        if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: flags) {
+            flushComposition(client: client)
+            return false
+        }
+
+        /// 백스페이스 처리 로직
+        if keyCode == KeyCode.BACKSPACE.rawValue {
+            if processor.countComposable() < 1 {
+                return false
+            }
+            if processor.applyBackspace() < 1 {
+                return updateEmptyCommit(client: client)
+            }
+            if let commit = processor.composeCommitToUpdate() {
+                switch strategy {
+                case .directInsert:
+                    return updateReplacementRangeCommit(client: client, with: commit)
+                case .swapMarked:
+                    return updateDefaultRangeCommit(client: client, with: commit)
+                }
+            }
+            return false
+        }
+
+        /// 한글 조합 시작 - 키코드 기반 처리 (라틴 자판 독립적)
+        var baseChar: String = s
+
+        if KeyCodeMapper.isHangulInputKey(keyCode: keyCode) {
+            if let keyCodeChar = processor.processKeyCodeInput(keyCode: keyCode, modifiers: flags) {
+                baseChar = keyCodeChar
+                logger.debug("키코드 기반 입력: \(KeyCodeMapper.debugKeyInfo(keyCode: keyCode, modifiers: flags))")
+            }
+        } else {
+            processor.rawChar = s
+        }
+
+        /// 비 한글 처리 먼저 진행
+        if !processor.verifyCombosable(baseChar) {
+            flushComposition(client: client)
+            return true
+        }
+
+        /// 한글의 핵심 조합이 여기에서 이루어짐
+        let nextStatus = processor.한글조합()
+        logger.debug("상태: \(String(describing: nextStatus))")
+
+        if let commit = processor.완성 {
+            client.insertText(commit, replacementRange: .notFoundRange)
+            processor.clearBuffers()
+        }
+
+        if let commit = processor.composeCommitToUpdate() {
+            return updateSelectedRangeCommit(client: client, with: commit)
+        }
+
+        return false
     }
 
     // 백스페이스 처리
@@ -81,83 +143,6 @@ extension InputController {
         let selection = NSRange(location: 0, length: with.count)
         client.setMarkedText(with, selectionRange: selection, replacementRange: .notFoundRange)
         return true
-    }
-
-    // 글자 조합, 백스페이스, 엔터, ESC 키 처리
-    override func inputText(_ s: String!, key keyCode: Int, modifiers flags: Int, client sender: Any!) -> Bool {
-        guard let client = sender as? IMKTextInput else {
-            // false 를 반환하는 경우는 시스템에서 string 을 처리하고 출력한다
-            return false
-        }
-        // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
-        let strategy = processor.getInputStrategy(client: client)
-        if let bundleId = client.bundleIdentifier() {
-            logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
-        }
-
-        if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: flags) {
-            flushComposition(client: client)
-            return false
-        }
-
-        /// 백스페이스 처리 로직
-        if keyCode == KeyCode.BACKSPACE.rawValue {
-            /// 조합중인 자소가 없으면 처리 중단
-            if processor.countComposable() < 1 {
-                return false
-            }
-            /// 조합 중인 자소에 대해 백스페이스 처리 후 조합할 자소가 없다면 마감
-            if processor.applyBackspace() < 1 {
-                return updateEmptyCommit(client: client)
-            }
-            /// 조합중이면 클라이언트 특성에 따라 첫/가/끝 역순으로 자소를 제거하면서 setMarkedText 를 수행
-            if let commit = processor.composeCommitToUpdate() {
-                switch strategy {
-                case .directInsert:
-                    return updateReplacementRangeCommit(client: client, with: commit)
-                case .swapMarked:
-                    return updateDefaultRangeCommit(client: client, with: commit)
-                }
-            }
-
-            return false
-        }
-
-        /// 한글 조합 시작 - 키코드 기반 처리 (라틴 자판 독립적)
-        var baseChar: String = s
-
-        // 키코드 기반 문자 변환 시도 (기본 동작)
-        if KeyCodeMapper.isHangulInputKey(keyCode: keyCode) {
-            if let keyCodeChar = processor.processKeyCodeInput(keyCode: keyCode, modifiers: flags) {
-                baseChar = keyCodeChar
-                logger.debug("키코드 기반 입력: \(KeyCodeMapper.debugKeyInfo(keyCode: keyCode, modifiers: flags))")
-            }
-        } else {
-            // 키코드 매핑이 없는 경우 기존 문자열 사용 (하위 호환성)
-            processor.rawChar = s
-        }
-
-        /// 비 한글 처리 먼저 진행
-        if !processor.verifyCombosable(baseChar) {
-            flushComposition(client: client)
-            return true
-        }
-
-        /// 한글의 핵심 조합이 여기에서 이루어짐
-        let nextStatus = processor.한글조합()
-        logger.debug("상태: \(String(describing: nextStatus))")
-
-        if let commit = processor.완성 {
-            client.insertText(commit, replacementRange: .notFoundRange)
-            processor.clearBuffers()
-        }
-
-        // updateCommit
-        if let commit = processor.composeCommitToUpdate() {
-            return updateSelectedRangeCommit(client: client, with: commit)
-        }
-
-        return false
     }
 
     // 입력기 메뉴가 열릴 때마다 호출됨
