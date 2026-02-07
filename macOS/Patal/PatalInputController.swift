@@ -19,10 +19,13 @@ extension InputController {
         }
     }
 
-    // 화살표 등 네비게이션 키: 조합을 먼저 커밋하고 시스템에 넘김
+    // 화살표, ESC 등 네비게이션 키: 조합을 먼저 커밋하고 시스템에 넘김
     // inputText 는 화살표 키 이벤트를 받지 못할 수 있으므로 handle 에서 처리
     override func handle(_ event: NSEvent!, client sender: Any!) -> Bool {
-        if event.type == .keyDown && (123...126).contains(Int(event.keyCode)) {
+        let keyCode = Int(event.keyCode)
+        if event.type == .keyDown
+            && ((123...126).contains(keyCode) || keyCode == KeyCode.ESC.rawValue)
+        {
             if processor.countComposable() > 0 {
                 if let client = sender as? IMKTextInput {
                     flushComposition(client: client)

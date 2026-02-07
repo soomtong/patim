@@ -528,3 +528,122 @@ struct CommittedBackspaceTests {
         #expect(processor.keyHistory.isEmpty)
     }
 }
+
+// ESC, 화살표 키 입력 시 flushComposition 시뮬레이션
+// handle(_:client:) 에서 countComposable > 0 이면 flushCommit + clearBuffers 호출
+@Suite("ESC/화살표 flush 테스트", .serialized)
+struct NavigationKeyFlushTests {
+    let layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_P2)
+    var processor: HangulProcessor!
+
+    init() {
+        processor = HangulProcessor(layout: layout)
+    }
+
+    /// flushComposition 동작 시뮬레이션
+    private mutating func simulateFlush() -> [String] {
+        let flushed = processor.flushCommit()
+        processor.clearBuffers()
+        return flushed
+    }
+
+    @Test("초성 조합 중 flush → 초성 커밋")
+    mutating func testFlushDuringChosung() {
+        processor.rawChar = "k"
+        _ = processor.한글조합()
+        #expect(processor.countComposable() > 0)
+
+        let flushed = simulateFlush()
+        #expect(flushed == ["ㄱ"])
+        #expect(processor.countComposable() == 0)
+        #expect(processor.getComposed() == nil)
+    }
+
+    @Test("초성+중성 조합 중 flush → 완성 글자 커밋")
+    mutating func testFlushDuringChosungJungsung() {
+        processor.rawChar = "k"
+        _ = processor.한글조합()
+        processor.rawChar = "f"
+        _ = processor.한글조합()
+        #expect(processor.getComposed() == "가")
+
+        let flushed = simulateFlush()
+        #expect(flushed == ["가"])
+        #expect(processor.countComposable() == 0)
+    }
+
+    @Test("초성+중성+종성 조합 중 flush → 완성 글자 커밋")
+    mutating func testFlushDuringFullSyllable() {
+        // k(ㄱ) + f(ㅏ) + a(ㅇ) = "강"
+        processor.rawChar = "k"
+        _ = processor.한글조합()
+        processor.rawChar = "f"
+        _ = processor.한글조합()
+        processor.rawChar = "a"
+        _ = processor.한글조합()
+        #expect(processor.getComposed() == "강")
+
+        let flushed = simulateFlush()
+        #expect(flushed == ["강"])
+        #expect(processor.countComposable() == 0)
+    }
+
+    @Test("커밋 후 새 글자 조합 중 flush → 새 글자만 커밋")
+    mutating func testFlushAfterCommitDuringNewComposition() {
+        // j(ㅇ) + o(ㅜ) + d(ㅣ) = "위"
+        processor.rawChar = "j"
+        _ = processor.한글조합()
+        processor.rawChar = "o"
+        _ = processor.한글조합()
+        processor.rawChar = "d"
+        _ = processor.한글조합()
+        #expect(processor.getComposed() == "위")
+
+        // l(ㅈ) → "위" 커밋, "ㅈ" 조합 시작
+        processor.rawChar = "l"
+        let state = processor.한글조합()
+        #expect(state == CommitState.committed)
+        #expect(processor.완성 == "위")
+
+        // 커밋된 "위"를 소비
+        processor.clearBuffers()
+
+        // f(ㅏ) → "자" 조합 중
+        processor.rawChar = "f"
+        _ = processor.한글조합()
+        #expect(processor.getComposed() == "자")
+
+        // ESC/화살표 → flush
+        let flushed = simulateFlush()
+        #expect(flushed == ["자"])
+        #expect(processor.countComposable() == 0)
+    }
+
+    @Test("조합 없는 상태에서 flush → 빈 결과")
+    mutating func testFlushWithoutComposition() {
+        #expect(processor.countComposable() == 0)
+
+        let flushed = simulateFlush()
+        #expect(flushed.isEmpty)
+    }
+
+    @Test("flush 후 새로운 조합 가능")
+    mutating func testNewCompositionAfterFlush() {
+        // "가" 조합 후 flush
+        processor.rawChar = "k"
+        _ = processor.한글조합()
+        processor.rawChar = "f"
+        _ = processor.한글조합()
+
+        let flushed = simulateFlush()
+        #expect(flushed == ["가"])
+
+        // flush 후 "나" 새 조합
+        processor.rawChar = "h"
+        _ = processor.한글조합()
+        processor.rawChar = "f"
+        _ = processor.한글조합()
+        #expect(processor.getComposed() == "나")
+        #expect(processor.countComposable() == 2)
+    }
+}
