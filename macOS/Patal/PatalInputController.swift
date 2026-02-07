@@ -10,6 +10,31 @@ import Foundation
 import InputMethodKit
 
 extension InputController {
+    // 조합 중인 글자를 커밋
+    private func flushComposition(client: IMKTextInput) {
+        let flushed = processor.flushCommit()
+        if !flushed.isEmpty {
+            logger.debug("내보낼 것: \(flushed)")
+            flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
+        }
+    }
+
+    // 화살표 등 네비게이션 키: 조합을 먼저 커밋하고 시스템에 넘김
+    // inputText 는 화살표 키 이벤트를 받지 못할 수 있으므로 handle 에서 처리
+    override func handle(_ event: NSEvent!, client sender: Any!) -> Bool {
+        if event.type == .keyDown && (123...126).contains(Int(event.keyCode)) {
+            if processor.countComposable() > 0 {
+                if let client = sender as? IMKTextInput {
+                    flushComposition(client: client)
+                    processor.clearBuffers()
+                }
+            }
+            return false
+        }
+
+        return super.handle(event, client: sender)
+    }
+
     // 백스페이스 처리
     private func updateEmptyCommit(client: IMKTextInput) -> Bool {
         client.setMarkedText("", selectionRange: .defaultRange, replacementRange: .defaultRange)
@@ -52,12 +77,7 @@ extension InputController {
         }
 
         if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: flags) {
-            // 엔터 같은 특수 키코드 처리
-            let flushed = processor.flushCommit()
-            if !flushed.isEmpty {
-                logger.debug("내보낼 것: \(flushed)")
-                flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
-            }
+            flushComposition(client: client)
             return false
         }
 
@@ -100,9 +120,7 @@ extension InputController {
 
         /// 비 한글 처리 먼저 진행
         if !processor.verifyCombosable(baseChar) {
-            let flushed = processor.flushCommit()
-            flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
-
+            flushComposition(client: client)
             return true
         }
 
@@ -135,11 +153,7 @@ extension InputController {
             return
         }
 
-        let flushed = processor.flushCommit()
-        if !flushed.isEmpty {
-            logger.debug("강제로 내보낼 것: \(flushed)")
-            flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
-        }
+        flushComposition(client: client)
     }
 
     // 입력기 메뉴의 옵션이 변경되는 경우 호출됨
