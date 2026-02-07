@@ -23,14 +23,30 @@ extension InputController {
     // inputText 는 화살표 키 이벤트를 받지 못할 수 있으므로 handle 에서 처리
     override func handle(_ event: NSEvent!, client sender: Any!) -> Bool {
         let keyCode = Int(event.keyCode)
-        if event.type == .keyDown
-            && ((123...126).contains(keyCode) || keyCode == KeyCode.ESC.rawValue)
-        {
+        guard event.type == .keyDown else {
+            return super.handle(event, client: sender)
+        }
+
+        // 화살표 키: flush 후 시스템에 넘김 (커서 이동)
+        if (123...126).contains(keyCode) {
             if processor.countComposable() > 0 {
                 if let client = sender as? IMKTextInput {
                     flushComposition(client: client)
                     processor.clearBuffers()
                 }
+            }
+            return false
+        }
+
+        // ESC: flush 후 조합 중이었으면 소비, 아니면 시스템에 넘김
+        // inputText 로 넘어가면 ESC 문자(0x1B)가 삽입되므로 조합 중에는 여기서 소비
+        if keyCode == KeyCode.ESC.rawValue {
+            if processor.countComposable() > 0 {
+                if let client = sender as? IMKTextInput {
+                    flushComposition(client: client)
+                    processor.clearBuffers()
+                }
+                return true
             }
             return false
         }
