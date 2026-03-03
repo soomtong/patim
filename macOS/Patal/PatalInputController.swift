@@ -32,10 +32,16 @@ extension InputController {
         return true
     }
 
-    // 조합 처리
+    // 조합 처리 (InputStrategy 구분 없이 모든 앱에서 공통 호출)
+    // plain String을 전달하면 클라이언트가 자체 스타일(선택 하이라이트)을 적용하므로
+    // NSAttributedString에 밑줄 속성을 명시하여 macOS 내장 입력기와 동일한 밑줄 표시를 사용한다
     private func updateSelectedRangeCommit(client: IMKTextInput, with: String) -> Bool {
-        let selection = NSRange(location: 0, length: with.count)
-        client.setMarkedText(with, selectionRange: selection, replacementRange: .notFoundRange)
+        let attributed = NSAttributedString(string: with, attributes: [
+            .underlineStyle: NSUnderlineStyle.single.rawValue,
+            .markedClauseSegment: 0,
+        ])
+        let cursorAtEnd = NSRange(location: with.count, length: 0)
+        client.setMarkedText(attributed, selectionRange: cursorAtEnd, replacementRange: .notFoundRange)
         return true
     }
 
