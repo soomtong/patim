@@ -65,7 +65,7 @@ security find-identity -v -p codesigning
 sleep 1
 
 # Sign the package
-DEVELOPER_ID_INSTALLER="Apple Development: soomtong@gmail.com (4XWP9KHTYS)"
+DEVELOPER_ID_INSTALLER="E793A579662FDA7FB599D165C19278872969F264"
 
 codesign --deep --force --sign "$DEVELOPER_ID_INSTALLER" "$APP"
 sleep 1
