@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import InputMethodKit
+import IMKSwift
 
 @objc(PatIMKController)
-class InputController: IMKInputController {
+class InputController: IMKInputSessionController {
     internal let logger = CustomLogger(category: "InputController")
 
     // 클라이언트 하나 당 하나의 입력기 레이아웃 인스턴스가 사용됨
@@ -24,10 +24,8 @@ class InputController: IMKInputController {
     private(set) var isInstanceSynced: Bool = false
 
     // 클래스 생성이 하나의 인스턴스에서 이루어지기 때문에 여러개의 Patal 입력기를 동시에 사용할 수 없음.
-    override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
-        guard let inputMethodID = getCurrentInputMethodID() else {
-            return nil
-        }
+    override init(server: IMKServer, delegate: Any?, client inputClient: any IMKTextInput) {
+        let inputMethodID = getCurrentInputMethodID() ?? "InputmethodHan3P3"
 
         layoutName = getInputLayoutID(id: inputMethodID)
         logger.debug("팥알 입력기 자판: \(layoutName)")
@@ -91,7 +89,7 @@ class InputController: IMKInputController {
     }
 
     // 입력기가 전환될 때마다 호출됨
-    override open func activateServer(_ sender: Any!) {
+    override func activateServer(_ sender: any IMKTextInput) {
         super.activateServer(sender)
         isControllerActivated = true
 
@@ -137,7 +135,7 @@ class InputController: IMKInputController {
     }
 
     // 입력기가 비활성화 되면 호출됨
-    override open func deactivateServer(_ sender: Any!) {
+    override func deactivateServer(_ sender: any IMKTextInput) {
         super.deactivateServer(sender)
         isControllerActivated = false
         logger.debug("입력기 서버 중단: \(layoutName)")

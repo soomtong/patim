@@ -43,7 +43,7 @@ enum KeyCode: Int {
     case ESC = 53
 }
 
-enum ModifierCode: Int {
+enum ModifierCode: UInt {
     case NONE = 0
     case SHIFT = 131072
     case ALT = 524288

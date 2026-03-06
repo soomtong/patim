@@ -7,7 +7,7 @@
 
 import Carbon
 import Cocoa
-import InputMethodKit
+import IMKSwift
 
 extension Notification.Name {
     static let inputSourceChanged = Notification.Name("InputSourceChanged")

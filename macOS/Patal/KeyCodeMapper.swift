@@ -134,7 +134,7 @@ class KeyCodeMapper {
     ///   - keyCode: 물리적 키코드
     ///   - modifiers: 수정자 키 플래그
     /// - Returns: 한글 입력에 사용할 문자열 (라틴 자판 독립적)
-    static func mapKeyCodeToHangulChar(keyCode: Int, modifiers: Int) -> String? {
+    static func mapKeyCodeToHangulChar(keyCode: Int, modifiers: UInt) -> String? {
         let isShiftPressed = (modifiers & ModifierCode.SHIFT.rawValue) != 0
 
         if isShiftPressed {
@@ -156,7 +156,7 @@ class KeyCodeMapper {
     ///   - keyCode: 키코드
     ///   - modifiers: 수정자 플래그
     /// - Returns: 디버그 정보 문자열
-    static func debugKeyInfo(keyCode: Int, modifiers: Int) -> String {
+    static func debugKeyInfo(keyCode: Int, modifiers: UInt) -> String {
         let char = mapKeyCodeToHangulChar(keyCode: keyCode, modifiers: modifiers) ?? "unknown"
         let isShift = (modifiers & ModifierCode.SHIFT.rawValue) != 0
         return "keyCode: \(keyCode), char: '\(char)', shift: \(isShift)"
