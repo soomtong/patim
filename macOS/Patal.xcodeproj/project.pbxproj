@@ -25,6 +25,7 @@
 		46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7E26EC5CFA005EC052 /* han3-P2.png */; };
 		46E67F8226EC5CFA005EC052 /* icon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7F26EC5CFA005EC052 /* icon.tiff */; };
 		E224DEE42D2024B900808927 /* OptionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E224DEE32D2024B900808927 /* OptionMenu.swift */; };
+		E2INPUTSESSION00000001 /* InputControllerContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2INPUTSESSION00000002 /* InputControllerContext.swift */; };
 		E24856192D20F0A300AC78AF /* PatalInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24856182D20F0A300AC78AF /* PatalInputController.swift */; };
 		E258567D2D18134A006FD5E7 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = E258567C2D18134A006FD5E7 /* Extention.swift */; };
 		E25E6A492F2D87A600093A1F /* PerformanceTracer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25E6A482F2D87A600093A1F /* PerformanceTracer.swift */; };
@@ -80,6 +81,7 @@
 		46E67F7E26EC5CFA005EC052 /* han3-P2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-P2.png"; sourceTree = "<group>"; };
 		46E67F7F26EC5CFA005EC052 /* icon.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = icon.tiff; sourceTree = "<group>"; };
 		E224DEE32D2024B900808927 /* OptionMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionMenu.swift; sourceTree = "<group>"; };
+		E2INPUTSESSION00000002 /* InputControllerContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputControllerContext.swift; sourceTree = "<group>"; };
 		E24856182D20F0A300AC78AF /* PatalInputController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatalInputController.swift; sourceTree = "<group>"; };
 		E258567C2D18134A006FD5E7 /* Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extention.swift; sourceTree = "<group>"; };
 		E25E6A482F2D87A600093A1F /* PerformanceTracer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceTracer.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 				469C537E2B91E1C200446511 /* Logger.swift */,
 				46E67F5026EC5505005EC052 /* AppDelegate.swift */,
 				134356FF27DDFF850074E691 /* InputController.swift */,
+				E2INPUTSESSION00000002 /* InputControllerContext.swift */,
 				E24856182D20F0A300AC78AF /* PatalInputController.swift */,
 				E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */,
 				E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */,
@@ -372,6 +375,7 @@
 				E299CA4F2D008F2F00E2FD0D /* HangulComposer.swift in Sources */,
 				E224DEE42D2024B900808927 /* OptionMenu.swift in Sources */,
 				1343570027DDFF850074E691 /* InputController.swift in Sources */,
+				E2INPUTSESSION00000001 /* InputControllerContext.swift in Sources */,
 				E2B1644B2CDFAFD4003FCE85 /* HangulCode.swift in Sources */,
 				E25E6A492F2D87A600093A1F /* PerformanceTracer.swift in Sources */,
 				E258567D2D18134A006FD5E7 /* Extention.swift in Sources */,

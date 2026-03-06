@@ -10,40 +10,35 @@ import IMKSwift
 
 @objc(PatIMKController)
 class InputController: IMKInputSessionController {
-    internal let logger = CustomLogger(category: "InputController")
+    // 컨텍스트 캐시를 통해 비즈니스 로직 객체를 클라이언트별로 재사용
+    weak var context: InputControllerContext?
 
-    // 클라이언트 하나 당 하나의 입력기 레이아웃 인스턴스가 사용됨
-    internal var layoutName: LayoutName
-    internal var optionMenu: OptionMenu
-
-    var processor: HangulProcessor
+    // 컨텍스트 프로퍼티에 대한 편의 접근자
+    internal var logger: CustomLogger { context!.logger }
+    internal var layoutName: LayoutName {
+        get { context!.layoutName }
+        set { context!.layoutName = newValue }
+    }
+    internal var optionMenu: OptionMenu {
+        get { context!.optionMenu }
+        set { context!.optionMenu = newValue }
+    }
+    var processor: HangulProcessor {
+        get { context!.processor }
+        set { context!.processor = newValue }
+    }
 
     // 현재 컨트롤러가 활성 상태인지 추적
     private(set) var isControllerActivated: Bool = false
     // 동기화 중복 방지 플래그
     private(set) var isInstanceSynced: Bool = false
 
-    // 클래스 생성이 하나의 인스턴스에서 이루어지기 때문에 여러개의 Patal 입력기를 동시에 사용할 수 없음.
     override init(server: IMKServer, delegate: Any?, client inputClient: any IMKTextInput) {
-        let inputMethodID = getCurrentInputMethodID() ?? "InputmethodHan3P3"
-
-        layoutName = getInputLayoutID(id: inputMethodID)
-        logger.debug("팥알 입력기 자판: \(layoutName)")
-
-        let traitKey = buildTraitKey(name: layoutName)
-        let hangulLayout = createLayoutInstance(name: layoutName)
-        processor = HangulProcessor(layout: hangulLayout)
-        logger.debug("팥알 입력기 처리기: \(processor)")
-
-        if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
-            processor.hangulLayout.traits = loadedTraits
-        } else {
-            processor.hangulLayout.traits = processor.hangulLayout.availableTraits
-        }
-
-        optionMenu = OptionMenu(layout: processor.hangulLayout)
-
         super.init(server: server, delegate: delegate, client: inputClient)
+
+        context = InputControllerContext.context(for: inputClient, controller: self)
+        logger.debug("팥알 입력기 자판: \(layoutName)")
+        logger.debug("팥알 입력기 처리기: \(processor)")
 
         if let inputMethodVersion = getCurrentProjectVersion() {
             logger.debug("팥알 입력기 버전: \(inputMethodVersion)")
@@ -104,34 +99,7 @@ class InputController: IMKInputSessionController {
         let endTotal = PerformanceTracerCompat.measureAsync("updateLayout.Total")
         defer { endTotal() }
 
-        // 1. 기존 조합 상태 flush (결과는 사용하지 않음 - 이미 deactivate 시 처리됨)
-        PerformanceTracerCompat.measure("updateLayout.flushCommit") {
-            let _ = processor.flushCommit()
-        }
-
-        // 2. 새 레이아웃으로 교체
-        layoutName = newLayout
-        let hangulLayout = PerformanceTracerCompat.measure("updateLayout.createLayoutInstance") {
-            createLayoutInstance(name: layoutName)
-        }
-        processor = PerformanceTracerCompat.measure("updateLayout.HangulProcessor.init") {
-            HangulProcessor(layout: hangulLayout)
-        }
-
-        // 3. 저장된 특성 로드
-        let traitKey = buildTraitKey(name: layoutName)
-        PerformanceTracerCompat.measure("updateLayout.loadActiveOptions") {
-            if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
-                processor.hangulLayout.traits = loadedTraits
-            } else {
-                processor.hangulLayout.traits = processor.hangulLayout.availableTraits
-            }
-        }
-
-        // 4. 메뉴 업데이트
-        optionMenu = PerformanceTracerCompat.measure("updateLayout.OptionMenu.init") {
-            OptionMenu(layout: processor.hangulLayout)
-        }
+        context?.updateLayout(to: newLayout)
     }
 
     // 입력기가 비활성화 되면 호출됨
