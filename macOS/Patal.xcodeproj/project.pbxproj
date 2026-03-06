@@ -234,6 +234,9 @@
 				E258567E2D182D6C006FD5E7 /* Layouts */,
 			);
 			name = Patal;
+			packageProductDependencies = (
+				E2IMKSWIFT000000000002 /* IMKSwift */,
+			);
 			productName = Patal;
 			productReference = 46E67F4D26EC5505005EC052 /* Patal.app */;
 			productType = "com.apple.product-type.application";
@@ -291,6 +294,9 @@
 			);
 			mainGroup = 46E67F4426EC5505005EC052;
 			productRefGroup = 46E67F4E26EC5505005EC052 /* Products */;
+			packageReferences = (
+				E2IMKSWIFT000000000001 /* XCRemoteSwiftPackageReference "IMKSwift" */,
+			);
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -691,6 +697,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E2IMKSWIFT000000000001 /* XCRemoteSwiftPackageReference "IMKSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vChewing/IMKSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 26.03.06;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E2IMKSWIFT000000000002 /* IMKSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E2IMKSWIFT000000000001 /* XCRemoteSwiftPackageReference "IMKSwift" */;
+			productName = IMKSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 46E67F4526EC5505005EC052 /* Project object */;
 }

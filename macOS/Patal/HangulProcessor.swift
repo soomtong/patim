@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import InputMethodKit
+import IMKSwift
 
 #if DEBUG
     @inline(__always)
@@ -196,7 +196,7 @@ class HangulProcessor {
         stateMachine.setBuffer(savedBuffer)
     }
 
-    let managableModifiers = [ModifierCode.NONE.rawValue, ModifierCode.SHIFT.rawValue]
+    let managableModifiers: [UInt] = [ModifierCode.NONE.rawValue, ModifierCode.SHIFT.rawValue]
 
     init(layout: HangulAutomata) {
         layoutName = String(describing: type(of: layout))
@@ -225,7 +225,7 @@ class HangulProcessor {
     /// - setMarkedText의 replacementRange 처리 방식에 따라 directInsert/swapMarked 구분
     /// - 측정된 앱(knownApps)은 validAttributesForMarkedText 호출 없이 바로 결정 (성능 최적화)
     @inline(__always)
-    func getInputStrategy(client: IMKTextInput) -> InputStrategy {
+    func getInputStrategy(client: any IMKTextInput) -> InputStrategy {
         let bundleId = client.bundleIdentifier() ?? "unknown"
 
         // 측정된 앱은 빠른 경로 (validAttributesForMarkedText 호출 생략)
@@ -247,7 +247,7 @@ class HangulProcessor {
     /// - 백스페이스 + 글자단위 삭제 특성이 활성화 된 경우
     /// - command, option 키와 함께 사용되는 경우
     /// - 한글 레이아웃 자판 맵에 등록되지 않은 키코드 인 경우
-    func verifyProcessable(_ s: String, keyCode: Int = 0, modifierCode: Int = 0) -> Bool {
+    func verifyProcessable(_ s: String, keyCode: Int = 0, modifierCode: UInt = 0) -> Bool {
         logger.debug(" => \(s), \(keyCode), \(modifierCode)")
 
         if !managableModifiers.contains(modifierCode) { return false }
@@ -285,7 +285,7 @@ class HangulProcessor {
     ///   - keyCode: 물리적 키코드
     ///   - modifiers: 수정자 키 플래그
     /// - Returns: 변환된 문자 (라틴 자판 독립적)
-    func processKeyCodeInput(keyCode: Int, modifiers: Int) -> String? {
+    func processKeyCodeInput(keyCode: Int, modifiers: UInt) -> String? {
         if let hangulChar = KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: keyCode, modifiers: modifiers) {
             rawChar = hangulChar
             logger.debug(
