@@ -50,6 +50,16 @@ final class InputControllerContext {
         self.controller = controller
     }
 
+    func reloadTraits() {
+        let traitKey = buildTraitKey(name: layoutName)
+        if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
+            if processor.hangulLayout.traits != loadedTraits {
+                processor.hangulLayout.traits = loadedTraits
+                optionMenu = OptionMenu(layout: processor.hangulLayout)
+            }
+        }
+    }
+
     func updateLayout(to newLayout: LayoutName) {
         let _ = processor.flushCommit()
 

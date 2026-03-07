@@ -91,6 +91,9 @@ class InputController: IMKInputSessionController {
         // 자판 변경 감지 및 업데이트
         syncLayoutIfNeeded()
 
+        // 다른 클라이언트에서 변경된 traits를 동기화
+        context?.reloadTraits()
+
         logger.debug("입력기 서버 시작: \(layoutName)")
     }
 
