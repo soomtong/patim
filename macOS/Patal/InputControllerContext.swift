@@ -40,7 +40,7 @@ final class InputControllerContext {
         if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
             processor.hangulLayout.traits = loadedTraits
         } else {
-            processor.hangulLayout.traits = processor.hangulLayout.availableTraits
+            processor.hangulLayout.traits = processor.hangulLayout.availableTraits.subtracting([.글자단위삭제])
         }
 
         self.optionMenu = OptionMenu(layout: processor.hangulLayout)
@@ -71,7 +71,7 @@ final class InputControllerContext {
         if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
             processor.hangulLayout.traits = loadedTraits
         } else {
-            processor.hangulLayout.traits = processor.hangulLayout.availableTraits
+            processor.hangulLayout.traits = processor.hangulLayout.availableTraits.subtracting([.글자단위삭제])
         }
 
         optionMenu = OptionMenu(layout: processor.hangulLayout)
