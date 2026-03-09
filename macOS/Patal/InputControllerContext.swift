@@ -7,21 +7,6 @@ import Foundation
 import IMKSwift
 
 final class InputControllerContext {
-    nonisolated(unsafe) private static let cache = NSMapTable<NSObject, InputControllerContext>.weakToStrongObjects()
-
-    static func context(for client: any IMKTextInput, controller: InputController) -> InputControllerContext {
-        let clientObj = client as! NSObject
-        if let cached = cache.object(forKey: clientObj) {
-            cached.reassign(controller: controller)
-            return cached
-        }
-        let inputMethodID = getCurrentInputMethodID() ?? "InputmethodHan3P3"
-        let layoutName = getInputLayoutID(id: inputMethodID)
-        let newContext = InputControllerContext(controller: controller, layoutName: layoutName)
-        cache.setObject(newContext, forKey: clientObj)
-        return newContext
-    }
-
     weak var controller: InputController?
 
     let logger = CustomLogger(category: "InputController")
@@ -44,10 +29,6 @@ final class InputControllerContext {
         }
 
         self.optionMenu = OptionMenu(layout: processor.hangulLayout)
-    }
-
-    func reassign(controller: InputController) {
-        self.controller = controller
     }
 
     func reloadTraits() {

@@ -10,22 +10,22 @@ import IMKSwift
 
 @objc(PatIMKController)
 class InputController: IMKInputSessionController {
-    // 컨텍스트 캐시를 통해 비즈니스 로직 객체를 클라이언트별로 재사용
-    weak var context: InputControllerContext?
+    // 비즈니스 로직 객체를 클라이언트별로 관리
+    var context: InputControllerContext!
 
     // 컨텍스트 프로퍼티에 대한 편의 접근자
-    internal var logger: CustomLogger { context!.logger }
+    internal var logger: CustomLogger { context.logger }
     internal var layoutName: LayoutName {
-        get { context!.layoutName }
-        set { context!.layoutName = newValue }
+        get { context.layoutName }
+        set { context.layoutName = newValue }
     }
     internal var optionMenu: OptionMenu {
-        get { context!.optionMenu }
-        set { context!.optionMenu = newValue }
+        get { context.optionMenu }
+        set { context.optionMenu = newValue }
     }
     var processor: HangulProcessor {
-        get { context!.processor }
-        set { context!.processor = newValue }
+        get { context.processor }
+        set { context.processor = newValue }
     }
 
     // 현재 컨트롤러가 활성 상태인지 추적
@@ -36,7 +36,9 @@ class InputController: IMKInputSessionController {
     override init(server: IMKServer, delegate: Any?, client inputClient: any IMKTextInput) {
         super.init(server: server, delegate: delegate, client: inputClient)
 
-        context = InputControllerContext.context(for: inputClient, controller: self)
+        let inputMethodID = getCurrentInputMethodID() ?? "InputmethodHan3P3"
+        let currentLayout = getInputLayoutID(id: inputMethodID)
+        context = InputControllerContext(controller: self, layoutName: currentLayout)
         logger.debug("팥알 입력기 자판: \(layoutName)")
         logger.debug("팥알 입력기 처리기: \(processor)")
 
@@ -61,13 +63,12 @@ class InputController: IMKInputSessionController {
         let endTotal = PerformanceTracerCompat.measureAsync("InputSourceChanged.Total")
         defer { endTotal() }
 
-        guard isControllerActivated, context != nil else { return }
+        guard isControllerActivated else { return }
         syncLayoutIfNeeded()
     }
 
     private func syncLayoutIfNeeded() {
         guard !isInstanceSynced else { return }
-        guard let context else { return }
         isInstanceSynced = true
         defer { isInstanceSynced = false }
 
@@ -78,9 +79,9 @@ class InputController: IMKInputSessionController {
         guard let id = inputMethodID else { return }
         let currentLayout = getInputLayoutID(id: id)
 
-        if currentLayout != context.layoutName {
-            context.logger.debug("입력 소스 변경 동기화: \(context.layoutName) → \(currentLayout)")
-            context.updateLayout(to: currentLayout)
+        if currentLayout != layoutName {
+            logger.debug("입력 소스 변경 동기화: \(layoutName) → \(currentLayout)")
+            updateLayout(to: currentLayout)
         }
     }
 
@@ -89,16 +90,11 @@ class InputController: IMKInputSessionController {
         super.activateServer(sender)
         isControllerActivated = true
 
-        // weak 참조가 해제된 경우 컨텍스트 재연결
-        if context == nil {
-            context = InputControllerContext.context(for: sender, controller: self)
-        }
-
         // 자판 변경 감지 및 업데이트
         syncLayoutIfNeeded()
 
         // 다른 클라이언트에서 변경된 traits를 동기화
-        context?.reloadTraits()
+        context.reloadTraits()
 
         logger.debug("입력기 서버 시작: \(layoutName)")
     }
@@ -108,13 +104,13 @@ class InputController: IMKInputSessionController {
         let endTotal = PerformanceTracerCompat.measureAsync("updateLayout.Total")
         defer { endTotal() }
 
-        context?.updateLayout(to: newLayout)
+        context.updateLayout(to: newLayout)
     }
 
     // 입력기가 비활성화 되면 호출됨
     override func deactivateServer(_ sender: any IMKTextInput) {
         super.deactivateServer(sender)
         isControllerActivated = false
-        context?.logger.debug("입력기 서버 중단: \(context?.layoutName.debugDescription ?? "unknown")")
+        logger.debug("입력기 서버 중단: \(layoutName)")
     }
 }
