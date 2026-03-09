@@ -7,16 +7,16 @@
 
 import AppKit
 import Foundation
-import IMKSwift
+import InputMethodKit
 
 extension InputController {
     // 백스페이스 처리
-    private func updateEmptyCommit(client: any IMKTextInput) -> Bool {
+    private func updateEmptyCommit(client: IMKTextInput) -> Bool {
         client.setMarkedText("", selectionRange: .defaultRange, replacementRange: .defaultRange)
         return true
     }
 
-    private func updateReplacementRangeCommit(client: any IMKTextInput, with: String) -> Bool {
+    private func updateReplacementRangeCommit(client: IMKTextInput, with: String) -> Bool {
         let selectedRange = client.selectedRange()
         let replacementRange = NSRange(
             location: max(0, selectedRange.location - with.count),
@@ -26,7 +26,7 @@ extension InputController {
         return true
     }
 
-    private func updateDefaultRangeCommit(client: any IMKTextInput, with: String) -> Bool {
+    private func updateDefaultRangeCommit(client: IMKTextInput, with: String) -> Bool {
         let string = NSAttributedString(string: with, attributes: [.backgroundColor: NSColor.clear])
         client.setMarkedText(string, selectionRange: .defaultRange, replacementRange: .defaultRange)
         return true
@@ -35,7 +35,7 @@ extension InputController {
     // 조합 처리 (InputStrategy 구분 없이 모든 앱에서 공통 호출)
     // plain String을 전달하면 클라이언트가 자체 스타일(선택 하이라이트)을 적용하므로
     // NSAttributedString에 밑줄 속성을 명시하여 macOS 내장 입력기와 동일한 밑줄 표시를 사용한다
-    private func updateSelectedRangeCommit(client: any IMKTextInput, with: String) -> Bool {
+    private func updateSelectedRangeCommit(client: IMKTextInput, with: String) -> Bool {
         let attributed = NSAttributedString(string: with, attributes: [
             .underlineStyle: NSUnderlineStyle.single.rawValue,
             .markedClauseSegment: 0,
@@ -46,8 +46,11 @@ extension InputController {
     }
 
     // 글자 조합, 백스페이스, 엔터, ESC 키 처리
-    override func inputText(_ s: String, key keyCode: Int, modifiers flags: UInt, client sender: any IMKTextInput) -> Bool {
-        let client = sender
+    override func inputText(_ s: String!, key keyCode: Int, modifiers flags: Int, client sender: Any!) -> Bool {
+        guard let client = sender as? IMKTextInput else {
+            // false 를 반환하는 경우는 시스템에서 string 을 처리하고 출력한다
+            return false
+        }
         // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
         let strategy = processor.getInputStrategy(client: client)
         if let bundleId = client.bundleIdentifier() {
@@ -127,14 +130,16 @@ extension InputController {
     }
 
     // 입력기 메뉴가 열릴 때마다 호출됨
-    override func menu() -> NSMenu? {
+    override open func menu() -> NSMenu! {
         return optionMenu.menu
     }
 
     // 자판 전환, 마우스 클릭 등으로 조합을 끝낼 경우
-    override func commitComposition(_ sender: any IMKTextInput) {
+    override func commitComposition(_ sender: Any!) {
         logger.debug("자판 전환, 마우스 클릭 등으로 조합을 끝낼 경우")
-        let client = sender
+        guard let client = sender as? IMKTextInput else {
+            return
+        }
 
         let flushed = processor.flushCommit()
         if !flushed.isEmpty {

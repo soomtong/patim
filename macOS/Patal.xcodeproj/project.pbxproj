@@ -25,7 +25,6 @@
 		46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7E26EC5CFA005EC052 /* han3-P2.png */; };
 		46E67F8226EC5CFA005EC052 /* icon.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 46E67F7F26EC5CFA005EC052 /* icon.tiff */; };
 		E224DEE42D2024B900808927 /* OptionMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E224DEE32D2024B900808927 /* OptionMenu.swift */; };
-		E246FF642F5B11B6005B5828 /* IMKSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E2IMKSWIFT000000000002 /* IMKSwift */; };
 		E24856192D20F0A300AC78AF /* PatalInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24856182D20F0A300AC78AF /* PatalInputController.swift */; };
 		E258567D2D18134A006FD5E7 /* Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = E258567C2D18134A006FD5E7 /* Extention.swift */; };
 		E25E6A492F2D87A600093A1F /* PerformanceTracer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25E6A482F2D87A600093A1F /* PerformanceTracer.swift */; };
@@ -41,7 +40,6 @@
 		E2DEB0722F24A82D0078431E /* han3-p.png in Resources */ = {isa = PBXBuildFile; fileRef = E2DEB0702F24A82D0078431E /* han3-p.png */; };
 		E2DEB0732F24A82D0078431E /* han3-p@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2DEB0712F24A82D0078431E /* han3-p@2x.png */; };
 		E2FE77C02E65C28E00D5B355 /* KeyCodeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE77BF2E65C28E00D5B355 /* KeyCodeMapper.swift */; };
-		E2INPUTSESSION00000001 /* InputControllerContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2INPUTSESSION00000002 /* InputControllerContext.swift */; };
 		E2KEYLAYOUT0000000000001 /* Han3P3.keylayout in Resources */ = {isa = PBXBuildFile; fileRef = E2KEYLAYOUTREF00000001 /* Han3P3.keylayout */; };
 		E2KEYLAYOUT0000000000002 /* Han3ShinP2.keylayout in Resources */ = {isa = PBXBuildFile; fileRef = E2KEYLAYOUTREF00000002 /* Han3ShinP2.keylayout */; };
 		E2KEYLAYOUT0000000000003 /* Han3ShinPCS.keylayout in Resources */ = {isa = PBXBuildFile; fileRef = E2KEYLAYOUTREF00000003 /* Han3ShinPCS.keylayout */; };
@@ -98,7 +96,6 @@
 		E2DEB0702F24A82D0078431E /* han3-p.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-p.png"; sourceTree = "<group>"; };
 		E2DEB0712F24A82D0078431E /* han3-p@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-p@2x.png"; sourceTree = "<group>"; };
 		E2FE77BF2E65C28E00D5B355 /* KeyCodeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCodeMapper.swift; sourceTree = "<group>"; };
-		E2INPUTSESSION00000002 /* InputControllerContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputControllerContext.swift; sourceTree = "<group>"; };
 		E2KEYLAYOUTREF00000001 /* Han3P3.keylayout */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Han3P3.keylayout; sourceTree = "<group>"; };
 		E2KEYLAYOUTREF00000002 /* Han3ShinP2.keylayout */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Han3ShinP2.keylayout; sourceTree = "<group>"; };
 		E2KEYLAYOUTREF00000003 /* Han3ShinPCS.keylayout */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Han3ShinPCS.keylayout; sourceTree = "<group>"; };
@@ -122,7 +119,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E246FF642F5B11B6005B5828 /* IMKSwift in Frameworks */,
 				134356FE27DDFD030074E691 /* Cocoa.framework in Frameworks */,
 				134356FC27DDFCF20074E691 /* InputMethodKit.framework in Frameworks */,
 			);
@@ -174,7 +170,6 @@
 				469C537E2B91E1C200446511 /* Logger.swift */,
 				46E67F5026EC5505005EC052 /* AppDelegate.swift */,
 				134356FF27DDFF850074E691 /* InputController.swift */,
-				E2INPUTSESSION00000002 /* InputControllerContext.swift */,
 				E24856182D20F0A300AC78AF /* PatalInputController.swift */,
 				E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */,
 				E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */,
@@ -248,7 +243,6 @@
 			);
 			name = Patal;
 			packageProductDependencies = (
-				E2IMKSWIFT000000000002 /* IMKSwift */,
 			);
 			productName = Patal;
 			productReference = 46E67F4D26EC5505005EC052 /* Patal.app */;
@@ -306,7 +300,6 @@
 			);
 			mainGroup = 46E67F4426EC5505005EC052;
 			packageReferences = (
-				E2IMKSWIFT000000000001 /* XCRemoteSwiftPackageReference "IMKSwift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 46E67F4E26EC5505005EC052 /* Products */;
@@ -385,7 +378,6 @@
 				E299CA4F2D008F2F00E2FD0D /* HangulComposer.swift in Sources */,
 				E224DEE42D2024B900808927 /* OptionMenu.swift in Sources */,
 				1343570027DDFF850074E691 /* InputController.swift in Sources */,
-				E2INPUTSESSION00000001 /* InputControllerContext.swift in Sources */,
 				E2B1644B2CDFAFD4003FCE85 /* HangulCode.swift in Sources */,
 				E25E6A492F2D87A600093A1F /* PerformanceTracer.swift in Sources */,
 				E258567D2D18134A006FD5E7 /* Extention.swift in Sources */,
@@ -712,24 +704,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		E2IMKSWIFT000000000001 /* XCRemoteSwiftPackageReference "IMKSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/vChewing/IMKSwift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 26.03.06;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		E2IMKSWIFT000000000002 /* IMKSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E2IMKSWIFT000000000001 /* XCRemoteSwiftPackageReference "IMKSwift" */;
-			productName = IMKSwift;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 46E67F4526EC5505005EC052 /* Project object */;
 }
