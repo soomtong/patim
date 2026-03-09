@@ -54,6 +54,35 @@ extension InputController {
             logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
         }
 
+        /// 빠른마침표: 스페이스바를 빠르게 2번 누르면 마침표로 변환
+        if keyCode == KeyCode.SPACE.rawValue && flags == ModifierCode.NONE.rawValue
+            && processor.hangulLayout.can빠른마침표
+        {
+            let flushed = processor.flushCommit()
+            if !flushed.isEmpty {
+                logger.debug("내보낼 것: \(flushed)")
+                flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
+            }
+
+            if processor.checkDoubleSpace() {
+                logger.debug("빠른마침표: 더블스페이스 → 마침표")
+                // 이전 스페이스를 지우고 마침표와 스페이스를 삽입
+                let selectedRange = client.selectedRange()
+                let replaceRange = NSRange(
+                    location: max(0, selectedRange.location - 1), length: 1)
+                client.insertText(". ", replacementRange: replaceRange)
+                return true
+            }
+
+            // 단일 스페이스: OS에게 처리를 넘김
+            return false
+        }
+
+        // 스페이스가 아닌 키 입력 시 스페이스 타이머 초기화
+        if keyCode != KeyCode.SPACE.rawValue {
+            processor.resetSpaceTimer()
+        }
+
         if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: flags) {
             // 엔터 같은 특수 키코드 처리
             let flushed = processor.flushCommit()

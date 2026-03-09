@@ -33,6 +33,7 @@ enum LayoutTrait: String {
     case 수정기호
     case 두줄숫자
     case 글자단위삭제
+    case 빠른마침표
 }
 
 enum KeyCode: Int {
@@ -112,6 +113,11 @@ extension HangulAutomata {
     @inlinable
     var can글자단위삭제: Bool {
         return traits.contains(LayoutTrait.글자단위삭제)
+    }
+
+    @inlinable
+    var can빠른마침표: Bool {
+        return traits.contains(LayoutTrait.빠른마침표)
     }
 
     @inlinable
