@@ -196,6 +196,11 @@ class HangulProcessor {
         stateMachine.setBuffer(savedBuffer)
     }
 
+    /// 빠른마침표: 마지막 스페이스 입력 시각
+    private var lastSpaceTime: UInt64 = 0
+    /// 빠른마침표: 더블스페이스 판정 시간 간격 (나노초, 500ms)
+    private let doubleSpaceThreshold: UInt64 = 500_000_000
+
     let managableModifiers: [UInt] = [ModifierCode.NONE.rawValue, ModifierCode.SHIFT.rawValue]
 
     init(layout: HangulAutomata) {
@@ -379,6 +384,27 @@ class HangulProcessor {
 
     func resetComposing(_ s: String) {
         stateMachine.resetComposingKeys(s)
+    }
+
+    /// 빠른마침표: 스페이스 입력 시각을 기록하고 더블스페이스 여부를 반환
+    func checkDoubleSpace() -> Bool {
+        let now = mach_absolute_time()
+        let elapsed = machToNanoseconds(now - lastSpaceTime)
+        let isDouble = lastSpaceTime > 0 && elapsed < doubleSpaceThreshold
+        lastSpaceTime = isDouble ? 0 : now
+        return isDouble
+    }
+
+    /// 빠른마침표: 스페이스 타이머를 초기화 (비스페이스 입력 시)
+    func resetSpaceTimer() {
+        lastSpaceTime = 0
+    }
+
+    /// mach_absolute_time 단위를 나노초로 변환
+    private func machToNanoseconds(_ ticks: UInt64) -> UInt64 {
+        var timebaseInfo = mach_timebase_info_data_t()
+        mach_timebase_info(&timebaseInfo)
+        return ticks * UInt64(timebaseInfo.numer) / UInt64(timebaseInfo.denom)
     }
 
     func clearPreedit() {
