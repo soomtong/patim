@@ -66,11 +66,23 @@ extension InputController {
 
             if processor.checkDoubleSpace() {
                 logger.debug("빠른마침표: 더블스페이스 → 마침표")
-                // 이전 스페이스를 지우고 마침표와 스페이스를 삽입
+                // 이전 스페이스를 지우고 마침표를 삽입
                 let selectedRange = client.selectedRange()
                 let replaceRange = NSRange(
                     location: max(0, selectedRange.location - 1), length: 1)
-                client.insertText(". ", replacementRange: replaceRange)
+
+                switch strategy {
+                case .directInsert:
+                    client.insertText(".", replacementRange: replaceRange)
+                case .swapMarked:
+                    // swapMarked 앱(iTerm2, Ghostty 등)에서는 insertText의
+                    // replacementRange가 무시될 수 있음
+                    // setMarkedText로 이전 스페이스를 마킹한 후 insertText로 교체
+                    client.setMarkedText(
+                        "", selectionRange: .defaultRange,
+                        replacementRange: replaceRange)
+                    client.insertText(".", replacementRange: .notFoundRange)
+                }
                 return true
             }
 
