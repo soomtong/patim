@@ -59,12 +59,13 @@ extension InputController {
             && processor.hangulLayout.can빠른마침표
         {
             let flushed = processor.flushCommit()
-            if !flushed.isEmpty {
+            let hadContent = !flushed.isEmpty
+            if hadContent {
                 logger.debug("내보낼 것: \(flushed)")
                 flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
             }
 
-            if processor.checkDoubleSpace() {
+            if processor.checkDoubleSpace(hadContent: hadContent) {
                 logger.debug("빠른마침표: 더블스페이스 → 마침표")
                 // 이전 스페이스를 지우고 마침표를 삽입
                 let selectedRange = client.selectedRange()
@@ -86,7 +87,13 @@ extension InputController {
                 return true
             }
 
-            // 단일 스페이스: OS에게 처리를 넘김
+            if hadContent {
+                // 한글 flush 후 첫 스페이스: 직접 삽입하여 커서 위치를 확보
+                client.insertText(" ", replacementRange: .notFoundRange)
+                return true
+            }
+
+            // 한글 입력 없는 스페이스: OS에게 처리를 넘김
             return false
         }
 

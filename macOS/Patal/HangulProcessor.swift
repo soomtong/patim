@@ -387,11 +387,21 @@ class HangulProcessor {
     }
 
     /// 빠른마침표: 스페이스 입력 시각을 기록하고 더블스페이스 여부를 반환
-    func checkDoubleSpace() -> Bool {
+    /// - hadContent: 이번 스페이스에서 한글 flush가 있었는지 여부
+    /// - 한글 flush가 있었던 스페이스만 타이머를 시작하고,
+    ///   직후 빈 스페이스가 오면 더블스페이스로 판정
+    func checkDoubleSpace(hadContent: Bool) -> Bool {
         let now = mach_absolute_time()
         let elapsed = machToNanoseconds(now - lastSpaceTime)
-        let isDouble = lastSpaceTime > 0 && elapsed < doubleSpaceThreshold
-        lastSpaceTime = isDouble ? 0 : now
+        let isDouble = !hadContent && lastSpaceTime > 0 && elapsed < doubleSpaceThreshold
+
+        if isDouble {
+            lastSpaceTime = 0
+        } else if hadContent {
+            lastSpaceTime = now
+        }
+        // 한글 입력 없는 단순 스페이스는 타이머를 건드리지 않음
+
         return isDouble
     }
 
