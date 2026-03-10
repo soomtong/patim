@@ -410,6 +410,30 @@ class HangulProcessor {
         lastSpaceTime = 0
     }
 
+    /// 빠른마침표: 보류 중인 스페이스 여부
+    private(set) var hasPendingSpace: Bool = false
+
+    /// 빠른마침표: 한글 flush 후 스페이스를 보류 상태로 설정
+    func setPendingSpace() {
+        hasPendingSpace = true
+        lastSpaceTime = mach_absolute_time()
+    }
+
+    /// 빠른마침표: 보류 스페이스를 더블스페이스(마침표)로 소비할 수 있는지 판정
+    func consumePendingSpaceAsDouble() -> Bool {
+        guard hasPendingSpace else { return false }
+        let elapsed = machToNanoseconds(mach_absolute_time() - lastSpaceTime)
+        hasPendingSpace = false
+        lastSpaceTime = 0
+        return elapsed < doubleSpaceThreshold
+    }
+
+    /// 빠른마침표: 보류 스페이스를 일반 스페이스로 해제
+    func flushPendingSpace() {
+        hasPendingSpace = false
+        lastSpaceTime = 0
+    }
+
     /// mach_absolute_time 단위를 나노초로 변환
     private func machToNanoseconds(_ ticks: UInt64) -> UInt64 {
         var timebaseInfo = mach_timebase_info_data_t()
