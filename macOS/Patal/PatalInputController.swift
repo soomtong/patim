@@ -45,6 +45,9 @@ extension InputController {
         return true
     }
 
+    /// 빠른마침표: 더블스페이스 판정 대기 시간 (초)
+    private static let pendingSpaceTimeout: Double = 0.5
+
     private func startPendingSpaceTimer(client: any IMKTextInput) {
         pendingSpaceTimer?.cancel()
         let work = DispatchWorkItem { [weak self] in
@@ -53,7 +56,7 @@ extension InputController {
             client.insertText(" ", replacementRange: .notFoundRange)
         }
         pendingSpaceTimer = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: work)
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.pendingSpaceTimeout, execute: work)
     }
 
     private func cancelPendingSpaceTimer() {
