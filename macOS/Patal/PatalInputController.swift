@@ -54,52 +54,37 @@ extension InputController {
             logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
         }
 
-        /// 빠른마침표: 스페이스바를 빠르게 2번 누르면 마침표로 변환
+        /// 빠른마침표: 보류 중인 스페이스 처리 (모든 키 이벤트에서 먼저 확인)
+        if processor.hasPendingSpace {
+            if keyCode == KeyCode.SPACE.rawValue && flags == ModifierCode.NONE.rawValue
+                && processor.hangulLayout.can빠른마침표
+                && processor.consumePendingSpaceAsDouble()
+            {
+                // 더블스페이스 (500ms 이내): 보류 스페이스를 마침표로 변환
+                logger.debug("빠른마침표: 더블스페이스 → 마침표")
+                client.insertText(".", replacementRange: .notFoundRange)
+                return true
+            }
+            // 타임아웃 또는 다른 키: 보류 스페이스를 일반 스페이스로 삽입
+            processor.flushPendingSpace()
+            client.insertText(" ", replacementRange: .notFoundRange)
+            // 현재 키 이벤트는 아래에서 정상 처리
+        }
+
+        /// 빠른마침표: 한글 flush 후 스페이스를 보류
         if keyCode == KeyCode.SPACE.rawValue && flags == ModifierCode.NONE.rawValue
             && processor.hangulLayout.can빠른마침표
         {
             let flushed = processor.flushCommit()
-            let hadContent = !flushed.isEmpty
-            if hadContent {
+            if !flushed.isEmpty {
                 logger.debug("내보낼 것: \(flushed)")
                 flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
-            }
-
-            if processor.checkDoubleSpace(hadContent: hadContent) {
-                logger.debug("빠른마침표: 더블스페이스 → 마침표")
-                // 이전 스페이스를 지우고 마침표를 삽입
-                let selectedRange = client.selectedRange()
-                let replaceRange = NSRange(
-                    location: max(0, selectedRange.location - 1), length: 1)
-
-                switch strategy {
-                case .directInsert:
-                    client.insertText(".", replacementRange: replaceRange)
-                case .swapMarked:
-                    // swapMarked 앱(iTerm2, Ghostty 등)에서는 insertText의
-                    // replacementRange가 무시될 수 있음
-                    // setMarkedText로 이전 스페이스를 마킹한 후 insertText로 교체
-                    client.setMarkedText(
-                        "", selectionRange: .defaultRange,
-                        replacementRange: replaceRange)
-                    client.insertText(".", replacementRange: .notFoundRange)
-                }
+                // 한글 flush 후 스페이스: 보류 상태로 전환 (아직 삽입하지 않음)
+                processor.setPendingSpace()
                 return true
             }
-
-            if hadContent {
-                // 한글 flush 후 첫 스페이스: 직접 삽입하여 커서 위치를 확보
-                client.insertText(" ", replacementRange: .notFoundRange)
-                return true
-            }
-
             // 한글 입력 없는 스페이스: OS에게 처리를 넘김
             return false
-        }
-
-        // 스페이스가 아닌 키 입력 시 스페이스 타이머 초기화
-        if keyCode != KeyCode.SPACE.rawValue {
-            processor.resetSpaceTimer()
         }
 
         if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: flags) {
@@ -183,6 +168,12 @@ extension InputController {
     override func commitComposition(_ sender: any IMKTextInput) {
         logger.debug("자판 전환, 마우스 클릭 등으로 조합을 끝낼 경우")
         let client = sender
+
+        // 빠른마침표: 보류 중인 스페이스가 있으면 삽입
+        if processor.hasPendingSpace {
+            processor.flushPendingSpace()
+            client.insertText(" ", replacementRange: .notFoundRange)
+        }
 
         let flushed = processor.flushCommit()
         if !flushed.isEmpty {

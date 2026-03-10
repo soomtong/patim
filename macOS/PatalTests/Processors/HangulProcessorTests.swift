@@ -169,36 +169,29 @@ struct HangulProcessorTests {
         #expect(processor.getConverted() == ".")
     }
 
-    @Test("빠른마침표: 한글 flush 후 더블스페이스 감지")
-    func testDoubleSpaceDetection() {
-        // 한글 flush 있는 첫 스페이스 → 타이머 시작
-        #expect(processor.checkDoubleSpace(hadContent: true) == false)
-        // 직후 빈 스페이스 → 더블스페이스 판정
-        #expect(processor.checkDoubleSpace(hadContent: false) == true)
+    @Test("빠른마침표: 보류 스페이스 설정 후 더블스페이스 소비")
+    func testPendingSpaceDoubleConsume() {
+        #expect(processor.hasPendingSpace == false)
+        // 한글 flush 후 스페이스 보류
+        processor.setPendingSpace()
+        #expect(processor.hasPendingSpace == true)
+        // 즉시 두 번째 스페이스 → 더블스페이스 판정
+        #expect(processor.consumePendingSpaceAsDouble() == true)
+        #expect(processor.hasPendingSpace == false)
     }
 
-    @Test("빠른마침표: 한글 없는 스페이스 연타는 마침표 안 됨")
-    func testBareSpaceNoTrigger() {
-        // 한글 입력 없이 스페이스만 누르면 타이머가 시작되지 않음
-        #expect(processor.checkDoubleSpace(hadContent: false) == false)
-        #expect(processor.checkDoubleSpace(hadContent: false) == false)
-        #expect(processor.checkDoubleSpace(hadContent: false) == false)
+    @Test("빠른마침표: 보류 스페이스 없으면 더블스페이스 불가")
+    func testNoPendingSpaceNoDouble() {
+        #expect(processor.hasPendingSpace == false)
+        #expect(processor.consumePendingSpaceAsDouble() == false)
     }
 
-    @Test("빠른마침표: 스페이스 타이머 초기화 후 더블스페이스 불가")
-    func testSpaceTimerReset() {
-        #expect(processor.checkDoubleSpace(hadContent: true) == false)
-        processor.resetSpaceTimer()
-        #expect(processor.checkDoubleSpace(hadContent: false) == false)
-    }
-
-    @Test("빠른마침표: 더블스페이스 후 연속 스페이스는 마침표 안 됨")
-    func testTripleSpace() {
-        #expect(processor.checkDoubleSpace(hadContent: true) == false)
-        #expect(processor.checkDoubleSpace(hadContent: false) == true)
-        // 더블스페이스 후 타이머 초기화 → 한글 없는 스페이스는 무시
-        #expect(processor.checkDoubleSpace(hadContent: false) == false)
-        #expect(processor.checkDoubleSpace(hadContent: false) == false)
+    @Test("빠른마침표: 보류 스페이스 해제 후 더블스페이스 불가")
+    func testFlushPendingSpaceThenNoDouble() {
+        processor.setPendingSpace()
+        processor.flushPendingSpace()
+        #expect(processor.hasPendingSpace == false)
+        #expect(processor.consumePendingSpaceAsDouble() == false)
     }
 
     @Test("빠른마침표: 특성 활성화 확인")
