@@ -45,6 +45,22 @@ extension InputController {
         return true
     }
 
+    private func startPendingSpaceTimer(client: any IMKTextInput) {
+        pendingSpaceTimer?.cancel()
+        let work = DispatchWorkItem { [weak self] in
+            guard let self, self.processor.hasPendingSpace else { return }
+            self.processor.flushPendingSpace()
+            client.insertText(" ", replacementRange: .notFoundRange)
+        }
+        pendingSpaceTimer = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: work)
+    }
+
+    private func cancelPendingSpaceTimer() {
+        pendingSpaceTimer?.cancel()
+        pendingSpaceTimer = nil
+    }
+
     // 글자 조합, 백스페이스, 엔터, ESC 키 처리
     override func inputText(_ s: String, key keyCode: Int, modifiers flags: UInt, client sender: any IMKTextInput) -> Bool {
         let client = sender
@@ -56,6 +72,7 @@ extension InputController {
 
         /// 빠른마침표: 보류 중인 스페이스 처리 (모든 키 이벤트에서 먼저 확인)
         if processor.hasPendingSpace {
+            cancelPendingSpaceTimer()
             if keyCode == KeyCode.SPACE.rawValue && flags == ModifierCode.NONE.rawValue
                 && processor.hangulLayout.can빠른마침표
                 && processor.consumePendingSpaceAsDouble()
@@ -81,6 +98,7 @@ extension InputController {
                 flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
                 // 한글 flush 후 스페이스: 보류 상태로 전환 (아직 삽입하지 않음)
                 processor.setPendingSpace()
+                startPendingSpaceTimer(client: client)
                 return true
             }
             // 한글 입력 없는 스페이스: OS에게 처리를 넘김
@@ -171,6 +189,7 @@ extension InputController {
 
         // 빠른마침표: 보류 중인 스페이스가 있으면 삽입
         if processor.hasPendingSpace {
+            cancelPendingSpaceTimer()
             processor.flushPendingSpace()
             client.insertText(" ", replacementRange: .notFoundRange)
         }

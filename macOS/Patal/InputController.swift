@@ -33,6 +33,9 @@ class InputController: IMKInputSessionController {
     // 동기화 중복 방지 플래그
     private(set) var isInstanceSynced: Bool = false
 
+    // 빠른마침표: 보류 스페이스 자동 플러시 타이머
+    var pendingSpaceTimer: DispatchWorkItem?
+
     override init(server: IMKServer, delegate: Any?, client inputClient: any IMKTextInput) {
         super.init(server: server, delegate: delegate, client: inputClient)
 

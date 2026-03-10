@@ -196,11 +196,6 @@ class HangulProcessor {
         stateMachine.setBuffer(savedBuffer)
     }
 
-    /// 빠른마침표: 마지막 스페이스 입력 시각
-    private var lastSpaceTime: UInt64 = 0
-    /// 빠른마침표: 더블스페이스 판정 시간 간격 (나노초, 500ms)
-    private let doubleSpaceThreshold: UInt64 = 500_000_000
-
     let managableModifiers: [UInt] = [ModifierCode.NONE.rawValue, ModifierCode.SHIFT.rawValue]
 
     init(layout: HangulAutomata) {
@@ -387,58 +382,24 @@ class HangulProcessor {
     }
 
     /// 빠른마침표: 스페이스 입력 시각을 기록하고 더블스페이스 여부를 반환
-    /// - hadContent: 이번 스페이스에서 한글 flush가 있었는지 여부
-    /// - 한글 flush가 있었던 스페이스만 타이머를 시작하고,
-    ///   직후 빈 스페이스가 오면 더블스페이스로 판정
-    func checkDoubleSpace(hadContent: Bool) -> Bool {
-        let now = mach_absolute_time()
-        let elapsed = machToNanoseconds(now - lastSpaceTime)
-        let isDouble = !hadContent && lastSpaceTime > 0 && elapsed < doubleSpaceThreshold
-
-        if isDouble {
-            lastSpaceTime = 0
-        } else if hadContent {
-            lastSpaceTime = now
-        }
-        // 한글 입력 없는 단순 스페이스는 타이머를 건드리지 않음
-
-        return isDouble
-    }
-
-    /// 빠른마침표: 스페이스 타이머를 초기화 (비스페이스 입력 시)
-    func resetSpaceTimer() {
-        lastSpaceTime = 0
-    }
-
     /// 빠른마침표: 보류 중인 스페이스 여부
     private(set) var hasPendingSpace: Bool = false
 
     /// 빠른마침표: 한글 flush 후 스페이스를 보류 상태로 설정
     func setPendingSpace() {
         hasPendingSpace = true
-        lastSpaceTime = mach_absolute_time()
     }
 
-    /// 빠른마침표: 보류 스페이스를 더블스페이스(마침표)로 소비할 수 있는지 판정
+    /// 빠른마침표: 보류 스페이스를 더블스페이스(마침표)로 소비 (타이머가 500ms를 보장)
     func consumePendingSpaceAsDouble() -> Bool {
         guard hasPendingSpace else { return false }
-        let elapsed = machToNanoseconds(mach_absolute_time() - lastSpaceTime)
         hasPendingSpace = false
-        lastSpaceTime = 0
-        return elapsed < doubleSpaceThreshold
+        return true
     }
 
     /// 빠른마침표: 보류 스페이스를 일반 스페이스로 해제
     func flushPendingSpace() {
         hasPendingSpace = false
-        lastSpaceTime = 0
-    }
-
-    /// mach_absolute_time 단위를 나노초로 변환
-    private func machToNanoseconds(_ ticks: UInt64) -> UInt64 {
-        var timebaseInfo = mach_timebase_info_data_t()
-        mach_timebase_info(&timebaseInfo)
-        return ticks * UInt64(timebaseInfo.numer) / UInt64(timebaseInfo.denom)
     }
 
     func clearPreedit() {
