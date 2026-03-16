@@ -11,10 +11,8 @@
 		134356FE27DDFD030074E691 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 134356FD27DDFD030074E691 /* Cocoa.framework */; };
 		1343570027DDFF850074E691 /* InputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134356FF27DDFF850074E691 /* InputController.swift */; };
 		1343570327DE0BEB0074E691 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1343570527DE0BEB0074E691 /* InfoPlist.strings */; };
-		461A81592B49B030005E7725 /* han3-shin-pcs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81552B49B030005E7725 /* han3-shin-pcs@2x.png */; };
 		461A815A2B49B030005E7725 /* han3-shin-p2.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81562B49B030005E7725 /* han3-shin-p2.png */; };
 		461A815B2B49B030005E7725 /* han3-shin-pcs.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81572B49B030005E7725 /* han3-shin-pcs.png */; };
-		461A815C2B49B030005E7725 /* han3-shin-p2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 461A81582B49B030005E7725 /* han3-shin-p2@2x.png */; };
 		462EBD172B3F3DF400BD94B2 /* Korean.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 462EBD162B3F3DF400BD94B2 /* Korean.tiff */; };
 		464092AA2B92EDA800F5D81D /* HangulProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464092A92B92EDA800F5D81D /* HangulProcessor.swift */; };
 		469C537F2B91E1C200446511 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469C537E2B91E1C200446511 /* Logger.swift */; };
@@ -39,7 +37,9 @@
 		E299CA4F2D008F2F00E2FD0D /* HangulComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */; };
 		E2B1644B2CDFAFD4003FCE85 /* HangulCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */; };
 		E2DEB0722F24A82D0078431E /* han3-p.png in Resources */ = {isa = PBXBuildFile; fileRef = E2DEB0702F24A82D0078431E /* han3-p.png */; };
-		E2DEB0732F24A82D0078431E /* han3-p@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2DEB0712F24A82D0078431E /* han3-p@2x.png */; };
+		E2F296432F683A3C00A8C479 /* han3-p@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2F296402F683A3C00A8C479 /* han3-p@2x.png */; };
+		E2F296442F683A3C00A8C479 /* han3-shin-p2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2F296412F683A3C00A8C479 /* han3-shin-p2@2x.png */; };
+		E2F296452F683A3C00A8C479 /* han3-shin-pcs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2F296422F683A3C00A8C479 /* han3-shin-pcs@2x.png */; };
 		E2FE77C02E65C28E00D5B355 /* KeyCodeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE77BF2E65C28E00D5B355 /* KeyCodeMapper.swift */; };
 		E2INPUTSESSION00000001 /* InputControllerContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2INPUTSESSION00000002 /* InputControllerContext.swift */; };
 		E2KEYLAYOUT0000000000001 /* Han3P3.keylayout in Resources */ = {isa = PBXBuildFile; fileRef = E2KEYLAYOUTREF00000001 /* Han3P3.keylayout */; };
@@ -62,10 +62,8 @@
 		134356FD27DDFD030074E691 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		134356FF27DDFF850074E691 /* InputController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputController.swift; sourceTree = "<group>"; };
 		1343570427DE0BEB0074E691 /* en */ = {isa = PBXFileReference; explicitFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		461A81552B49B030005E7725 /* han3-shin-pcs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-pcs@2x.png"; sourceTree = "<group>"; };
 		461A81562B49B030005E7725 /* han3-shin-p2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2.png"; sourceTree = "<group>"; };
 		461A81572B49B030005E7725 /* han3-shin-pcs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-pcs.png"; sourceTree = "<group>"; };
-		461A81582B49B030005E7725 /* han3-shin-p2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2@2x.png"; sourceTree = "<group>"; };
 		462EBD162B3F3DF400BD94B2 /* Korean.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Korean.tiff; sourceTree = "<group>"; };
 		464092A92B92EDA800F5D81D /* HangulProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulProcessor.swift; sourceTree = "<group>"; };
 		469C537E2B91E1C200446511 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -96,7 +94,9 @@
 		E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulComposer.swift; sourceTree = "<group>"; };
 		E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulCode.swift; sourceTree = "<group>"; };
 		E2DEB0702F24A82D0078431E /* han3-p.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-p.png"; sourceTree = "<group>"; };
-		E2DEB0712F24A82D0078431E /* han3-p@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-p@2x.png"; sourceTree = "<group>"; };
+		E2F296402F683A3C00A8C479 /* han3-p@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-p@2x.png"; sourceTree = "<group>"; };
+		E2F296412F683A3C00A8C479 /* han3-shin-p2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2@2x.png"; sourceTree = "<group>"; };
+		E2F296422F683A3C00A8C479 /* han3-shin-pcs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-pcs@2x.png"; sourceTree = "<group>"; };
 		E2FE77BF2E65C28E00D5B355 /* KeyCodeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCodeMapper.swift; sourceTree = "<group>"; };
 		E2INPUTSESSION00000002 /* InputControllerContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputControllerContext.swift; sourceTree = "<group>"; };
 		E2KEYLAYOUTREF00000001 /* Han3P3.keylayout */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Han3P3.keylayout; sourceTree = "<group>"; };
@@ -197,12 +197,12 @@
 		46E67F7C26EC5CFA005EC052 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				E2F296402F683A3C00A8C479 /* han3-p@2x.png */,
+				E2F296412F683A3C00A8C479 /* han3-shin-p2@2x.png */,
+				E2F296422F683A3C00A8C479 /* han3-shin-pcs@2x.png */,
 				461A81572B49B030005E7725 /* han3-shin-pcs.png */,
-				461A81552B49B030005E7725 /* han3-shin-pcs@2x.png */,
 				461A81562B49B030005E7725 /* han3-shin-p2.png */,
-				461A81582B49B030005E7725 /* han3-shin-p2@2x.png */,
 				E2DEB0702F24A82D0078431E /* han3-p.png */,
-				E2DEB0712F24A82D0078431E /* han3-p@2x.png */,
 				46E67F7E26EC5CFA005EC052 /* han3-P2.png */,
 				46E67F7D26EC5CFA005EC052 /* han3-P2@2x.png */,
 				462EBD162B3F3DF400BD94B2 /* Korean.tiff */,
@@ -285,7 +285,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1610;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					46E67F4C26EC5505005EC052 = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -327,15 +327,15 @@
 				46E67F5326EC5506005EC052 /* Assets.xcassets in Resources */,
 				462EBD172B3F3DF400BD94B2 /* Korean.tiff in Resources */,
 				1343570327DE0BEB0074E691 /* InfoPlist.strings in Resources */,
-				461A815C2B49B030005E7725 /* han3-shin-p2@2x.png in Resources */,
 				461A815A2B49B030005E7725 /* han3-shin-p2.png in Resources */,
+				E2F296432F683A3C00A8C479 /* han3-p@2x.png in Resources */,
+				E2F296442F683A3C00A8C479 /* han3-shin-p2@2x.png in Resources */,
+				E2F296452F683A3C00A8C479 /* han3-shin-pcs@2x.png in Resources */,
 				E2DEB0722F24A82D0078431E /* han3-p.png in Resources */,
-				E2DEB0732F24A82D0078431E /* han3-p@2x.png in Resources */,
 				46E67F5626EC5506005EC052 /* MainMenu.xib in Resources */,
 				461A815B2B49B030005E7725 /* han3-shin-pcs.png in Resources */,
 				46E67F8026EC5CFA005EC052 /* han3-P2@2x.png in Resources */,
 				46E67F8126EC5CFA005EC052 /* han3-P2.png in Resources */,
-				461A81592B49B030005E7725 /* han3-shin-pcs@2x.png in Resources */,
 				46E67F8226EC5CFA005EC052 /* icon.tiff in Resources */,
 				E2KEYLAYOUT0000000000001 /* Han3P3.keylayout in Resources */,
 				E2KEYLAYOUT0000000000002 /* Han3ShinP2.keylayout in Resources */,
@@ -505,6 +505,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
@@ -566,6 +567,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_CROSS_MODULE_OPTIMIZATION = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -586,7 +588,11 @@
 				CURRENT_PROJECT_VERSION = _HASH_;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = LL75ZY5CKZ;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = YES;
+				ENABLE_RESOURCE_ACCESS_USB = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				INFOPLIST_FILE = Patal/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "팥알입력기";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -596,7 +602,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.5.5;
+				MARKETING_VERSION = 1.5.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.Patal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -617,7 +623,11 @@
 				CURRENT_PROJECT_VERSION = _HASH_;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = LL75ZY5CKZ;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = YES;
+				ENABLE_RESOURCE_ACCESS_USB = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				INFOPLIST_FILE = Patal/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "팥알입력기";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -627,7 +637,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.5.5;
+				MARKETING_VERSION = 1.5.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.soomtong.inputmethod.Patal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
