@@ -10,23 +10,10 @@ import IMKSwift
 
 @objc(PatIMKController)
 class InputController: IMKInputSessionController {
-    // 비즈니스 로직 객체를 클라이언트별로 관리
-    var context: InputControllerContext!
-
-    // 컨텍스트 프로퍼티에 대한 편의 접근자
-    internal var logger: CustomLogger { context.logger }
-    internal var layoutName: LayoutName {
-        get { context.layoutName }
-        set { context.layoutName = newValue }
-    }
-    internal var optionMenu: OptionMenu {
-        get { context.optionMenu }
-        set { context.optionMenu = newValue }
-    }
-    var processor: HangulProcessor {
-        get { context.processor }
-        set { context.processor = newValue }
-    }
+    internal let logger = CustomLogger(category: "InputController")
+    internal var layoutName: LayoutName = .HAN3_P3
+    var processor: HangulProcessor!
+    internal var optionMenu: OptionMenu!
 
     // 현재 컨트롤러가 활성 상태인지 추적
     private(set) var isControllerActivated: Bool = false
@@ -41,9 +28,22 @@ class InputController: IMKInputSessionController {
 
         let inputMethodID = getCurrentInputMethodID() ?? "InputmethodHan3P3"
         let currentLayout = getInputLayoutID(id: inputMethodID)
-        context = InputControllerContext(controller: self, layoutName: currentLayout)
+
+        layoutName = currentLayout
+        let traitKey = buildTraitKey(name: layoutName)
+        let hangulLayout = createLayoutInstance(name: layoutName)
+        processor = HangulProcessor(layout: hangulLayout)
+
+        if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
+            processor.hangulLayout.traits = loadedTraits
+        } else {
+            processor.hangulLayout.traits = processor.hangulLayout.availableTraits.subtracting([.글자단위삭제])
+        }
+
+        optionMenu = OptionMenu(layout: processor.hangulLayout)
+
         logger.debug("팥알 입력기 자판: \(layoutName)")
-        logger.debug("팥알 입력기 처리기: \(processor)")
+        logger.debug("팥알 입력기 처리기: \(processor!)")
 
         if let inputMethodVersion = getCurrentProjectVersion() {
             logger.debug("팥알 입력기 버전: \(inputMethodVersion)")
@@ -97,9 +97,19 @@ class InputController: IMKInputSessionController {
         syncLayoutIfNeeded()
 
         // 다른 클라이언트에서 변경된 traits를 동기화
-        context.reloadTraits()
+        reloadTraits()
 
         logger.debug("입력기 서버 시작: \(layoutName)")
+    }
+
+    private func reloadTraits() {
+        let traitKey = buildTraitKey(name: layoutName)
+        if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
+            if processor.hangulLayout.traits != loadedTraits {
+                processor.hangulLayout.traits = loadedTraits
+                optionMenu = OptionMenu(layout: processor.hangulLayout)
+            }
+        }
     }
 
     // 자판 변경 시 레이아웃 업데이트
@@ -107,7 +117,20 @@ class InputController: IMKInputSessionController {
         let endTotal = PerformanceTracerCompat.measureAsync("updateLayout.Total")
         defer { endTotal() }
 
-        context.updateLayout(to: newLayout)
+        let _ = processor.flushCommit()
+
+        layoutName = newLayout
+        let hangulLayout = createLayoutInstance(name: layoutName)
+        processor = HangulProcessor(layout: hangulLayout)
+
+        let traitKey = buildTraitKey(name: layoutName)
+        if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
+            processor.hangulLayout.traits = loadedTraits
+        } else {
+            processor.hangulLayout.traits = processor.hangulLayout.availableTraits.subtracting([.글자단위삭제])
+        }
+
+        optionMenu = OptionMenu(layout: processor.hangulLayout)
     }
 
     // 입력기가 비활성화 되면 호출됨

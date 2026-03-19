@@ -41,7 +41,6 @@
 		E2F296442F683A3C00A8C479 /* han3-shin-p2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2F296412F683A3C00A8C479 /* han3-shin-p2@2x.png */; };
 		E2F296452F683A3C00A8C479 /* han3-shin-pcs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2F296422F683A3C00A8C479 /* han3-shin-pcs@2x.png */; };
 		E2FE77C02E65C28E00D5B355 /* KeyCodeMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE77BF2E65C28E00D5B355 /* KeyCodeMapper.swift */; };
-		E2INPUTSESSION00000001 /* InputControllerContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2INPUTSESSION00000002 /* InputControllerContext.swift */; };
 		E2KEYLAYOUT0000000000001 /* Han3P3.keylayout in Resources */ = {isa = PBXBuildFile; fileRef = E2KEYLAYOUTREF00000001 /* Han3P3.keylayout */; };
 		E2KEYLAYOUT0000000000002 /* Han3ShinP2.keylayout in Resources */ = {isa = PBXBuildFile; fileRef = E2KEYLAYOUTREF00000002 /* Han3ShinP2.keylayout */; };
 		E2KEYLAYOUT0000000000003 /* Han3ShinPCS.keylayout in Resources */ = {isa = PBXBuildFile; fileRef = E2KEYLAYOUTREF00000003 /* Han3ShinPCS.keylayout */; };
@@ -98,7 +97,6 @@
 		E2F296412F683A3C00A8C479 /* han3-shin-p2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-p2@2x.png"; sourceTree = "<group>"; };
 		E2F296422F683A3C00A8C479 /* han3-shin-pcs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "han3-shin-pcs@2x.png"; sourceTree = "<group>"; };
 		E2FE77BF2E65C28E00D5B355 /* KeyCodeMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCodeMapper.swift; sourceTree = "<group>"; };
-		E2INPUTSESSION00000002 /* InputControllerContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputControllerContext.swift; sourceTree = "<group>"; };
 		E2KEYLAYOUTREF00000001 /* Han3P3.keylayout */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Han3P3.keylayout; sourceTree = "<group>"; };
 		E2KEYLAYOUTREF00000002 /* Han3ShinP2.keylayout */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Han3ShinP2.keylayout; sourceTree = "<group>"; };
 		E2KEYLAYOUTREF00000003 /* Han3ShinPCS.keylayout */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Han3ShinPCS.keylayout; sourceTree = "<group>"; };
@@ -174,7 +172,6 @@
 				469C537E2B91E1C200446511 /* Logger.swift */,
 				46E67F5026EC5505005EC052 /* AppDelegate.swift */,
 				134356FF27DDFF850074E691 /* InputController.swift */,
-				E2INPUTSESSION00000002 /* InputControllerContext.swift */,
 				E24856182D20F0A300AC78AF /* PatalInputController.swift */,
 				E2B1644A2CDFAFC3003FCE85 /* HangulCode.swift */,
 				E299CA4E2D008F2F00E2FD0D /* HangulComposer.swift */,
@@ -385,7 +382,6 @@
 				E299CA4F2D008F2F00E2FD0D /* HangulComposer.swift in Sources */,
 				E224DEE42D2024B900808927 /* OptionMenu.swift in Sources */,
 				1343570027DDFF850074E691 /* InputController.swift in Sources */,
-				E2INPUTSESSION00000001 /* InputControllerContext.swift in Sources */,
 				E2B1644B2CDFAFD4003FCE85 /* HangulCode.swift in Sources */,
 				E25E6A492F2D87A600093A1F /* PerformanceTracer.swift in Sources */,
 				E258567D2D18134A006FD5E7 /* Extention.swift in Sources */,
