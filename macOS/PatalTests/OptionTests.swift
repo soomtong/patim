@@ -18,7 +18,10 @@ struct OptionTests {
         var layout = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
         var processor: HangulProcessor!
         var optionMenu: OptionMenu!
-        let holders = [LayoutTrait.글자단위삭제.rawValue, LayoutTrait.수정기호.rawValue, LayoutTrait.빠른마침표.rawValue]
+        let holders = [
+            LayoutTrait.글자단위삭제.rawValue, LayoutTrait.수정기호.rawValue, LayoutTrait.빠른마침표.rawValue,
+            LayoutTrait.옵션라틴.rawValue,
+        ]
 
         init() {
             processor = HangulProcessor(layout: layout)
@@ -46,6 +49,58 @@ struct OptionTests {
                 #expect(menu.state == NSControl.StateValue.on)
                 #expect(holders.contains(menu.title))
             }
+        }
+    }
+
+    @Suite("옵션라틴 trait")
+    struct OptionLatinTraitTests {
+
+        @Test("모든 자판에 옵션라틴 trait 포함")
+        func allLayoutsHaveOptionLatinTrait() {
+            let p3 = createLayoutInstance(name: LayoutName.HAN3_P3)
+            let shinP2 = createLayoutInstance(name: LayoutName.HAN3_SHIN_P2)
+            let shinPcs = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
+
+            #expect(p3.availableTraits.contains(LayoutTrait.옵션라틴))
+            #expect(shinP2.availableTraits.contains(LayoutTrait.옵션라틴))
+            #expect(shinPcs.availableTraits.contains(LayoutTrait.옵션라틴))
+        }
+
+        @Test("옵션라틴 기본값 비활성")
+        func optionLatinDefaultOff() {
+            let layout = createLayoutInstance(name: LayoutName.HAN3_P3)
+            #expect(layout.can옵션라틴 == false)
+        }
+
+        @Test("옵션라틴 활성화 확인")
+        func optionLatinCanBeEnabled() {
+            var layout = createLayoutInstance(name: LayoutName.HAN3_P3)
+            layout.traits.insert(LayoutTrait.옵션라틴)
+            #expect(layout.can옵션라틴 == true)
+        }
+
+        @Test("Option+키 라틴 문자 매핑 (소문자)")
+        func optionKeyLatinLowercase() {
+            // Option 비트를 제거하고 SHIFT 없이 KeyCodeMapper 호출하면 소문자 라틴 문자
+            let shiftOnly: UInt = 0
+            // keyCode 0 = 'a' in physicalKeyMap
+            let result = KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: 0, modifiers: shiftOnly)
+            #expect(result == "a")
+            // keyCode 12 = 'q'
+            let resultQ = KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: 12, modifiers: shiftOnly)
+            #expect(resultQ == "q")
+        }
+
+        @Test("Option+Shift+키 라틴 문자 매핑 (대문자)")
+        func optionShiftKeyLatinUppercase() {
+            // Option+Shift에서 ALT 비트를 제거하면 SHIFT만 남음
+            let shiftOnly = ModifierCode.SHIFT.rawValue
+            // keyCode 0 = 'A' in shiftKeyMap
+            let result = KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: 0, modifiers: shiftOnly)
+            #expect(result == "A")
+            // keyCode 12 = 'Q'
+            let resultQ = KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: 12, modifiers: shiftOnly)
+            #expect(resultQ == "Q")
         }
     }
 

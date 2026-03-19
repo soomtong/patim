@@ -14,7 +14,7 @@ import Foundation
 
 /// enum LayoutName 의 createLayoutInstance 조합기 이름과 같아야 합니다.
 struct Han3ShinP2Layout: HangulAutomata {
-    let availableTraits: Set<LayoutTrait> = [LayoutTrait.아래아, LayoutTrait.글자단위삭제, LayoutTrait.수정기호, LayoutTrait.빠른마침표]
+    let availableTraits: Set<LayoutTrait> = [LayoutTrait.아래아, LayoutTrait.글자단위삭제, LayoutTrait.수정기호, LayoutTrait.빠른마침표, LayoutTrait.옵션라틴]
     var traits: Set<LayoutTrait> = []
 
     let chosungMap: [String: 초성] = [

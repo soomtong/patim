@@ -111,6 +111,26 @@ extension InputController {
             return false
         }
 
+        /// 옵션라틴: Option 키가 눌린 경우 라틴 문자를 직접 commit
+        if processor.hangulLayout.can옵션라틴
+            && (modifiers & ModifierCode.ALT.rawValue) != 0
+            && KeyCodeMapper.isHangulInputKey(keyCode: keyCode)
+        {
+            // 조합 중인 한글을 먼저 flush
+            let flushed = processor.flushCommit()
+            if !flushed.isEmpty {
+                logger.debug("옵션라틴 flush: \(flushed)")
+                flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
+            }
+            // ALT 비트를 제거하고 SHIFT만 남겨서 라틴 문자 획득
+            let shiftOnly = modifiers & ModifierCode.SHIFT.rawValue
+            if let latinChar = KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: keyCode, modifiers: shiftOnly) {
+                logger.debug("옵션라틴 입력: \(latinChar)")
+                client.insertText(latinChar, replacementRange: .notFoundRange)
+                return true
+            }
+        }
+
         if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: modifiers) {
             // 엔터 같은 특수 키코드 처리
             let flushed = processor.flushCommit()
