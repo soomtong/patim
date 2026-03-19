@@ -76,21 +76,14 @@ extension InputController {
         /// 빠른마침표: 보류 중인 스페이스 처리 (모든 키 이벤트에서 먼저 확인)
         if processor.hasPendingSpace {
             cancelPendingSpaceTimer()
-            if processor.hangulLayout.can빠른마침표 && flags == ModifierCode.NONE.rawValue {
-                if keyCode == KeyCode.SPACE.rawValue && processor.consumePendingSpaceAsDouble() {
-                    // 더블스페이스 (500ms 이내): 보류 스페이스를 마침표 + 공백으로 변환
-                    logger.debug("빠른마침표: 더블스페이스 → 마침표 + 공백")
-                    client.insertText(". ", replacementRange: .notFoundRange)
-                    return true
-                }
-                if (keyCode == KeyCode.RETURN.rawValue || keyCode == KeyCode.ENTER.rawValue)
-                    && processor.consumePendingSpaceAsDouble()
-                {
-                    // 스페이스 + 엔터 (500ms 이내): 보류 스페이스를 마침표로 변환
-                    logger.debug("빠른마침표: 스페이스 + 엔터 → 마침표")
-                    client.insertText(".", replacementRange: .notFoundRange)
-                    return true
-                }
+            if keyCode == KeyCode.SPACE.rawValue && flags == ModifierCode.NONE.rawValue
+                && processor.hangulLayout.can빠른마침표
+                && processor.consumePendingSpaceAsDouble()
+            {
+                // 더블스페이스 (500ms 이내): 보류 스페이스를 마침표 + 공백으로 변환
+                logger.debug("빠른마침표: 더블스페이스 → 마침표 + 공백")
+                client.insertText(". ", replacementRange: .notFoundRange)
+                return true
             }
             // 타임아웃 또는 다른 키: 보류 스페이스를 일반 스페이스로 삽입
             processor.flushPendingSpace()
