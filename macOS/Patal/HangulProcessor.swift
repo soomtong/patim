@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import IMKSwift
+import InputMethodKit
 
 #if DEBUG
     @inline(__always)
@@ -225,7 +225,7 @@ class HangulProcessor {
     /// - setMarkedText의 replacementRange 처리 방식에 따라 directInsert/swapMarked 구분
     /// - 측정된 앱(knownApps)은 validAttributesForMarkedText 호출 없이 바로 결정 (성능 최적화)
     @inline(__always)
-    func getInputStrategy(client: any IMKTextInput) -> InputStrategy {
+    func getInputStrategy(client: IMKTextInput) -> InputStrategy {
         let bundleId = client.bundleIdentifier() ?? "unknown"
 
         // 측정된 앱은 빠른 경로 (validAttributesForMarkedText 호출 생략)

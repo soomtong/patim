@@ -7,16 +7,16 @@
 
 import AppKit
 import Foundation
-import IMKSwift
+import InputMethodKit
 
 extension InputController {
     // 백스페이스 처리
-    private func updateEmptyCommit(client: any IMKTextInput) -> Bool {
+    private func updateEmptyCommit(client: IMKTextInput) -> Bool {
         client.setMarkedText("", selectionRange: .defaultRange, replacementRange: .defaultRange)
         return true
     }
 
-    private func updateReplacementRangeCommit(client: any IMKTextInput, with: String) -> Bool {
+    private func updateReplacementRangeCommit(client: IMKTextInput, with: String) -> Bool {
         let selectedRange = client.selectedRange()
         let replacementRange = NSRange(
             location: max(0, selectedRange.location - with.count),
@@ -26,7 +26,7 @@ extension InputController {
         return true
     }
 
-    private func updateDefaultRangeCommit(client: any IMKTextInput, with: String) -> Bool {
+    private func updateDefaultRangeCommit(client: IMKTextInput, with: String) -> Bool {
         let string = NSAttributedString(string: with, attributes: [.backgroundColor: NSColor.clear])
         client.setMarkedText(string, selectionRange: .defaultRange, replacementRange: .defaultRange)
         return true
@@ -35,7 +35,7 @@ extension InputController {
     // 조합 처리 (InputStrategy 구분 없이 모든 앱에서 공통 호출)
     // plain String을 전달하면 클라이언트가 자체 스타일(선택 하이라이트)을 적용하므로
     // NSAttributedString에 밑줄 속성을 명시하여 macOS 내장 입력기와 동일한 밑줄 표시를 사용한다
-    private func updateSelectedRangeCommit(client: any IMKTextInput, with: String) -> Bool {
+    private func updateSelectedRangeCommit(client: IMKTextInput, with: String) -> Bool {
         let attributed = NSAttributedString(string: with, attributes: [
             .underlineStyle: NSUnderlineStyle.single.rawValue,
             .markedClauseSegment: 0,
@@ -48,7 +48,7 @@ extension InputController {
     /// 빠른마침표: 더블스페이스 판정 대기 시간 (초)
     private static let pendingSpaceTimeout: Double = 0.5
 
-    private func startPendingSpaceTimer(client: any IMKTextInput) {
+    private func startPendingSpaceTimer(client: IMKTextInput) {
         pendingSpaceTimer?.cancel()
         let work = DispatchWorkItem { [weak self] in
             guard let self, self.processor.hasPendingSpace else { return }
@@ -65,8 +65,11 @@ extension InputController {
     }
 
     // 글자 조합, 백스페이스, 엔터, ESC 키 처리
-    override func inputText(_ s: String, key keyCode: Int, modifiers flags: UInt, client sender: any IMKTextInput) -> Bool {
-        let client = sender
+    override func inputText(_ s: String!, key keyCode: Int, modifiers flags: Int, client sender: Any!) -> Bool {
+        guard let client = sender as? IMKTextInput else {
+            return false
+        }
+        let modifiers = UInt(bitPattern: flags)
         // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
         let strategy = processor.getInputStrategy(client: client)
         if let bundleId = client.bundleIdentifier() {
@@ -76,7 +79,7 @@ extension InputController {
         /// 빠른마침표: 보류 중인 스페이스 처리 (모든 키 이벤트에서 먼저 확인)
         if processor.hasPendingSpace {
             cancelPendingSpaceTimer()
-            if keyCode == KeyCode.SPACE.rawValue && flags == ModifierCode.NONE.rawValue
+            if keyCode == KeyCode.SPACE.rawValue && modifiers == ModifierCode.NONE.rawValue
                 && processor.hangulLayout.can빠른마침표
                 && processor.consumePendingSpaceAsDouble()
             {
@@ -92,7 +95,7 @@ extension InputController {
         }
 
         /// 빠른마침표: 한글 flush 후 스페이스를 보류
-        if keyCode == KeyCode.SPACE.rawValue && flags == ModifierCode.NONE.rawValue
+        if keyCode == KeyCode.SPACE.rawValue && modifiers == ModifierCode.NONE.rawValue
             && processor.hangulLayout.can빠른마침표
         {
             let flushed = processor.flushCommit()
@@ -108,7 +111,7 @@ extension InputController {
             return false
         }
 
-        if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: flags) {
+        if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: modifiers) {
             // 엔터 같은 특수 키코드 처리
             let flushed = processor.flushCommit()
             if !flushed.isEmpty {
@@ -146,9 +149,9 @@ extension InputController {
 
         // 키코드 기반 문자 변환 시도 (기본 동작)
         if KeyCodeMapper.isHangulInputKey(keyCode: keyCode) {
-            if let keyCodeChar = processor.processKeyCodeInput(keyCode: keyCode, modifiers: flags) {
+            if let keyCodeChar = processor.processKeyCodeInput(keyCode: keyCode, modifiers: modifiers) {
                 baseChar = keyCodeChar
-                logger.debug("키코드 기반 입력: \(KeyCodeMapper.debugKeyInfo(keyCode: keyCode, modifiers: flags))")
+                logger.debug("키코드 기반 입력: \(KeyCodeMapper.debugKeyInfo(keyCode: keyCode, modifiers: modifiers))")
             }
         } else {
             // 키코드 매핑이 없는 경우 기존 문자열 사용 (하위 호환성)
@@ -181,14 +184,16 @@ extension InputController {
     }
 
     // 입력기 메뉴가 열릴 때마다 호출됨
-    override func menu() -> NSMenu? {
+    override func menu() -> NSMenu! {
         return optionMenu.menu
     }
 
     // 자판 전환, 마우스 클릭 등으로 조합을 끝낼 경우
-    override func commitComposition(_ sender: any IMKTextInput) {
+    override func commitComposition(_ sender: Any!) {
         logger.debug("자판 전환, 마우스 클릭 등으로 조합을 끝낼 경우")
-        let client = sender
+        guard let client = sender as? IMKTextInput else {
+            return
+        }
 
         // 빠른마침표: 보류 중인 스페이스가 있으면 삽입
         if processor.hasPendingSpace {

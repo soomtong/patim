@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import IMKSwift
+import InputMethodKit
 
 @objc(PatIMKController)
-class InputController: IMKInputSessionController {
+class InputController: IMKInputController {
     internal let logger = CustomLogger(category: "InputController")
     internal var layoutName: LayoutName = .HAN3_P3
     var processor: HangulProcessor!
@@ -23,7 +23,7 @@ class InputController: IMKInputSessionController {
     // 빠른마침표: 보류 스페이스 자동 플러시 타이머
     var pendingSpaceTimer: DispatchWorkItem?
 
-    override init(server: IMKServer, delegate: Any?, client inputClient: any IMKTextInput) {
+    override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
         super.init(server: server, delegate: delegate, client: inputClient)
 
         let inputMethodID = getCurrentInputMethodID() ?? "InputmethodHan3P3"
@@ -89,7 +89,7 @@ class InputController: IMKInputSessionController {
     }
 
     // 입력기가 전환될 때마다 호출됨
-    override func activateServer(_ sender: any IMKTextInput) {
+    override func activateServer(_ sender: Any!) {
         super.activateServer(sender)
         isControllerActivated = true
 
@@ -134,7 +134,7 @@ class InputController: IMKInputSessionController {
     }
 
     // 입력기가 비활성화 되면 호출됨
-    override func deactivateServer(_ sender: any IMKTextInput) {
+    override func deactivateServer(_ sender: Any!) {
         super.deactivateServer(sender)
         isControllerActivated = false
         logger.debug("입력기 서버 중단: \(layoutName)")
