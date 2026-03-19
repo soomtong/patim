@@ -12,6 +12,9 @@ UserInterfaceState.xcuserstate
 # Products
 dist/
 
+# Superpowers plans
+docs/superpowers/
+
 # Junk files on Mac OS X
 *.DS_Store
 *.playground
