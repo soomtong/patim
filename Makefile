@@ -20,13 +20,13 @@ test:
 	@echo "Running tests..."
 	@cd $(SRC_DIR) && xcodebuild test \
 		-scheme $(SCHEME) \
-		-destination 'platform=macOS'
+		-destination 'platform=macOS,arch=arm64'
 
 test-only:
 	@echo "Running single test..."
 	@cd $(SRC_DIR) && xcodebuild test \
 		-scheme $(SCHEME) \
-		-destination 'platform=macOS' \
+		-destination 'platform=macOS,arch=arm64' \
 		-only-testing:PatalTests/$(CLASS)
 
 test-verbose:
@@ -44,15 +44,15 @@ format:
 
 build-verbose:
 	@echo "Building the project..."
-	@cd $(SRC_DIR) && xcodebuild -verbose -scheme Patal -configuration Release build
+	@cd $(SRC_DIR) && xcodebuild -verbose -scheme Patal -configuration Release -destination 'platform=macOS,arch=arm64' build
 
 build:
 	@echo "Building the project..."
-	@cd $(SRC_DIR) && xcodebuild -verbose -scheme Patal -configuration Release build
+	@cd $(SRC_DIR) && xcodebuild -verbose -scheme Patal -configuration Release -destination 'platform=macOS,arch=arm64' build
 
 debug:
 	@echo "Building Debug version..."
-	@cd $(SRC_DIR) && xcodebuild -scheme $(SCHEME) -configuration Debug build CONFIGURATION_BUILD_DIR=$(CURDIR)/$(SRC_DIR)/build/Debug
+	@cd $(SRC_DIR) && xcodebuild -scheme $(SCHEME) -configuration Debug -destination 'platform=macOS,arch=arm64' build CONFIGURATION_BUILD_DIR=$(CURDIR)/$(SRC_DIR)/build/Debug
 	@echo "Debug build completed. Start log monitoring with: make log"
 
 log:
