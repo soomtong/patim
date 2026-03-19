@@ -20,16 +20,14 @@ test:
 	@echo "Running tests..."
 	@cd $(SRC_DIR) && xcodebuild test \
 		-scheme $(SCHEME) \
-		-destination 'platform=macOS' \
-		| xcbeautify
+		-destination 'platform=macOS'
 
 test-only:
 	@echo "Running single test..."
 	@cd $(SRC_DIR) && xcodebuild test \
 		-scheme $(SCHEME) \
 		-destination 'platform=macOS' \
-		-only-testing:PatalTests/$(CLASS) \
-		| xcbeautify
+		-only-testing:PatalTests/$(CLASS)
 
 test-verbose:
 	@echo "Running tests with verbose output..."
@@ -39,8 +37,10 @@ test-verbose:
 		-verbose
 
 format:
-	@echo "Running format script..."
-	@cd $(SCRIPT_DIR) && sh format.sh
+	@echo "Running swift-format..."
+	@cd $(SRC_DIR) && swift-format -i ./Patal/*.swift --configuration=./.swift-format.json
+	@echo "Running swiftlint..."
+	@cd $(SRC_DIR) && swiftlint lint --quiet ./Patal/
 
 build-verbose:
 	@echo "Building the project..."
@@ -48,7 +48,7 @@ build-verbose:
 
 build:
 	@echo "Building the project..."
-	@cd $(SRC_DIR) && xcodebuild -verbose -scheme Patal -configuration Release build | xcpretty
+	@cd $(SRC_DIR) && xcodebuild -verbose -scheme Patal -configuration Release build
 
 debug:
 	@echo "Building Debug version..."
@@ -136,7 +136,7 @@ help:
 	@echo "  remove-user - Remove the user Patal app"
 	@echo "  unquarantine- Remove quarantine attribute from Patal app"
 	@echo "  list        - List the contents of the dist directory"
-	@echo "  test        - Run tests with pretty formatting"
+	@echo "  test        - Run tests"
 	@echo "  test-only   - Run a single test (Usage: make test-only CLASS=AClass)"
 	@echo "  test-verbose- Run tests with verbose output"
 	@echo "  help        - Show this help message"
