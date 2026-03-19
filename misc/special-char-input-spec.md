@@ -418,43 +418,135 @@ func backspaceInSymbolMode() {
 }
 ```
 
-### 10. 자판별 적용 범위
+### 10. Trait 상호배제 (Mutex)
 
-| 자판 | 기호 확장 지원 | 트리거 메커니즘 | 트리거 키 | 단 선택 키 |
-|------|-------------|--------------|----------|----------|
-| 신세벌 P2 | O | 초성 충돌 | j (ㅇ) | k(ㄱ), l(ㅈ), ;(ㅂ) |
-| 신세벌 PCS | O | 초성 충돌 | j (ㅇ) | k(ㄱ), l(ㅈ), ;(ㅂ) |
-| 공세벌 P3 | O | 중복 모음 키 | / (오른쪽 ㅗ), 9 (오른쪽 ㅜ) | 트리거 키와 동일 |
+기호확장 트리거 키가 다른 trait의 키와 겹치는 경우, 두 trait을 동시에 활성화할 수 없다.
+
+#### 충돌 분석
+
+| 자판 | 기호확장 트리거 | 모아주기와 충돌 | 이유 |
+|------|--------------|--------------|------|
+| 신세벌 P2 | j(ㅇ) + 초성 | **충돌 없음** | ㅇ+ㄱ 등은 모아주기 여부와 무관하게 불가능한 겹자음 |
+| 신세벌 PCS | j(ㅇ) + 초성 | **충돌 없음** | 동일 |
+| 공세벌 P3 | /(ㅗ), 9(ㅜ) | **충돌** | 모아주기에서 `/`는 중성 단독 입력(vowelOnly)의 시작. 기호확장에서는 트리거. 다음 키가 올 때까지 의도 구분 불가 |
+
+공세벌 P3에서의 구체적 충돌 시나리오:
+
+```
+모아주기 ON + 기호확장 ON 일 때:
+
+사용자가 "/" 입력
+  ├─ 모아주기 해석: vowelOnly(ㅗ) 상태 → 다음에 초성/종성을 눌러 음절 완성
+  └─ 기호확장 해석: triggered 상태 → 다음 키로 기호 출력
+
+사용자가 "/" → "k" 입력
+  ├─ 모아주기 해석: ㅗ + ㄱ(초성) → 고 (consonantVowel)
+  └─ 기호확장 해석: / + k → 기호 맵에서 기호 출력
+
+→ 동일한 키 시퀀스에 두 가지 해석이 존재하므로 공존 불가
+```
+
+#### 상호배제 규칙
+
+```swift
+/// Trait 간 상호배제 규칙
+/// 하나를 켜면 충돌하는 trait은 자동으로 꺼진다
+let traitMutexRules: [(LayoutTrait, LayoutTrait)] = [
+    (.기호확장, .모아주기),   // 공세벌 P3에서 충돌
+]
+```
+
+적용 조건: 상호배제는 **실제로 충돌이 발생하는 자판에서만** 적용한다.
+
+| 자판 | 기호확장 ↔ 모아주기 상호배제 |
+|------|-------------------------|
+| 공세벌 P3 | **적용** (중복 모음 키 트리거이므로) |
+| 신세벌 P2 | 미적용 (모아주기 trait 자체가 없음) |
+| 신세벌 PCS | 미적용 (모아주기 trait 자체가 없음) |
+
+#### 구현
+
+`toggleLayoutTrait`에서 trait을 켤 때 mutex 규칙을 확인한다:
+
+```swift
+/// 자판별 상호배제 규칙: 트리거 메커니즘이 충돌하는 trait 쌍
+/// 자판의 availableTraits에 두 trait이 모두 있을 때만 적용
+let traitMutexPairs: [(LayoutTrait, LayoutTrait)] = [
+    (.기호확장, .모아주기),
+]
+
+func toggleLayoutTrait(
+    trait: LayoutTrait, for menuItem: NSMenuItem, in layout: inout HangulAutomata
+) -> String {
+    if layout.traits.contains(trait) {
+        // 끄기: 그냥 제거
+        layout.traits.remove(trait)
+        menuItem.state = .off
+    } else {
+        // 켜기: 상호배제 trait 확인 후 끄기
+        for (a, b) in traitMutexPairs {
+            if trait == a && layout.traits.contains(b)
+               && layout.availableTraits.contains(a)
+               && layout.availableTraits.contains(b)
+            {
+                layout.traits.remove(b)
+                // 해당 메뉴 아이템도 off로 변경 필요
+            }
+            if trait == b && layout.traits.contains(a)
+               && layout.availableTraits.contains(a)
+               && layout.availableTraits.contains(b)
+            {
+                layout.traits.remove(a)
+            }
+        }
+        layout.traits.insert(trait)
+        menuItem.state = .on
+    }
+    // ...
+}
+```
+
+> 참고: 신세벌 P2/PCS는 `availableTraits`에 `모아주기`가 없으므로 mutex 규칙이 자동으로 무시된다. 공세벌 P3에 `기호확장`을 추가하면 `availableTraits`에 `모아주기`와 `기호확장`이 모두 존재하게 되어 mutex가 발동한다.
+
+### 11. 자판별 적용 범위
+
+| 자판 | 기호 확장 지원 | 트리거 메커니즘 | 트리거 키 | 단 선택 키 | 모아주기와 공존 |
+|------|-------------|--------------|----------|----------|-------------|
+| 신세벌 P2 | O | 초성 충돌 | j (ㅇ) | k(ㄱ), l(ㅈ), ;(ㅂ) | 해당 없음 |
+| 신세벌 PCS | O | 초성 충돌 | j (ㅇ) | k(ㄱ), l(ㅈ), ;(ㅂ) | 해당 없음 |
+| 공세벌 P3 | O | 중복 모음 키 | / (오른쪽 ㅗ), 9 (오른쪽 ㅜ) | 트리거 키와 동일 | **불가 (mutex)** |
 
 각 자판의 `symbolExtensionConfig`이 nil이면 기호 확장이 비활성화된다.
 
-### 11. 구현 단계
+### 12. 구현 단계
 
 #### Phase 1: 기본 인프라
 1. `LayoutTrait.기호확장` 추가
-2. `SymbolExtensionState` enum 정의
-3. `HangulAutomata` 프로토콜에 기호 맵 관련 인터페이스 추가 (기본 구현 = 빈 맵)
-4. `CompositionStateMachine.reset()` 추가
-5. `HangulProcessor`에 `symbolState` 관리 로직 추가
+2. Trait 상호배제 로직 구현 (`toggleLayoutTrait`에서 mutex 처리)
+3. `SymbolExtensionState` enum 정의
+4. `HangulAutomata` 프로토콜에 기호 맵 관련 인터페이스 추가 (기본 구현 = 빈 맵)
+5. `CompositionStateMachine.reset()` 추가
+6. `HangulProcessor`에 `symbolState` 관리 로직 추가
 
 #### Phase 2: 입력 흐름 연결
-6. `PatalInputController.inputText`에서 기호 확장 분기 처리
-7. 트리거 감지 → 단 선택 → 기호 확정 플로우 구현
-8. 백스페이스 처리
+7. `PatalInputController.inputText`에서 기호 확장 분기 처리
+8. 트리거 감지 → 단 선택 → 기호 확정 플로우 구현
+9. 백스페이스 처리
 
 #### Phase 3: 기호 맵 데이터
-9. 신세벌 P2 기호 확장 맵 정의 (pat.im 배열표 기반)
-10. 공세벌 P3 기호 확장 맵 정의 (pat.im 배열표 기반)
-11. 신세벌 PCS 기호 맵 정의 (필요 시)
+10. 신세벌 P2 기호 확장 맵 정의 (pat.im 배열표 기반)
+11. 공세벌 P3 기호 확장 맵 정의 (pat.im 배열표 기반)
+12. 신세벌 PCS 기호 맵 정의 (필요 시)
 
 #### Phase 4: 테스트
-12. 신세벌 상태 전이 단위 테스트 (초성 충돌 트리거)
-13. 공세벌 상태 전이 단위 테스트 (중복 모음 키 트리거)
-14. 기호 출력 통합 테스트
-15. 백스페이스 테스트
-16. 기호 확장 비활성 시 기존 동작 유지 확인
+13. 신세벌 상태 전이 단위 테스트 (초성 충돌 트리거)
+14. 공세벌 상태 전이 단위 테스트 (중복 모음 키 트리거)
+15. Trait 상호배제 테스트 (공세벌 P3에서 기호확장 ON → 모아주기 OFF 확인)
+16. 기호 출력 통합 테스트
+17. 백스페이스 테스트
+18. 기호 확장 비활성 시 기존 동작 유지 확인
 
-### 12. 주의사항
+### 13. 주의사항
 
 - **성능**: 기호 확장 체크는 모든 키 입력에서 발생하므로 최소한의 분기로 처리해야 한다. `symbolState == .inactive && config == nil`이면 즉시 기존 경로로 진행.
 - **기존 동작 보존**: `symbolExtensionConfig`이 nil이면 현재 동작과 100% 동일해야 한다.
