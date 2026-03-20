@@ -183,7 +183,7 @@ struct SymbolExtensionShinP2Tests {
         #expect(processor.symbolState == .layerSelected(layerKey: "k"))
 
         // 매핑되지 않은 키
-        processor.rawChar = "["
+        processor.rawChar = "}"
         let result = processor.handleSymbolExtension()
         #expect(result == nil)
         #expect(processor.symbolState == .inactive)
@@ -207,6 +207,58 @@ struct SymbolExtensionShinP2Tests {
         _ = proc.한글조합WithSymbolCheck()
         #expect(proc.symbolState == .inactive)
         #expect(proc.getComposed() == "ㅇ")
+    }
+
+    @Test("j → ; → 1 → 동그라미 숫자 ⑪ (3단)")
+    func testCircledNumber11() {
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = ";"
+        _ = processor.handleSymbolExtension()
+
+        processor.rawChar = "1"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{246A}")  // ⑪
+    }
+
+    @Test("j → ; → $ → 위첨자 ⁴ (6단)")
+    func testSuperscript4() {
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = ";"
+        _ = processor.handleSymbolExtension()
+
+        processor.rawChar = "$"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{2074}")  // ⁴
+    }
+
+    @Test("j → l → Q → 원소기호 ∈ (5단)")
+    func testElementOf() {
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = "l"
+        _ = processor.handleSymbolExtension()
+
+        processor.rawChar = "Q"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{2208}")  // ∈
+    }
+
+    @Test("j → k → [ → 【 (1단)")
+    func testBlackBracket() {
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = "k"
+        _ = processor.handleSymbolExtension()
+
+        processor.rawChar = "["
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{3010}")  // 【
     }
 
     @Test("백스페이스: layerSelected → triggered 복귀")
@@ -315,11 +367,31 @@ struct SymbolExtensionP3Tests {
         _ = processor.한글조합WithSymbolCheck()
         #expect(processor.symbolState == .triggered(triggerKey: "/"))
 
-        // "k"는 symbolMap["/"]에 없고, layerKeys도 비어있음 → inactive
-        processor.rawChar = "k"
+        // "7"은 symbolMap["/"]에 없고, layerKeys도 비어있음 → inactive
+        processor.rawChar = "7"
         let result = processor.handleSymbolExtension()
         #expect(result == nil)
         #expect(processor.symbolState == .inactive)
+    }
+
+    @Test("2단계 직접 조회: / → q → 왼쪽화살표(←)")
+    func testDirectArrow() {
+        processor.rawChar = "/"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = "q"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{2190}")  // ←
+    }
+
+    @Test("2단계 직접 조회: 9 → m → 동그라미 ①")
+    func testCircledNumber9() {
+        processor.rawChar = "9"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = "m"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{2460}")  // ①
     }
 
     @Test("/ 후 겹모음 키(f=ㅏ) → 기호 출력 (기호확장 우선)")
