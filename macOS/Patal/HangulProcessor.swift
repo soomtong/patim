@@ -451,17 +451,23 @@ class HangulProcessor {
         case .inactive:
             return nil
 
-        case .triggered:
+        case .triggered(let triggerKey):
+            // 2단계 직접 조회 (공세벌: 트리거 키 = 단 키)
+            if let symbol = config.symbolMap[triggerKey]?[rawChar] {
+                stateMachine.reset()
+                symbolState = .inactive
+                return symbol
+            }
+            // 3단계 단 선택 (신세벌: 트리거 → 단 선택 → 기호)
             if config.layerKeys.contains(rawChar) {
                 // 단 선택 키 → 트리거 자소 소급취소, 기호 모드 진입
                 stateMachine.reset()
                 symbolState = .layerSelected(layerKey: rawChar)
                 return ""  // 빈 문자열 = 키 소비됨, preedit 해제 필요
-            } else {
-                // 단 선택 키가 아님 → 정상 한글 조합 계속
-                symbolState = .inactive
-                return nil
             }
+            // 기호 확장 키가 아님 → 정상 한글 조합 계속
+            symbolState = .inactive
+            return nil
 
         case .layerSelected(let layerKey):
             if let symbol = config.symbolMap[layerKey]?[rawChar] {
