@@ -20,7 +20,7 @@ struct OptionTests {
         var optionMenu: OptionMenu!
         let holders = [
             LayoutTrait.글자단위삭제.rawValue, LayoutTrait.수정기호.rawValue, LayoutTrait.빠른마침표.rawValue,
-            LayoutTrait.옵션라틴.rawValue,
+            LayoutTrait.옵션라틴.rawValue, LayoutTrait.기호확장.rawValue,
         ]
 
         init() {
