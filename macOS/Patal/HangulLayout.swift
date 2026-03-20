@@ -35,6 +35,7 @@ enum LayoutTrait: String {
     case 글자단위삭제
     case 빠른마침표
     case 옵션라틴
+    case 기호확장
 }
 
 enum KeyCode: Int {
@@ -87,6 +88,9 @@ protocol HangulAutomata {
     func pickJungsung(by char: String) -> unichar?
     func pickJongsung(by char: String) -> unichar?
     func pickNonSyllable(by char: String) -> String?
+
+    /// 기호 확장 설정 (nil이면 기호 확장 미지원)
+    var symbolExtensionConfig: SymbolExtensionConfig? { get }
 }
 
 /// 각 레이아웃이 가져야할 프로토콜의 공용 구현
@@ -125,6 +129,14 @@ extension HangulAutomata {
     var can옵션라틴: Bool {
         return traits.contains(LayoutTrait.옵션라틴)
     }
+
+    @inlinable
+    var can기호확장: Bool {
+        return traits.contains(LayoutTrait.기호확장)
+    }
+
+    /// 기본 구현: 기호 확장 미지원
+    var symbolExtensionConfig: SymbolExtensionConfig? { nil }
 
     @inlinable
     func pickChosung(by char: String) -> unichar? {

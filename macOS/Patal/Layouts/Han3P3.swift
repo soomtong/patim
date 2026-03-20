@@ -13,8 +13,25 @@ import Foundation
 
 /// enum LayoutName 의 createLayoutInstance 조합기 이름과 같아야 합니다.
 struct Han3P3Layout: HangulAutomata {
-    let availableTraits: Set<LayoutTrait> = [LayoutTrait.모아주기, LayoutTrait.두줄숫자, LayoutTrait.글자단위삭제, LayoutTrait.빠른마침표, LayoutTrait.옵션라틴]
+    let availableTraits: Set<LayoutTrait> = [LayoutTrait.모아주기, LayoutTrait.두줄숫자, LayoutTrait.글자단위삭제, LayoutTrait.빠른마침표, LayoutTrait.옵션라틴, LayoutTrait.기호확장]
     var traits: Set<LayoutTrait> = []
+
+    /// 기호 확장 설정: 겹중성 충돌 트리거 (ㅗ+ㅗ, ㅜ+ㅜ)
+    var symbolExtensionConfig: SymbolExtensionConfig? {
+        guard can기호확장 else { return nil }
+        return SymbolExtensionConfig(
+            triggerKeys: ["/", "9"],
+            triggerState: .vowelOnly,
+            layerKeys: ["/", "9"],
+            symbolMap: Self.symbolMap
+        )
+    }
+
+    /// 기호 맵: [단선택키][기호키] → 기호 문자열
+    private static let symbolMap: [String: [String: String]] = [
+        "/": [:],  // 1단 (추후 배열표 기반 데이터 추가)
+        "9": [:],  // 2단
+    ]
 
     let chosungMap: [String: 초성] = [
         "k": 초성.기역,

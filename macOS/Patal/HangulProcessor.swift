@@ -186,6 +186,9 @@ class HangulProcessor {
         }
     }
 
+    /// 기호 확장 상태
+    private(set) var symbolState: SymbolExtensionState = .inactive
+
     /// StateMachine 인스턴스
     private var stateMachine: CompositionStateMachine
 
@@ -257,6 +260,9 @@ class HangulProcessor {
             !hangulLayout.can글자단위삭제
             && (keyCode == KeyCode.BACKSPACE.rawValue && modifierCode == 0)
         if composableBackspace { return true }
+
+        // 기호 확장 모드에서는 기호 키가 한글 맵에 없을 수 있으므로 통과
+        if symbolState != .inactive { return true }
 
         // 키코드 기반 검증 우선 적용 (라틴 자판 독립적)
         if let hangulChar = KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: keyCode, modifiers: modifierCode) {
@@ -406,6 +412,109 @@ class HangulProcessor {
         stateMachine.reset()
     }
 
+    // MARK: - 기호 확장
+
+    /// 기호 확장 상태 리셋
+    func resetSymbolState() {
+        symbolState = .inactive
+    }
+
+    /// 기호 확장 트리거 조건 확인 (한글조합 후 호출)
+    /// 조합 결과가 트리거 조건에 맞으면 triggered 상태로 전환
+    private func checkSymbolTrigger() {
+        guard let config = hangulLayout.symbolExtensionConfig else { return }
+
+        let bufferState = stateMachine.currentState
+
+        switch config.triggerState {
+        case .initialConsonant:
+            if bufferState == .initialConsonant
+                && config.triggerKeys.contains(rawChar)
+            {
+                symbolState = .triggered(triggerKey: rawChar)
+            }
+        case .vowelOnly:
+            if bufferState == .vowelOnly
+                && config.triggerKeys.contains(rawChar)
+            {
+                symbolState = .triggered(triggerKey: rawChar)
+            }
+        }
+    }
+
+    /// 기호 확장 입력 처리
+    /// - Returns: 기호 문자열 (nil이면 기호 확장이 처리하지 않음)
+    func handleSymbolExtension() -> String? {
+        guard let config = hangulLayout.symbolExtensionConfig else { return nil }
+
+        switch symbolState {
+        case .inactive:
+            return nil
+
+        case .triggered:
+            if config.layerKeys.contains(rawChar) {
+                // 단 선택 키 → 트리거 자소 소급취소, 기호 모드 진입
+                stateMachine.reset()
+                symbolState = .layerSelected(layerKey: rawChar)
+                return ""  // 빈 문자열 = 키 소비됨, preedit 해제 필요
+            } else {
+                // 단 선택 키가 아님 → 정상 한글 조합 계속
+                symbolState = .inactive
+                return nil
+            }
+
+        case .layerSelected(let layerKey):
+            if let symbol = config.symbolMap[layerKey]?[rawChar] {
+                // 기호 맵에 있음 → 기호 출력
+                symbolState = .inactive
+                return symbol
+            } else {
+                // 기호 맵에 없음 → 기호 모드 탈출
+                symbolState = .inactive
+                return nil
+            }
+        }
+    }
+
+    /// 기호 확장 백스페이스 처리
+    /// - Returns: true이면 백스페이스를 소비함 (일반 백스페이스 처리 불필요)
+    func handleSymbolBackspace() -> Bool {
+        guard hangulLayout.symbolExtensionConfig != nil else { return false }
+
+        switch symbolState {
+        case .layerSelected(let layerKey):
+            // layerSelected → triggered 복귀: 트리거 자소 재입력
+            let config = hangulLayout.symbolExtensionConfig!
+            // 공세벌: layerKey == triggerKey, 신세벌: triggerKey는 항상 단일 값
+            let triggerKey = config.triggerKeys.contains(layerKey) ? layerKey : config.triggerKeys.first!
+            stateMachine.reset()
+            _ = stateMachine.processInput(triggerKey)
+            symbolState = .triggered(triggerKey: triggerKey)
+            return true
+
+        case .triggered:
+            symbolState = .inactive
+            return false  // 기존 백스페이스 로직에 위임
+
+        case .inactive:
+            return false
+        }
+    }
+
+    /// 한글 조합 후 트리거 조건을 확인하는 래퍼
+    @_optimize(speed)
+    @inline(__always)
+    func 한글조합WithSymbolCheck() -> CommitState {
+        let result = 한글조합()
+
+        // 조합 중일 때만 트리거 확인 (커밋 시에는 새 글자가 시작되므로 확인 불필요)
+        if result == .composing && hangulLayout.can기호확장 {
+            checkSymbolTrigger()
+        }
+
+        return result
+    }
+
     func clearBuffers() {
         rawChar = ""
         완성 = nil
@@ -426,6 +535,7 @@ class HangulProcessor {
 
     /// 버퍼에 있는 커밋이나 조합 중인 글자를 내보내기
     func flushCommit() -> [String] {
+        resetSymbolState()
         var buffers: [String] = []
 
         // 남은 완성 글자가 있는 경우 (드문 케이스)

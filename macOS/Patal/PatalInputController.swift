@@ -143,6 +143,13 @@ extension InputController {
 
         /// 백스페이스 처리 로직
         if keyCode == KeyCode.BACKSPACE.rawValue {
+            /// 기호 확장 백스페이스 (layerSelected → triggered 복귀)
+            if processor.handleSymbolBackspace() {
+                if let commit = processor.composeCommitToUpdate() {
+                    return updateSelectedRangeCommit(client: client, with: commit)
+                }
+                return updateEmptyCommit(client: client)
+            }
             /// 조합중인 자소가 없으면 처리 중단
             if processor.countComposable() < 1 {
                 return false
@@ -178,6 +185,21 @@ extension InputController {
             processor.rawChar = s
         }
 
+        /// 기호 확장 처리 (triggered/layerSelected 상태)
+        if processor.symbolState != .inactive {
+            if let symbolResult = processor.handleSymbolExtension() {
+                if symbolResult.isEmpty {
+                    // 단 선택 완료 → preedit 해제
+                    return updateEmptyCommit(client: client)
+                } else {
+                    // 기호 출력
+                    client.insertText(symbolResult, replacementRange: .notFoundRange)
+                    return true
+                }
+            }
+            // nil = 기호 확장이 처리하지 않음 → 정상 한글 조합 계속
+        }
+
         /// 비 한글 처리 먼저 진행
         if !processor.verifyCombosable(baseChar) {
             let flushed = processor.flushCommit()
@@ -187,7 +209,7 @@ extension InputController {
         }
 
         /// 한글의 핵심 조합이 여기에서 이루어짐
-        let nextStatus = processor.한글조합()
+        let nextStatus = processor.한글조합WithSymbolCheck()
         logger.debug("상태: \(String(describing: nextStatus))")
 
         if let commit = processor.완성 {
@@ -214,6 +236,9 @@ extension InputController {
         guard let client = sender as? IMKTextInput else {
             return
         }
+
+        // 기호 확장 상태 리셋
+        processor.resetSymbolState()
 
         // 빠른마침표: 보류 중인 스페이스가 있으면 삽입
         if processor.hasPendingSpace {
