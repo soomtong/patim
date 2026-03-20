@@ -12,7 +12,7 @@ rm -rf "$APP"
 sleep 1
 pushd ../macOS
 
-xcodebuild -scheme Patal -configuration Release | xcbeautify
+xcodebuild -scheme Patal -configuration Release
 sleep 1
 
 mv "$BUILD_DIR/Patal.app" "$APP"
