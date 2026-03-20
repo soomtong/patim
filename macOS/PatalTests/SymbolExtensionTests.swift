@@ -107,7 +107,7 @@ struct SymbolExtensionShinP2Tests {
         #expect(result == "\u{2018}")  // '
     }
 
-    @Test("j → ; → j → 여는 큰따옴표(")")
+    @Test("j → ; → j → 여는 큰따옴표")
     func testOpenDoubleQuote() {
         processor.rawChar = "j"
         _ = processor.한글조합WithSymbolCheck()
