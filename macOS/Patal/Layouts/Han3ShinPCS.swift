@@ -28,12 +28,8 @@ struct Han3ShinPcsLayout: HangulAutomata {
         )
     }
 
-    /// 기호 맵: [단선택키][기호키] → 기호 문자열
-    private static let symbolMap: [String: [String: String]] = [
-        "k": [:],  // 1단 (추후 배열표 기반 데이터 추가)
-        "l": [:],  // 2단
-        ";": [:],  // 3단
-    ]
+    /// 기호 맵: P2와 동일한 배열 사용 (신세벌 공통)
+    private static let symbolMap: [String: [String: String]] = Han3ShinP2Layout.sharedSymbolMap
 
     let chosungMap: [String: 초성] = [
         "k": 초성.기역,

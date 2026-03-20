@@ -16,21 +16,33 @@ struct Han3P3Layout: HangulAutomata {
     let availableTraits: Set<LayoutTrait> = [LayoutTrait.모아주기, LayoutTrait.두줄숫자, LayoutTrait.글자단위삭제, LayoutTrait.빠른마침표, LayoutTrait.옵션라틴, LayoutTrait.기호확장]
     var traits: Set<LayoutTrait> = []
 
-    /// 기호 확장 설정: 겹중성 충돌 트리거 (ㅗ+ㅗ, ㅜ+ㅜ)
+    /// 기호 확장 설정: 2단계 직접 조회 (오른쪽ㅗ/ㅜ → 기호키)
+    /// 오른쪽 ㅗ·ㅜ를 누른 뒤 바로 기호 글쇠를 눌러 입력 (pat.im/1128 참조)
     var symbolExtensionConfig: SymbolExtensionConfig? {
         guard can기호확장 else { return nil }
         return SymbolExtensionConfig(
             triggerKeys: ["/", "9"],
             triggerState: .vowelOnly,
-            layerKeys: ["/", "9"],
+            layerKeys: [],
             symbolMap: Self.symbolMap
         )
     }
 
-    /// 기호 맵: [단선택키][기호키] → 기호 문자열
+    /// 기호 맵: [트리거키][기호키] → 기호 문자열
+    /// 오른쪽ㅗ(/) → 1단, 오른쪽ㅜ(9) → 2단
+    /// Shift+기호키 → 3단/4단 (pat.im/1128 참조)
     private static let symbolMap: [String: [String: String]] = [
-        "/": [:],  // 1단 (추후 배열표 기반 데이터 추가)
-        "9": [:],  // 2단
+        // 오른쪽ㅗ (/) 기호
+        "/": [
+            "f": "·",     // 가운뎃점 U+00B7
+            "g": "\u{2026}",  // 말줄임표 …
+            "d": "○",     // 흰 동그라미 U+25CB
+            "a": "◇",     // 흰 마름모 U+25C7
+        ],
+        // 오른쪽ㅜ (9) 기호
+        "9": [
+            "s": "□",     // 흰 네모 U+25A1
+        ],
     ]
 
     let chosungMap: [String: 초성] = [

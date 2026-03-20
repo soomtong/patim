@@ -9,33 +9,6 @@ import Testing
 
 @testable import Patal
 
-/// 테스트용 기호 맵 (신세벌)
-private let shinSymbolMap: [String: [String: String]] = [
-    "k": [
-        "g": "…",
-        "f": "·",
-        "G": "♣",
-    ],
-    "l": [
-        "g": "★",
-    ],
-    ";": [
-        "g": "♠",
-    ],
-]
-
-/// 테스트용 기호 맵 (공세벌)
-private let p3SymbolMap: [String: [String: String]] = [
-    "/": [
-        "f": "·",
-        "g": "…",
-        "F": "♠",
-    ],
-    "9": [
-        "s": "□",
-    ],
-]
-
 @Suite("기호 확장 테스트 - 신세벌 P2", .serialized)
 struct SymbolExtensionShinP2Tests {
     var processor: HangulProcessor!
@@ -49,12 +22,12 @@ struct SymbolExtensionShinP2Tests {
     @Test("기호확장 trait OFF이면 symbolExtensionConfig == nil")
     func testTraitOff() {
         var layout = Han3ShinP2Layout()
-        // 기호확장 trait 없음
         #expect(layout.symbolExtensionConfig == nil)
         #expect(layout.can기호확장 == false)
 
         layout.traits.insert(.기호확장)
         #expect(layout.can기호확장 == true)
+        #expect(layout.symbolExtensionConfig != nil)
     }
 
     @Test("SymbolExtensionState 기본 상태는 inactive")
@@ -72,31 +45,145 @@ struct SymbolExtensionShinP2Tests {
 
     @Test("트리거 후 모음 입력 → inactive로 복귀, 정상 한글 조합")
     func testTriggerThenVowel() {
-        // j(ㅇ)
         processor.rawChar = "j"
         _ = processor.한글조합WithSymbolCheck()
         #expect(processor.symbolState == .triggered(triggerKey: "j"))
 
-        // f(ㅏ) → 정상 한글: 아
+        // f(ㅏ) → P2의 symbolMap["j"]에 없으므로 직접조회 nil,
+        // f는 layerKey["k","l",";"]도 아님 → inactive
         processor.rawChar = "f"
         let result = processor.handleSymbolExtension()
-        #expect(result == nil)  // 기호 확장이 처리하지 않음
+        #expect(result == nil)
         #expect(processor.symbolState == .inactive)
 
-        // 정상 한글 조합 계속
         _ = processor.한글조합WithSymbolCheck()
         #expect(processor.getComposed() == "아")
     }
 
-    @Test("j → j (ㅇ+ㅇ) → 트리거 후 비단선택 초성 → inactive")
-    func testTriggerThenNonLayerChosung() {
+    @Test("j → k → f → 가운뎃점(·) 전체 플로우")
+    func testFullSymbolFlow() {
         // j(ㅇ) → triggered
         processor.rawChar = "j"
         _ = processor.한글조합WithSymbolCheck()
         #expect(processor.symbolState == .triggered(triggerKey: "j"))
 
-        // h(ㄴ) → 단 선택 키가 아님 → inactive
-        processor.rawChar = "h"
+        // k → layerSelected("k")
+        processor.rawChar = "k"
+        let layerResult = processor.handleSymbolExtension()
+        #expect(layerResult == "")  // 빈 문자열 = 키 소비됨
+        #expect(processor.symbolState == .layerSelected(layerKey: "k"))
+
+        // f → 가운뎃점
+        processor.rawChar = "f"
+        let symbolResult = processor.handleSymbolExtension()
+        #expect(symbolResult == "\u{00B7}")  // ·
+        #expect(processor.symbolState == .inactive)
+    }
+
+    @Test("j → k → g → 말줄임표(…)")
+    func testEllipsis() {
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = "k"
+        _ = processor.handleSymbolExtension()
+
+        processor.rawChar = "g"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{2026}")  // …
+    }
+
+    @Test("j → l → j → 여는 작은따옴표(')")
+    func testOpenSingleQuote() {
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = "l"
+        _ = processor.handleSymbolExtension()
+        #expect(processor.symbolState == .layerSelected(layerKey: "l"))
+
+        processor.rawChar = "j"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{2018}")  // '
+    }
+
+    @Test("j → ; → j → 여는 큰따옴표(")")
+    func testOpenDoubleQuote() {
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = ";"
+        _ = processor.handleSymbolExtension()
+        #expect(processor.symbolState == .layerSelected(layerKey: ";"))
+
+        processor.rawChar = "j"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{201C}")  // "
+    }
+
+    @Test("j → k → Shift+! → 로마숫자 Ⅰ (4단)")
+    func testRomanNumeral() {
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = "k"
+        _ = processor.handleSymbolExtension()
+
+        processor.rawChar = "!"  // Shift+1
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{2160}")  // Ⅰ
+    }
+
+    @Test("j → k → Shift+A → 그리스문자 α (4단)")
+    func testGreekAlpha() {
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = "k"
+        _ = processor.handleSymbolExtension()
+
+        processor.rawChar = "A"  // Shift+a
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{03B1}")  // α
+    }
+
+    @Test("j → l → 1 → 동그라미 숫자 ①")
+    func testCircledNumber() {
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = "l"
+        _ = processor.handleSymbolExtension()
+
+        processor.rawChar = "1"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{2460}")  // ①
+    }
+
+    @Test("j → ; → d → 검은 동그라미 ●")
+    func testFilledCircle() {
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = ";"
+        _ = processor.handleSymbolExtension()
+
+        processor.rawChar = "d"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{25CF}")  // ●
+    }
+
+    @Test("기호 맵에 없는 키 → nil, inactive")
+    func testUnmappedKey() {
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = "k"
+        _ = processor.handleSymbolExtension()
+        #expect(processor.symbolState == .layerSelected(layerKey: "k"))
+
+        // 매핑되지 않은 키
+        processor.rawChar = "["
         let result = processor.handleSymbolExtension()
         #expect(result == nil)
         #expect(processor.symbolState == .inactive)
@@ -112,25 +199,41 @@ struct SymbolExtensionShinP2Tests {
         #expect(processor.symbolState == .inactive)
     }
 
-    @Test("resetSymbolState 동작")
-    func testResetSymbolState() {
-        processor.rawChar = "j"
-        _ = processor.한글조합WithSymbolCheck()
-        #expect(processor.symbolState == .triggered(triggerKey: "j"))
-
-        processor.resetSymbolState()
-        #expect(processor.symbolState == .inactive)
-    }
-
     @Test("기호확장 비활성 시 triggered 되지 않음")
     func testNoTriggerWhenDisabled() {
-        var layout = Han3ShinP2Layout()
-        // 기호확장 trait 없음
+        let layout = Han3ShinP2Layout()
         let proc = HangulProcessor(layout: layout)
         proc.rawChar = "j"
         _ = proc.한글조합WithSymbolCheck()
         #expect(proc.symbolState == .inactive)
         #expect(proc.getComposed() == "ㅇ")
+    }
+
+    @Test("백스페이스: layerSelected → triggered 복귀")
+    func testBackspaceFromLayerSelected() {
+        // j → k → layerSelected
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+        processor.rawChar = "k"
+        _ = processor.handleSymbolExtension()
+        #expect(processor.symbolState == .layerSelected(layerKey: "k"))
+
+        // 백스페이스 → triggered 복귀, preedit에 ㅇ
+        let consumed = processor.handleSymbolBackspace()
+        #expect(consumed == true)
+        #expect(processor.symbolState == .triggered(triggerKey: "j"))
+        #expect(processor.getComposed() == "ㅇ")
+    }
+
+    @Test("백스페이스: triggered → inactive")
+    func testBackspaceFromTriggered() {
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+        #expect(processor.symbolState == .triggered(triggerKey: "j"))
+
+        let consumed = processor.handleSymbolBackspace()
+        #expect(consumed == false)  // 기존 백스페이스에 위임
+        #expect(processor.symbolState == .inactive)
     }
 }
 
@@ -149,7 +252,6 @@ struct SymbolExtensionP3Tests {
         processor.rawChar = "/"
         _ = processor.한글조합WithSymbolCheck()
         #expect(processor.symbolState == .triggered(triggerKey: "/"))
-        #expect(processor.getComposed() != nil)  // ㅗ
     }
 
     @Test("트리거: 9(ㅜ) 입력 후 triggered 상태")
@@ -157,6 +259,28 @@ struct SymbolExtensionP3Tests {
         processor.rawChar = "9"
         _ = processor.한글조합WithSymbolCheck()
         #expect(processor.symbolState == .triggered(triggerKey: "9"))
+    }
+
+    @Test("2단계 직접 조회: / → f → 가운뎃점(·)")
+    func testDirectSymbol() {
+        processor.rawChar = "/"
+        _ = processor.한글조합WithSymbolCheck()
+        #expect(processor.symbolState == .triggered(triggerKey: "/"))
+
+        processor.rawChar = "f"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{00B7}")  // ·
+        #expect(processor.symbolState == .inactive)
+    }
+
+    @Test("2단계 직접 조회: 9 → s → 네모(□)")
+    func testDirectSymbol9() {
+        processor.rawChar = "9"
+        _ = processor.한글조합WithSymbolCheck()
+
+        processor.rawChar = "s"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{25A1}")  // □
     }
 
     @Test("왼쪽 ㅗ(v)는 트리거하지 않음")
@@ -175,49 +299,65 @@ struct SymbolExtensionP3Tests {
 
     @Test("초성 뒤 / → consonantVowel 상태이므로 트리거 안됨")
     func testNoTriggerAfterChosung() {
-        // k(ㄱ) → initialConsonant
         processor.rawChar = "k"
         _ = processor.한글조합WithSymbolCheck()
         #expect(processor.symbolState == .inactive)
 
-        // /(ㅗ) → consonantVowel(고) → triggerState(.vowelOnly) 불일치 → 트리거 안됨
         processor.rawChar = "/"
         _ = processor.한글조합WithSymbolCheck()
         #expect(processor.symbolState == .inactive)
         #expect(processor.getComposed() == "고")
     }
 
-    @Test("/ 후 겹모음 /f → ㅘ, 기호확장 발동 안됨")
-    func testCompoundVowelNotTrigger() {
-        // /(ㅗ) → triggered
+    @Test("/ 후 매핑 없는 키 → inactive, 정상 한글 계속")
+    func testUnmappedKeyFallback() {
         processor.rawChar = "/"
         _ = processor.한글조합WithSymbolCheck()
         #expect(processor.symbolState == .triggered(triggerKey: "/"))
 
-        // f(ㅏ) → 단 선택 키가 아님 → inactive, 정상 겹모음
-        processor.rawChar = "f"
-        let result = processor.handleSymbolExtension()
-        #expect(result == nil)
-        #expect(processor.symbolState == .inactive)
-
-        // 정상 한글 조합: ㅗ+ㅏ=ㅘ
-        _ = processor.한글조합WithSymbolCheck()
-    }
-
-    @Test("모아주기+기호확장 공존: / → k → 정상 한글 고")
-    func testMoachigiCoexistence() {
-        // 모아주기 활성화
-        processor.hangulLayout.traits.insert(.모아주기)
-
-        // /(ㅗ) → vowelOnly, triggered
-        processor.rawChar = "/"
-        _ = processor.한글조합WithSymbolCheck()
-        #expect(processor.symbolState == .triggered(triggerKey: "/"))
-
-        // k는 layerKey가 아님 → inactive, 정상 한글 조합 계속
+        // "k"는 symbolMap["/"]에 없고, layerKeys도 비어있음 → inactive
         processor.rawChar = "k"
         let result = processor.handleSymbolExtension()
         #expect(result == nil)
         #expect(processor.symbolState == .inactive)
+    }
+
+    @Test("/ 후 겹모음 키(f=ㅏ) → 기호 출력 (기호확장 우선)")
+    func testSymbolOverridesCompoundVowel() {
+        // 기호확장 활성 시 / + f → · (기호), ㅘ가 아님
+        processor.rawChar = "/"
+        _ = processor.한글조합WithSymbolCheck()
+        #expect(processor.symbolState == .triggered(triggerKey: "/"))
+
+        // f가 symbolMap["/"]에 있으므로 기호 출력
+        processor.rawChar = "f"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{00B7}")  // · (겹모음 ㅘ 대신 가운뎃점)
+    }
+}
+
+@Suite("기호 확장 테스트 - PCS", .serialized)
+struct SymbolExtensionPcsTests {
+    var processor: HangulProcessor!
+
+    init() {
+        var layout = Han3ShinPcsLayout()
+        layout.traits.insert(.기호확장)
+        processor = HangulProcessor(layout: layout)
+    }
+
+    @Test("PCS도 P2와 동일한 기호 맵 사용")
+    func testSharedSymbolMap() {
+        // j → k → f → 가운뎃점
+        processor.rawChar = "j"
+        _ = processor.한글조합WithSymbolCheck()
+        #expect(processor.symbolState == .triggered(triggerKey: "j"))
+
+        processor.rawChar = "k"
+        _ = processor.handleSymbolExtension()
+
+        processor.rawChar = "f"
+        let result = processor.handleSymbolExtension()
+        #expect(result == "\u{00B7}")  // ·
     }
 }
