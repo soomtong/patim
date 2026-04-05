@@ -46,7 +46,7 @@ extension InputController {
     }
 
     /// 빠른마침표: 더블스페이스 판정 대기 시간 (초)
-    private static let pendingSpaceTimeout: Double = 0.5
+    private static let pendingSpaceTimeout: Double = 0.25
 
     private func startPendingSpaceTimer(client: IMKTextInput) {
         pendingSpaceTimer?.cancel()
