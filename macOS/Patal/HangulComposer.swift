@@ -63,49 +63,74 @@ let compat종성Map: [종성: 자음] = [
 
 /// 한글 낱자를 조합하는 객체
 /// 글자를 생성하고 출력할 수 있는 형태로 변환
-class HangulComposer {
+struct HangulComposer {
     private var chosungCode: 초성?
     private var jungsungCode: 중성?
     private var jongsungCode: 종성?
 
+    // init에서 확인한 오프셋을 그대로 저장해 getSyllable()에서 재조회하지 않도록 한다.
+    private var chosungOffsetValue: Int?
+    private var jungsungOffsetValue: Int?
+    private var jongsungOffsetValue: Int?
+
     init?(chosungPoint: 초성?, jungsungPoint: 중성?, jongsungPoint: 종성?) {
         switch (chosungPoint, jungsungPoint, jongsungPoint) {
         // 닿소리 홀소리 하나만
-        case (let chosungPoint?, nil, nil)
-        where chosungMapOffset[chosungPoint] != nil:
+        case (let chosungPoint?, nil, nil):
+            guard let offset = chosungMapOffset[chosungPoint] else { return nil }
             chosungCode = chosungPoint
+            chosungOffsetValue = offset
 
-        case (nil, let jungsungPoint?, nil)
-        where jungsungMapOffset[jungsungPoint] != nil:
+        case (nil, let jungsungPoint?, nil):
+            guard let offset = jungsungMapOffset[jungsungPoint] else { return nil }
             jungsungCode = jungsungPoint
+            jungsungOffsetValue = offset
 
-        case (nil, nil, let jongsungPoint?)
-        where jongsungMapOffset[jongsungPoint] != nil:
+        case (nil, nil, let jongsungPoint?):
+            guard let offset = jongsungMapOffset[jongsungPoint] else { return nil }
             jongsungCode = jongsungPoint
+            jongsungOffsetValue = offset
 
         // 조합: 초성이 없거나 중성이 없는 조합은 배제한다.
-        case (let chosungPoint?, let jungsungPoint?, nil)
-        where chosungMapOffset[chosungPoint] != nil && jungsungMapOffset[jungsungPoint] != nil:
+        case (let chosungPoint?, let jungsungPoint?, nil):
+            guard let cOffset = chosungMapOffset[chosungPoint],
+                let jOffset = jungsungMapOffset[jungsungPoint]
+            else { return nil }
             chosungCode = chosungPoint
             jungsungCode = jungsungPoint
+            chosungOffsetValue = cOffset
+            jungsungOffsetValue = jOffset
 
-        case (let chosungPoint?, let jungsungPoint?, let jongsungPoint?)
-        where chosungMapOffset[chosungPoint] != nil && jungsungMapOffset[jungsungPoint] != nil
-            && jongsungMapOffset[jongsungPoint] != nil:
+        case (let chosungPoint?, let jungsungPoint?, let jongsungPoint?):
+            guard let cOffset = chosungMapOffset[chosungPoint],
+                let jOffset = jungsungMapOffset[jungsungPoint],
+                let fOffset = jongsungMapOffset[jongsungPoint]
+            else { return nil }
             chosungCode = chosungPoint
             jungsungCode = jungsungPoint
             jongsungCode = jongsungPoint
+            chosungOffsetValue = cOffset
+            jungsungOffsetValue = jOffset
+            jongsungOffsetValue = fOffset
 
         // 아니 느슨한 조합을 할 수 있지 않을까?
-        case (let chosungPoint?, nil, let jongsungPoint?)
-        where chosungMapOffset[chosungPoint] != nil && jongsungMapOffset[jongsungPoint] != nil:
+        case (let chosungPoint?, nil, let jongsungPoint?):
+            guard let cOffset = chosungMapOffset[chosungPoint],
+                let fOffset = jongsungMapOffset[jongsungPoint]
+            else { return nil }
             chosungCode = chosungPoint
             jongsungCode = jongsungPoint
+            chosungOffsetValue = cOffset
+            jongsungOffsetValue = fOffset
 
-        case (nil, let jungsungPoint?, let jongsungPoint?)
-        where jungsungMapOffset[jungsungPoint] != nil && jongsungMapOffset[jongsungPoint] != nil:
+        case (nil, let jungsungPoint?, let jongsungPoint?):
+            guard let jOffset = jungsungMapOffset[jungsungPoint],
+                let fOffset = jongsungMapOffset[jongsungPoint]
+            else { return nil }
             jungsungCode = jungsungPoint
             jongsungCode = jongsungPoint
+            jungsungOffsetValue = jOffset
+            jongsungOffsetValue = fOffset
 
         default:
             return nil
@@ -127,27 +152,17 @@ class HangulComposer {
             return normalizeCompat(음소.끝소리)
 
         // 완성 낱자: 첫/가 조합
-        case (let chosungPoint?, let jungsungPoint?, nil):
-            var offset = 0
-            if let chosungOffset = chosungMapOffset[chosungPoint] {
-                offset += chosungOffset * jungsungOffset21 * jongsungOffset28
-            }
-            if let jungsungOffset = jungsungMapOffset[jungsungPoint] {
-                offset += jungsungOffset * jongsungOffset28
-            }
+        case (_?, _?, nil):
+            let offset =
+                chosungOffsetValue! * jungsungOffset21 * jongsungOffset28
+                + jungsungOffsetValue! * jongsungOffset28
             return Character(UnicodeScalar(hangulUnicodeOffset + offset)!)
         // 완성 낱자: 첫/가/끝 조합
-        case (let chosungPoint?, let jungsungPoint?, let jongsungPoint?):
-            var offset = 0
-            if let chosungOffset = chosungMapOffset[chosungPoint] {
-                offset += chosungOffset * jungsungOffset21 * jongsungOffset28
-            }
-            if let jungsungOffset = jungsungMapOffset[jungsungPoint] {
-                offset += jungsungOffset * jongsungOffset28
-            }
-            if let jongsungOffset = jongsungMapOffset[jongsungPoint] {
-                offset += jongsungOffset
-            }
+        case (_?, _?, _?):
+            let offset =
+                chosungOffsetValue! * jungsungOffset21 * jongsungOffset28
+                + jungsungOffsetValue! * jongsungOffset28
+                + jongsungOffsetValue!
             return Character(UnicodeScalar(hangulUnicodeOffset + offset)!)
 
         // 미완성 낱자

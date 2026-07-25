@@ -351,7 +351,10 @@ struct Han3ShinP2Layout: HangulAutomata {
         ],
     ]
 
-    let chosungMap: [String: 초성] = [
+    // 아래 매핑들은 인스턴스와 무관한 상수이므로 static let으로 한 번만 생성하고,
+    // 프로토콜 요구사항인 인스턴스 프로퍼티는 이를 그대로 위임한다.
+    // (레이아웃 전환/컨트롤러 재생성 시마다 딕셔너리 리터럴이 재구성되는 것을 방지)
+    private static let _chosungMap: [String: 초성] = [
         "k": 초성.기역,
         "kk": 초성.쌍기역,
         "h": 초성.니은,
@@ -372,8 +375,9 @@ struct Han3ShinP2Layout: HangulAutomata {
         "p": 초성.피읖,
         "m": 초성.히읗,
     ]
+    var chosungMap: [String: 초성] { Self._chosungMap }
 
-    let jungsungMap: [String: 중성] = [
+    private static let _jungsungMap: [String: 중성] = [
         "f": 중성.아, "F": 중성.아,
         "e": 중성.애, "E": 중성.애,
         "w": 중성.야, "W": 중성.야,
@@ -405,15 +409,18 @@ struct Han3ShinP2Layout: HangulAutomata {
         "pe": 중성.왜, "pE": 중성.왜,
         "pd": 중성.외, "pD": 중성.외,
     ]
-    let jungsungMapWith아래아: [String: 중성] = [
+    var jungsungMap: [String: 중성] { Self._jungsungMap }
+
+    private static let _jungsungMapWith아래아: [String: 중성] = [
         "z": 중성.아래아, "Z": 중성.아래아,
         "p": 중성.아래아,
         "pr": 중성.아래어,
         "pb": 중성.아래우,
         "pd": 중성.아래애,
     ]
+    var jungsungMapWith아래아: [String: 중성] { Self._jungsungMapWith아래아 }
 
-    let jongsungMap: [String: 종성] = [
+    private static let _jongsungMap: [String: 종성] = [
         "c": 종성.기역,
         "cc": 종성.쌍기역,
         "cq": 종성.기역시옷,
@@ -443,8 +450,9 @@ struct Han3ShinP2Layout: HangulAutomata {
         "f": 종성.피읖,
         "d": 종성.히흫,
     ]
+    var jongsungMap: [String: 종성] { Self._jongsungMap }
 
-    let nonSyllableMap: [String: String] = [
+    private static let _nonSyllableMap: [String: String] = [
         "Y": "✕",
         "U": "○",
         "I": "△",
@@ -458,8 +466,9 @@ struct Han3ShinP2Layout: HangulAutomata {
         "N": "―",
         "M": "…",
     ]
+    var nonSyllableMap: [String: String] { Self._nonSyllableMap }
 
-    let nonSyllableMapWith수정기호: [String: String] = [
+    private static let _nonSyllableMapWith수정기호: [String: String] = [
         "Y": "✕",
         "U": "○",
         "I": "△",
@@ -470,6 +479,7 @@ struct Han3ShinP2Layout: HangulAutomata {
         "N": "―",
         "M": "→",
     ]
+    var nonSyllableMapWith수정기호: [String: String] { Self._nonSyllableMapWith수정기호 }
 
     func pickJungsung(by char: String) -> unichar? {
         if has아래아 {

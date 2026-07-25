@@ -174,7 +174,10 @@ struct Han3P3Layout: HangulAutomata {
         ],
     ]
 
-    let chosungMap: [String: 초성] = [
+    // 아래 매핑들은 인스턴스와 무관한 상수이므로 static let으로 한 번만 생성하고,
+    // 프로토콜 요구사항인 인스턴스 프로퍼티는 이를 그대로 위임한다.
+    // (레이아웃 전환/컨트롤러 재생성 시마다 딕셔너리 리터럴이 재구성되는 것을 방지)
+    private static let _chosungMap: [String: 초성] = [
         "k": 초성.기역,
         "kk": 초성.쌍기역,
         "h": 초성.니은,
@@ -195,8 +198,9 @@ struct Han3P3Layout: HangulAutomata {
         "p": 초성.피읖,
         "m": 초성.히읗,
     ]
+    var chosungMap: [String: 초성] { Self._chosungMap }
 
-    let jungsungMap: [String: 중성] = [
+    private static let _jungsungMap: [String: 중성] = [
         "f": 중성.아,
         "t": 중성.애,
         "6": 중성.야,
@@ -222,8 +226,9 @@ struct Han3P3Layout: HangulAutomata {
         "8d": 중성.의,
         "d": 중성.이,
     ]
+    var jungsungMap: [String: 중성] { Self._jungsungMap }
 
-    let jongsungMap: [String: 종성] = [
+    private static let _jongsungMap: [String: 종성] = [
         "x": 종성.기역,
         "X": 종성.쌍기역,
         "xx": 종성.쌍기역,
@@ -259,8 +264,9 @@ struct Han3P3Layout: HangulAutomata {
         "f": 종성.피읖,
         "d": 종성.히흫,
     ]
+    var jongsungMap: [String: 종성] { Self._jongsungMap }
 
-    let nonSyllableMap: [String: String] = [
+    private static let _nonSyllableMap: [String: String] = [
         "Y": "/",
         "U": "7",
         "I": "8",
@@ -277,8 +283,9 @@ struct Han3P3Layout: HangulAutomata {
         "<": "2",
         ">": "3",
     ]
+    var nonSyllableMap: [String: String] { Self._nonSyllableMap }
 
-    let nonSyllableMapWith두줄숫자: [String: String] = [
+    private static let _nonSyllableMapWith두줄숫자: [String: String] = [
         "Y": "5",
         "U": "6",
         "I": "7",
@@ -295,6 +302,7 @@ struct Han3P3Layout: HangulAutomata {
         "N": "\'",
         "M": "\"",
     ]
+    var nonSyllableMapWith두줄숫자: [String: String] { Self._nonSyllableMapWith두줄숫자 }
 
     func pickNonSyllable(by char: String) -> String? {
         if has두줄숫자 {

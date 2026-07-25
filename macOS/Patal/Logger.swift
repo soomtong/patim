@@ -15,9 +15,10 @@ final class CustomLogger: Sendable {
         debugLogger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: category)
     }
 
-    func debug(_ message: String = "") {
+    func debug(_ message: @autoclosure () -> String = "") {
         #if DEBUG
-            debugLogger.debug("\(message, privacy: .public)")
+            let resolved = message()
+            debugLogger.debug("\(resolved, privacy: .public)")
         #endif
     }
 

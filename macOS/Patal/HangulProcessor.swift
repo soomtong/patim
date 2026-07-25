@@ -38,24 +38,24 @@ enum InputStrategy {
     /// 측정 완료된 앱의 전략 맵
     private static let knownApps: [String: InputStrategy] = [
         // 브라우저
-        "com.apple.Safari": .directInsert,          // NSTextAlternatives 포함
-        "com.google.Chrome": .swapMarked,           // NSMarkedClauseSegment만
-        "org.mozilla.firefox": .swapMarked,         // NSMarkedClauseSegment만 (NSFont 없음)
+        "com.apple.Safari": .directInsert,  // NSTextAlternatives 포함
+        "com.google.Chrome": .swapMarked,  // NSMarkedClauseSegment만
+        "org.mozilla.firefox": .swapMarked,  // NSMarkedClauseSegment만 (NSFont 없음)
         "com.duckduckgo.macos.browser": .directInsert,  // NSTextAlternatives 포함 (Sok 참고)
 
         // 개발 도구
-        "com.apple.dt.Xcode": .directInsert,        // NSMarkedClauseSegment + NSGlyphInfo
-        "com.apple.Terminal": .swapMarked,          // NSMarkedClauseSegment 없음
-        "com.googlecode.iterm2": .swapMarked,       // NSMarkedClauseSegment 없음
-        "io.alacritty": .swapMarked,                // Sok 참고
-        "com.google.android.studio": .swapMarked,   // Sok 참고
-        "com.sublimetext.4": .swapMarked,           // Sok 참고
+        "com.apple.dt.Xcode": .directInsert,  // NSMarkedClauseSegment + NSGlyphInfo
+        "com.apple.Terminal": .swapMarked,  // NSMarkedClauseSegment 없음
+        "com.googlecode.iterm2": .swapMarked,  // NSMarkedClauseSegment 없음
+        "io.alacritty": .swapMarked,  // Sok 참고
+        "com.google.android.studio": .swapMarked,  // Sok 참고
+        "com.sublimetext.4": .swapMarked,  // Sok 참고
         "com.sublimetext.3": .swapMarked,
 
         // Apple 텍스트 편집기
-        "com.apple.TextEdit": .directInsert,        // NSTextAlternatives + NSGlyphInfo
-        "com.apple.Notes": .directInsert,           // NSTextAlternatives + NSGlyphInfo
-        "com.apple.Stickies": .directInsert,        // Sok 참고: NSTextAlternatives 포함
+        "com.apple.TextEdit": .directInsert,  // NSTextAlternatives + NSGlyphInfo
+        "com.apple.Notes": .directInsert,  // NSTextAlternatives + NSGlyphInfo
+        "com.apple.Stickies": .directInsert,  // Sok 참고: NSTextAlternatives 포함
 
         // iWork 앱 (Sok 참고: NSMarkedClauseSegment + NSFont)
         "com.apple.iWork.Pages": .directInsert,
@@ -63,32 +63,32 @@ enum InputStrategy {
         // ⚠️ Numbers는 휴리스틱과 반대로 작동 - overrideApps에서 처리
 
         // Microsoft Office (Sok 참고)
-        "com.microsoft.Word": .directInsert,        // NSFont + NSMarkedClauseSegment
+        "com.microsoft.Word": .directInsert,  // NSFont + NSMarkedClauseSegment
         "com.microsoft.Powerpoint": .directInsert,
-        "com.microsoft.Excel": .swapMarked,         // Sok 참고: 예외
+        "com.microsoft.Excel": .swapMarked,  // Sok 참고: 예외
 
         // Electron 기반 앱
-        "com.microsoft.VSCode": .swapMarked,        // NSMarkedClauseSegment만 (NSFont 없음)
+        "com.microsoft.VSCode": .swapMarked,  // NSMarkedClauseSegment만 (NSFont 없음)
         "com.tinyspeck.slackmacgap": .swapMarked,
         "com.hnc.Discord": .swapMarked,
 
         // 메신저/SNS
-        "jp.naver.line.mac": .swapMarked,           // Sok 참고
+        "jp.naver.line.mac": .swapMarked,  // Sok 참고
 
         // 기타
-        "org.gimp.gimp-2.10": .swapMarked,          // Sok 참고
+        "org.gimp.gimp-2.10": .swapMarked,  // Sok 참고
     ]
 
     /// 휴리스틱과 반대로 작동하는 앱 (명시적 오버라이드)
     /// Numbers: NSFont + NSMarkedClauseSegment를 반환하지만 swapMarked가 필요 (Sok 참고)
     private static let overrideApps: [String: InputStrategy] = [
-        "com.apple.iWork.Numbers": .swapMarked,
+        "com.apple.iWork.Numbers": .swapMarked
     ]
 
     /// prefix 기반 매칭이 필요한 앱 (Sok 참고)
     /// 한컴오피스: 한글, 한셀, 한쇼 등 모두 동일 prefix
     private static let prefixRules: [(prefix: String, strategy: InputStrategy)] = [
-        ("com.hancom.office.hwp", .swapMarked),
+        ("com.hancom.office.hwp", .swapMarked)
     ]
 
     // MARK: - 전략 결정
@@ -217,30 +217,27 @@ class HangulProcessor {
 
     /// 조합중인 낱자가 있는지 검사
     func countComposable() -> Int {
-        var count = 0
-        if preedit.chosung != nil { count += 1 }
-        if preedit.jungsung != nil { count += 1 }
-        if preedit.jongsung != nil { count += 1 }
-        return count
+        return stateMachine.buffer.composableCount
     }
 
     /// 클라이언트에 적합한 입력 전략 결정
     /// - setMarkedText의 replacementRange 처리 방식에 따라 directInsert/swapMarked 구분
     /// - 측정된 앱(knownApps)은 validAttributesForMarkedText 호출 없이 바로 결정 (성능 최적화)
+    /// - bundleId도 함께 반환해 호출부에서 client.bundleIdentifier()를 다시 호출하지 않도록 한다
     @inline(__always)
-    func getInputStrategy(client: IMKTextInput) -> InputStrategy {
+    func getInputStrategy(client: IMKTextInput) -> (strategy: InputStrategy, bundleId: String) {
         let bundleId = client.bundleIdentifier() ?? "unknown"
 
         // 측정된 앱은 빠른 경로 (validAttributesForMarkedText 호출 생략)
         if let strategy = InputStrategy.determineFast(bundleId: bundleId) {
             logger.debug("[\(bundleId)] 전략: \(strategy) (캐시)")
-            return strategy
+            return (strategy, bundleId)
         }
 
         // 미측정 앱은 휴리스틱 적용
         let attributes = client.validAttributesForMarkedText() as? [String] ?? []
         logger.debug("[\(bundleId)] validAttributes: \(attributes)")
-        return InputStrategy.determine(bundleId: bundleId, attributes: attributes)
+        return (InputStrategy.determine(bundleId: bundleId, attributes: attributes), bundleId)
     }
 
     /// 처리 가능한 입력인지 검증한다.
@@ -321,17 +318,18 @@ class HangulProcessor {
 
     /// 준비된 조합자를 한글 글자로 변환
     func getComposed() -> String? {
+        let currentPreedit = preedit
         if let hangulComposer = HangulComposer(
-            chosungPoint: preedit.chosung,
-            jungsungPoint: preedit.jungsung,
-            jongsungPoint: preedit.jongsung
+            chosungPoint: currentPreedit.chosung,
+            jungsungPoint: currentPreedit.jungsung,
+            jongsungPoint: currentPreedit.jongsung
         ) {
             if let char = hangulComposer.getSyllable() {
                 return String(char)
             }
         }
         // 현대한글 조합을 못하면 옛한글 시도
-        if let char = getComposedAlternative(preedit: preedit) {
+        if let char = getComposedAlternative(preedit: currentPreedit) {
             return String(char)
         }
 
@@ -343,16 +341,13 @@ class HangulProcessor {
         var unicodeScalars = String.UnicodeScalarView()
 
         if let codePoint = preedit.chosung {
-            let scala = UnicodeScalar(codePoint.rawValue)!
-            unicodeScalars.append(UnicodeScalar(scala))
+            unicodeScalars.append(UnicodeScalar(codePoint.rawValue)!)
         }
         if let codePoint = preedit.jungsung {
-            let scala = UnicodeScalar(codePoint.rawValue)!
-            unicodeScalars.append(UnicodeScalar(scala))
+            unicodeScalars.append(UnicodeScalar(codePoint.rawValue)!)
         }
         if let codePoint = preedit.jongsung {
-            let scala = UnicodeScalar(codePoint.rawValue)!
-            unicodeScalars.append(UnicodeScalar(scala))
+            unicodeScalars.append(UnicodeScalar(codePoint.rawValue)!)
         }
 
         if unicodeScalars.count > 0 {
