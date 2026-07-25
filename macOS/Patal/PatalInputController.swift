@@ -36,10 +36,12 @@ extension InputController {
     // plain String을 전달하면 클라이언트가 자체 스타일(선택 하이라이트)을 적용하므로
     // NSAttributedString에 밑줄 속성을 명시하여 macOS 내장 입력기와 동일한 밑줄 표시를 사용한다
     private func updateSelectedRangeCommit(client: IMKTextInput, with: String) -> Bool {
-        let attributed = NSAttributedString(string: with, attributes: [
-            .underlineStyle: NSUnderlineStyle.single.rawValue,
-            .markedClauseSegment: 0,
-        ])
+        let attributed = NSAttributedString(
+            string: with,
+            attributes: [
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+                .markedClauseSegment: 0,
+            ])
         let cursorAtEnd = NSRange(location: with.count, length: 0)
         client.setMarkedText(attributed, selectionRange: cursorAtEnd, replacementRange: .notFoundRange)
         return true
@@ -71,10 +73,9 @@ extension InputController {
         }
         let modifiers = UInt(bitPattern: flags)
         // client 현재 입력기를 사용하는 클라이언트 임. 예를 들면 com.googlecode.iterm2
-        let strategy = processor.getInputStrategy(client: client)
-        if let bundleId = client.bundleIdentifier() {
-            logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
-        }
+        // bundleId도 함께 받아 client.bundleIdentifier()를 다시 호출하지 않는다
+        let (strategy, bundleId) = processor.getInputStrategy(client: client)
+        logger.debug("클라이언트: \(bundleId) 전략: \(String(describing: strategy))")
 
         /// 빠른마침표: 보류 중인 스페이스 처리 (모든 키 이벤트에서 먼저 확인)
         if processor.hasPendingSpace {
@@ -175,11 +176,11 @@ extension InputController {
         var baseChar: String = s
 
         // 키코드 기반 문자 변환 시도 (기본 동작)
-        if KeyCodeMapper.isHangulInputKey(keyCode: keyCode) {
-            if let keyCodeChar = processor.processKeyCodeInput(keyCode: keyCode, modifiers: modifiers) {
-                baseChar = keyCodeChar
-                logger.debug("키코드 기반 입력: \(KeyCodeMapper.debugKeyInfo(keyCode: keyCode, modifiers: modifiers))")
-            }
+        // isHangulInputKey는 physicalKeyMap 존재 여부만, processKeyCodeInput은 modifiers까지 반영해
+        // 동일 keyCode를 다시 조회하므로, 여기서는 단일 조회 결과의 nil 여부로 판단한다.
+        if let keyCodeChar = processor.processKeyCodeInput(keyCode: keyCode, modifiers: modifiers) {
+            baseChar = keyCodeChar
+            logger.debug("키코드 기반 입력: \(KeyCodeMapper.debugKeyInfo(keyCode: keyCode, modifiers: modifiers))")
         } else {
             // 키코드 매핑이 없는 경우 기존 문자열 사용 (하위 호환성)
             processor.rawChar = s

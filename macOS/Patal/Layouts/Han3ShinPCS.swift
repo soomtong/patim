@@ -31,7 +31,10 @@ struct Han3ShinPcsLayout: HangulAutomata {
     /// 기호 맵: P2와 동일한 배열 사용 (신세벌 공통)
     private static let symbolMap: [String: [String: String]] = Han3ShinP2Layout.sharedSymbolMap
 
-    let chosungMap: [String: 초성] = [
+    // 아래 매핑들은 인스턴스와 무관한 상수이므로 static let으로 한 번만 생성하고,
+    // 프로토콜 요구사항인 인스턴스 프로퍼티는 이를 그대로 위임한다.
+    // (레이아웃 전환/컨트롤러 재생성 시마다 딕셔너리 리터럴이 재구성되는 것을 방지)
+    private static let _chosungMap: [String: 초성] = [
         "k": 초성.기역,
         "kk": 초성.쌍기역,
         "h": 초성.니은,
@@ -52,8 +55,9 @@ struct Han3ShinPcsLayout: HangulAutomata {
         "p": 초성.피읖,
         "m": 초성.히읗,
     ]
+    var chosungMap: [String: 초성] { Self._chosungMap }
 
-    let jungsungMap: [String: 중성] = [
+    private static let _jungsungMap: [String: 중성] = [
         "f": 중성.아, "F": 중성.아,
         "e": 중성.애, "E": 중성.애,
         "w": 중성.야, "W": 중성.야,
@@ -80,8 +84,9 @@ struct Han3ShinPcsLayout: HangulAutomata {
         "z": 중성.의, "Z": 중성.의,
         "d": 중성.이, "D": 중성.이,
     ]
+    var jungsungMap: [String: 중성] { Self._jungsungMap }
 
-    let jongsungMap: [String: 종성] = [
+    private static let _jongsungMap: [String: 종성] = [
         "c": 종성.기역,
         "cc": 종성.쌍기역,
         "cq": 종성.기역시옷,
@@ -111,8 +116,9 @@ struct Han3ShinPcsLayout: HangulAutomata {
         "f": 종성.피읖,
         "d": 종성.히흫,
     ]
+    var jongsungMap: [String: 종성] { Self._jongsungMap }
 
-    let nonSyllableMap: [String: String] = [
+    private static let _nonSyllableMap: [String: String] = [
         "Y": "{",
         "U": "}",
         "I": "\'",
@@ -125,8 +131,9 @@ struct Han3ShinPcsLayout: HangulAutomata {
         "N": "(",
         "M": ")",
     ]
+    var nonSyllableMap: [String: String] { Self._nonSyllableMap }
 
-    let nonSyllableMapWith수정기호: [String: String] = [
+    private static let _nonSyllableMapWith수정기호: [String: String] = [
         "Y": "]",
         "U": "}",
         "H": "[",
@@ -134,6 +141,7 @@ struct Han3ShinPcsLayout: HangulAutomata {
         "N": "←",
         "M": "→",
     ]
+    var nonSyllableMapWith수정기호: [String: String] { Self._nonSyllableMapWith수정기호 }
 
     func pickNonSyllable(by char: String) -> String? {
         if has수정기호 {

@@ -16,6 +16,10 @@ struct CompositionStateMachine {
     /// 한글 자판 레이아웃 (초기화 후 변경 불가)
     let layout: HangulAutomata
 
+    /// createEvent가 겹모음/겹받침 판정 중 이미 계산한 조합 코드를 임시로 보관한다.
+    /// processInput 내에서 즉시 소비/초기화되어 다음 키 입력으로 값이 새어나가지 않는다.
+    private var pendingCombinedCode: unichar?
+
     init(layout: HangulAutomata) {
         self.layout = layout
         self.buffer = .empty
@@ -45,13 +49,18 @@ struct CompositionStateMachine {
             return .invalid
         }
 
-        return processEvent(event, rawKey: rawKey)
+        // createEvent가 겹모음/겹받침 판정 중 계산한 조합 코드를 즉시 소비하고 초기화한다.
+        let combinedCode = pendingCombinedCode
+        pendingCombinedCode = nil
+
+        return processEvent(event, rawKey: rawKey, precomputedCombinedCode: combinedCode)
     }
 
     /// rawKey를 InputEvent로 변환
     /// 현재 상태에 따라 검색 우선순위가 달라짐
     @inline(__always)
-    private func createEvent(from rawKey: String) -> InputEvent? {
+    private mutating func createEvent(from rawKey: String) -> InputEvent? {
+        pendingCombinedCode = nil
         let state = buffer.state
 
         // 상태에 따른 우선순위 결정
@@ -107,6 +116,7 @@ struct CompositionStateMachine {
                     if let jungsungCode = layout.pickJungsung(by: rawKey),
                        let jungsung = 중성(rawValue: jungsungCode)
                     {
+                        pendingCombinedCode = combinedCode
                         return .jungsung(jungsung)
                     }
                 }
@@ -189,6 +199,7 @@ struct CompositionStateMachine {
                     if let jungsungCode = layout.pickJungsung(by: rawKey),
                        let jungsung = 중성(rawValue: jungsungCode)
                     {
+                        pendingCombinedCode = combinedCode
                         return .jungsung(jungsung)
                     }
                 }
@@ -218,6 +229,7 @@ struct CompositionStateMachine {
                     if let jongsungCode = layout.pickJongsung(by: rawKey),
                        let jongsung = 종성(rawValue: jongsungCode)
                     {
+                        pendingCombinedCode = combinedCode
                         return .jongsung(jongsung)
                     }
                 }
@@ -279,13 +291,23 @@ struct CompositionStateMachine {
     /// - Returns: 상태 전이 결과
     @_optimize(speed)
     @inline(__always)
-    private mutating func processEvent(_ event: InputEvent, rawKey: String) -> TransitionResult {
+    private mutating func processEvent(
+        _ event: InputEvent,
+        rawKey: String,
+        precomputedCombinedCode: unichar? = nil
+    ) -> TransitionResult {
         var currentEvent: InputEvent? = event
         var currentRawKey: String? = rawKey
+        var currentCombinedCode: unichar? = precomputedCombinedCode
         var committedString = ""
 
         while let ev = currentEvent {
-            let output = transition(from: buffer.state, with: ev, rawKey: currentRawKey)
+            let output = transition(
+                from: buffer.state,
+                with: ev,
+                rawKey: currentRawKey,
+                precomputedCombinedCode: currentCombinedCode
+            )
 
             switch output.action {
             case .updateBuffer:
@@ -299,6 +321,8 @@ struct CompositionStateMachine {
                 // carryover 이벤트는 이미 히스토리에 기록된 키를 재처리하는 것이므로
                 // rawKey는 nil로 설정 (composing에 다시 추가하지 않음)
                 currentRawKey = nil
+                // 선계산된 조합 코드는 최초 이벤트에만 유효하므로 carryover에서는 폐기
+                currentCombinedCode = nil
             }
         }
 
@@ -314,7 +338,8 @@ struct CompositionStateMachine {
     private func transition(
         from state: CompositionState,
         with event: InputEvent,
-        rawKey: String?
+        rawKey: String?,
+        precomputedCombinedCode: unichar? = nil
     ) -> TransitionOutput {
         switch (state, event) {
         // MARK: Empty 상태
@@ -345,11 +370,11 @@ struct CompositionStateMachine {
             return handleVowelOnlyJongsung(jong, rawKey: rawKey)
 
         case (.vowelOnly, .jungsung(let jung)):
-            return handleVowelOnlyJungsung(jung, rawKey: rawKey)
+            return handleVowelOnlyJungsung(jung, rawKey: rawKey, precomputedCombinedCode: precomputedCombinedCode)
 
         // MARK: FinalOnly 상태 (종성만 - 모아주기)
         case (.finalOnly, .jongsung(let jong)):
-            return handleFinalOnlyJongsung(jong, rawKey: rawKey)
+            return handleFinalOnlyJongsung(jong, rawKey: rawKey, precomputedCombinedCode: precomputedCombinedCode)
 
         case (.finalOnly, .chosung(let cho)):
             return handleFinalOnlyChosung(cho, rawKey: rawKey)
@@ -362,7 +387,7 @@ struct CompositionStateMachine {
             return handleConsonantVowelChosung(cho, rawKey: rawKey)
 
         case (.consonantVowel, .jungsung(let jung)):
-            return handleConsonantVowelJungsung(jung, rawKey: rawKey)
+            return handleConsonantVowelJungsung(jung, rawKey: rawKey, precomputedCombinedCode: precomputedCombinedCode)
 
         case (.consonantVowel, .jongsung(let jong)):
             return handleConsonantVowelJongsung(jong, rawKey: rawKey)
@@ -562,12 +587,15 @@ struct CompositionStateMachine {
     /// - 예시 (겹모음 실패): [ㅏ] + ㅓ → 커밋 "ㅏ" + [ㅓ]
     /// - 조건 (성공): composingKeys 결합이 유효한 겹모음일 때
     /// - 조건 (실패): 결합 불가 시 현재 글자 커밋, 새 버퍼에 중성 설정
-    private func handleVowelOnlyJungsung(_ jung: 중성, rawKey: String?) -> TransitionOutput {
-        // 겹모음 시도
-        let testComposed = buffer.composedKey + (rawKey ?? "")
+    private func handleVowelOnlyJungsung(
+        _ jung: 중성,
+        rawKey: String?,
+        precomputedCombinedCode: unichar? = nil
+    ) -> TransitionOutput {
+        // 겹모음 시도: createEvent가 이미 계산해 둔 값이 있으면 재사용
+        let combinedCode = precomputedCombinedCode ?? layout.pickJungsung(by: buffer.composedKey + (rawKey ?? ""))
 
-        if let combinedCode = layout.pickJungsung(by: testComposed),
-           let combined = 중성(rawValue: combinedCode)
+        if let combinedCode, let combined = 중성(rawValue: combinedCode)
         {
             var newBuffer = buffer
             newBuffer.jungsung = combined
@@ -597,12 +625,15 @@ struct CompositionStateMachine {
     /// - 예시 (겹받침 실패): [ㄱ] + ㄴ → 커밋 "ㄱ" + [ㄴ]
     /// - 조건 (성공): composingKeys 결합이 유효한 겹받침일 때
     /// - 조건 (실패): 결합 불가 시 현재 글자 커밋, 새 버퍼에 종성 설정
-    private func handleFinalOnlyJongsung(_ jong: 종성, rawKey: String?) -> TransitionOutput {
-        // 겹받침 시도
-        let testComposed = buffer.composedKey + (rawKey ?? "")
+    private func handleFinalOnlyJongsung(
+        _ jong: 종성,
+        rawKey: String?,
+        precomputedCombinedCode: unichar? = nil
+    ) -> TransitionOutput {
+        // 겹받침 시도: createEvent가 이미 계산해 둔 값이 있으면 재사용
+        let combinedCode = precomputedCombinedCode ?? layout.pickJongsung(by: buffer.composedKey + (rawKey ?? ""))
 
-        if let combinedCode = layout.pickJongsung(by: testComposed),
-           let combined = 종성(rawValue: combinedCode)
+        if let combinedCode, let combined = 종성(rawValue: combinedCode)
         {
             var newBuffer = buffer
             newBuffer.jongsung = combined
@@ -702,13 +733,17 @@ struct CompositionStateMachine {
     /// - 예시 (겹모음 실패, 모아주기): [가] + ㅓ → 커밋 "가" + [ㅓ]
     /// - 조건 (성공): composingKeys 결합이 유효한 겹모음일 때
     /// - 조건 (실패): 결합 불가 시 모아주기면 커밋, 아니면 무시
-    private func handleConsonantVowelJungsung(_ jung: 중성, rawKey: String?) -> TransitionOutput {
-        // 겹모음 시도
+    private func handleConsonantVowelJungsung(
+        _ jung: 중성,
+        rawKey: String?,
+        precomputedCombinedCode: unichar? = nil
+    ) -> TransitionOutput {
+        // 겹모음 시도: createEvent가 이미 계산해 둔 값이 있으면 재사용
         if buffer.composingKeys.count > 0 {
-            let testComposed = buffer.composedKey + (rawKey ?? "")
+            let combinedCode =
+                precomputedCombinedCode ?? layout.pickJungsung(by: buffer.composedKey + (rawKey ?? ""))
 
-            if let combinedCode = layout.pickJungsung(by: testComposed),
-               let combined = 중성(rawValue: combinedCode)
+            if let combinedCode, let combined = 중성(rawValue: combinedCode)
             {
                 var newBuffer = buffer
                 newBuffer.jungsung = combined
@@ -1024,18 +1059,23 @@ struct CompositionStateMachine {
             buffer.keyHistory.removeLast()
             return .composing(buffer)
 
-        case .vowelOnly where layout.can모아주기:
-            // 모아주기: 중성만 제거
+        case .vowelOnly:
+            // 중성 하나만 있는 상태: composingKeys가 비어있으므로(위 guard) 모아주기 여부와
+            // 무관하게 항상 단일 키에서 온 상태 → 안전하게 O(1)로 제거 가능
             buffer.jungsung = nil
             buffer.keyHistory.removeLast()
             return .composing(buffer)
 
-        case .finalOnly where layout.can모아주기:
-            // 모아주기: 종성만 제거
+        case .finalOnly:
+            // 종성 하나만 있는 상태: 위와 동일한 이유로 모아주기 여부와 무관하게 O(1) 제거 가능
             buffer.jongsung = nil
             buffer.keyHistory.removeLast()
             return .composing(buffer)
 
+        // .vowelFinal(중성+종성), .consonantFinal(초성+종성)은 의도적으로 fast path에서 제외한다.
+        // 두 상태 모두 서로 다른 두 경로(예: finalOnly+중성 추가 / vowelOnly+종성 추가)로
+        // 도달할 수 있어 "마지막에 추가된 자모"가 상태만으로는 결정되지 않는다.
+        // 잘못된 자모를 제거하는 것을 막기 위해 리플레이(O(n))로 폴백한다.
         default:
             // 복잡한 케이스: 리플레이 필요
             return nil
