@@ -15,7 +15,7 @@ pushd ../macOS
 xcodebuild -scheme Patal -configuration Release
 sleep 1
 
-mv "$BUILD_DIR/Patal.app" "$APP"
+cp -R "$BUILD_DIR/Patal.app" "$APP"
 popd
 
 echo ""

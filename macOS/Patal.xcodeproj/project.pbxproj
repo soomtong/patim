@@ -365,6 +365,7 @@
 			inputPaths = (
 				"$(SRCROOT)/../.git/HEAD",
 				"$(SRCROOT)/../.git/index",
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
 			);
 			name = "Update Build Version with Git Commit";
 			outputFileListPaths = (
