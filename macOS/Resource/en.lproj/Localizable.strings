@@ -1,0 +1,10 @@
+/*
+  Localizable.strings
+  Patal
+
+  시스템 Input Menu가 CFBundleName 키를 통해 입력기 표시 이름을
+  조회할 때 사용하는 로컬라이즈 테이블. InfoPlist.strings와는
+  별개로 조회되므로 반드시 함께 유지해야 한다.
+*/
+
+"CFBundleName" = "Patal InputMethod";
