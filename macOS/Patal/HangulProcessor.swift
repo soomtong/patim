@@ -259,7 +259,8 @@ class HangulProcessor {
     /// - 백스페이스 + 글자단위 삭제 특성이 활성화 된 경우
     /// - command, option 키와 함께 사용되는 경우
     /// - 한글 레이아웃 자판 맵에 등록되지 않은 키코드 인 경우
-    func verifyProcessable(_ s: String, keyCode: Int = 0, modifierCode: UInt = 0) -> Bool {
+    /// mappedChar: 호출부가 이미 계산한 키코드 변환 결과 (nil이면 여기서 조회)
+    func verifyProcessable(_ s: String, keyCode: Int = 0, modifierCode: UInt = 0, mappedChar: String? = nil) -> Bool {
         logger.debug(" => \(s), \(keyCode), \(modifierCode)")
 
         if !managableModifiers.contains(modifierCode) { return false }
@@ -274,7 +275,9 @@ class HangulProcessor {
         if symbolState != .inactive { return true }
 
         // 키코드 기반 검증 우선 적용 (라틴 자판 독립적)
-        if let hangulChar = KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: keyCode, modifiers: modifierCode) {
+        if let hangulChar = mappedChar
+            ?? KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: keyCode, modifiers: modifierCode)
+        {
             return hangulLayout.chosungMap[hangulChar] != nil
                 || hangulLayout.jungsungMap[hangulChar] != nil
                 || hangulLayout.jongsungMap[hangulChar] != nil
@@ -293,21 +296,6 @@ class HangulProcessor {
         return hangulLayout.chosungMap[s] != nil
             || hangulLayout.jungsungMap[s] != nil
             || hangulLayout.jongsungMap[s] != nil
-    }
-
-    /// 키코드를 한글 입력용 문자로 변환하고 rawChar에 설정
-    /// - Parameters:
-    ///   - keyCode: 물리적 키코드
-    ///   - modifiers: 수정자 키 플래그
-    /// - Returns: 변환된 문자 (라틴 자판 독립적)
-    func processKeyCodeInput(keyCode: Int, modifiers: UInt) -> String? {
-        if let hangulChar = KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: keyCode, modifiers: modifiers) {
-            rawChar = hangulChar
-            logger.debug(
-                "키코드 변환: \(KeyCodeMapper.debugKeyInfo(keyCode: keyCode, modifiers: modifiers)) -> '\(hangulChar)'")
-            return hangulChar
-        }
-        return nil
     }
 
     /// 조합 가능한 문자가 들어온다. 다시 검수할 필요는 없음. 겹자음/겹모음이 있을 수 있기 때문에 previous 를 기준으로 운영.

@@ -135,7 +135,10 @@ extension InputController {
             }
         }
 
-        if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: modifiers) {
+        // 키코드 → 문자 변환은 이벤트당 한 번만 수행해 검증과 조합 단계가 공유한다
+        let mappedChar = KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: keyCode, modifiers: modifiers)
+
+        if !processor.verifyProcessable(s, keyCode: keyCode, modifierCode: modifiers, mappedChar: mappedChar) {
             // 엔터 같은 특수 키코드 처리
             let flushed = processor.flushCommit()
             if !flushed.isEmpty {
@@ -178,11 +181,9 @@ extension InputController {
         /// 한글 조합 시작 - 키코드 기반 처리 (라틴 자판 독립적)
         var baseChar: String = s
 
-        // 키코드 기반 문자 변환 시도 (기본 동작)
-        // isHangulInputKey는 physicalKeyMap 존재 여부만, processKeyCodeInput은 modifiers까지 반영해
-        // 동일 keyCode를 다시 조회하므로, 여기서는 단일 조회 결과의 nil 여부로 판단한다.
-        if let keyCodeChar = processor.processKeyCodeInput(keyCode: keyCode, modifiers: modifiers) {
+        if let keyCodeChar = mappedChar {
             baseChar = keyCodeChar
+            processor.rawChar = keyCodeChar
             logger.debug("키코드 기반 입력: \(KeyCodeMapper.debugKeyInfo(keyCode: keyCode, modifiers: modifiers))")
         } else {
             // 키코드 매핑이 없는 경우 기존 문자열 사용 (하위 호환성)
