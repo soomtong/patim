@@ -201,6 +201,10 @@ class HangulProcessor {
 
     let managableModifiers: [UInt] = [ModifierCode.NONE.rawValue, ModifierCode.SHIFT.rawValue]
 
+    /// 세션 동안 판정된 클라이언트별 입력 전략 캐시
+    /// 미측정 앱은 validAttributesForMarkedText() IPC 왕복이 필요하므로 앱당 1회로 제한한다
+    private var strategyCache: [String: InputStrategy] = [:]
+
     init(layout: HangulAutomata) {
         layoutName = String(describing: type(of: layout))
         hangulLayout = layout
@@ -228,16 +232,24 @@ class HangulProcessor {
     func getInputStrategy(client: IMKTextInput) -> (strategy: InputStrategy, bundleId: String) {
         let bundleId = client.bundleIdentifier() ?? "unknown"
 
+        // 세션 캐시: 앱당 1회만 판정 (미측정 앱의 키당 IPC 왕복 제거)
+        if let cached = strategyCache[bundleId] {
+            return (cached, bundleId)
+        }
+
         // 측정된 앱은 빠른 경로 (validAttributesForMarkedText 호출 생략)
         if let strategy = InputStrategy.determineFast(bundleId: bundleId) {
-            logger.debug("[\(bundleId)] 전략: \(strategy) (캐시)")
+            logger.debug("[\(bundleId)] 전략: \(strategy) (측정값)")
+            strategyCache[bundleId] = strategy
             return (strategy, bundleId)
         }
 
         // 미측정 앱은 휴리스틱 적용
         let attributes = client.validAttributesForMarkedText() as? [String] ?? []
         logger.debug("[\(bundleId)] validAttributes: \(attributes)")
-        return (InputStrategy.determine(bundleId: bundleId, attributes: attributes), bundleId)
+        let strategy = InputStrategy.determine(bundleId: bundleId, attributes: attributes)
+        strategyCache[bundleId] = strategy
+        return (strategy, bundleId)
     }
 
     /// 처리 가능한 입력인지 검증한다.
