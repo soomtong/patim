@@ -19,7 +19,11 @@ struct SyllableBuffer: Equatable, Sendable {
     var jongsung: 종성?
 
     /// 겹자음/겹모음 판정용 키 버퍼 (기존 composing 역할)
-    var composingKeys: [String]
+    /// 직접 대입을 포함한 모든 변경에서 _composedKey 캐시가 어긋나지 않도록 didSet으로 재계산한다
+    /// (버퍼는 자소 몇 개 수준이라 joined() 비용은 무시 가능)
+    var composingKeys: [String] {
+        didSet { _composedKey = composingKeys.joined() }
+    }
 
     /// 백스페이스 복원용 키 히스토리 (기존 keyHistory 역할)
     var keyHistory: [String]
@@ -94,20 +98,22 @@ extension SyllableBuffer {
 
     /// 기존 조합자에서 생성
     init(from 조합자: 조합자) {
-        self.chosung = 조합자.chosung
-        self.jungsung = 조합자.jungsung
-        self.jongsung = 조합자.jongsung
-        self.composingKeys = []
-        self.keyHistory = []
+        self.init(
+            chosung: 조합자.chosung,
+            jungsung: 조합자.jungsung,
+            jongsung: 조합자.jongsung
+        )
     }
 
     /// 기존 조합자와 버퍼 정보로 생성
     init(from 조합자: 조합자, composingKeys: [String], keyHistory: [String]) {
-        self.chosung = 조합자.chosung
-        self.jungsung = 조합자.jungsung
-        self.jongsung = 조합자.jongsung
-        self.composingKeys = composingKeys
-        self.keyHistory = keyHistory
+        self.init(
+            chosung: 조합자.chosung,
+            jungsung: 조합자.jungsung,
+            jongsung: 조합자.jongsung,
+            composingKeys: composingKeys,
+            keyHistory: keyHistory
+        )
     }
 }
 
@@ -116,15 +122,12 @@ extension SyllableBuffer {
 extension SyllableBuffer {
     /// composingKeys 초기화 후 새 키 설정
     mutating func resetComposingKeys(_ key: String) {
-        composingKeys.removeAll()
-        composingKeys.append(key)
-        _composedKey = key
+        composingKeys = [key]
     }
 
     /// composingKeys에 키 추가
     mutating func appendComposingKey(_ key: String) {
         composingKeys.append(key)
-        _composedKey.append(key)
     }
 
     /// keyHistory에 키 추가
@@ -146,7 +149,6 @@ extension SyllableBuffer {
         jongsung = nil
         composingKeys.removeAll()
         keyHistory.removeAll()
-        _composedKey = ""
     }
 
     /// preedit만 초기화 (keyHistory 유지)
@@ -155,7 +157,6 @@ extension SyllableBuffer {
         jungsung = nil
         jongsung = nil
         composingKeys.removeAll()
-        _composedKey = ""
     }
 }
 
