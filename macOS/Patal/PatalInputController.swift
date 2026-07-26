@@ -17,10 +17,13 @@ extension InputController {
     }
 
     private func updateReplacementRangeCommit(client: IMKTextInput, with: String) -> Bool {
+        // NSRange는 UTF-16 코드 유닛 기준이므로 자소 수(count)가 아닌 utf16.count를 사용한다
+        // (NFD 폴백 문자열은 자소 1개가 UTF-16 여러 유닛이 될 수 있음)
+        let utf16Length = with.utf16.count
         let selectedRange = client.selectedRange()
         let replacementRange = NSRange(
-            location: max(0, selectedRange.location - with.count),
-            length: min(NSNotFound, selectedRange.length + with.count))
+            location: max(0, selectedRange.location - utf16Length),
+            length: selectedRange.length + utf16Length)
 
         client.setMarkedText(with, selectionRange: .defaultRange, replacementRange: replacementRange)
         return true
@@ -42,7 +45,7 @@ extension InputController {
                 .underlineStyle: NSUnderlineStyle.single.rawValue,
                 .markedClauseSegment: 0,
             ])
-        let cursorAtEnd = NSRange(location: with.count, length: 0)
+        let cursorAtEnd = NSRange(location: with.utf16.count, length: 0)
         client.setMarkedText(attributed, selectionRange: cursorAtEnd, replacementRange: .notFoundRange)
         return true
     }
