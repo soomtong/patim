@@ -12,7 +12,7 @@ SCHEME = Patal
 # Default target
 .DEFAULT_GOAL := help
 
-.PHONY: all format install install-debug package distribute clean build debug log perf-log kill remove remove-root remove-user unquarantine list help test test-only test-verbose
+.PHONY: all format install install-debug package distribute clean build debug log perf-log kill refresh-menu remove remove-root remove-user unquarantine list help test test-only test-verbose
 
 all: format install package distribute
 
@@ -96,6 +96,11 @@ kill:
 	@echo "Killing Patal process..."
 	@killall Patal || true
 
+refresh-menu:
+	@echo "Refreshing Input Menu cache..."
+	@killall TextInputMenuAgent 2>/dev/null || true
+	@echo "Input Menu cache refreshed. CFBundleName/version display should now be up to date."
+
 remove: remove-user remove-root
 
 remove-root:
@@ -131,6 +136,7 @@ help:
 	@echo "  distribute  - Run the distribute script"
 	@echo "  clean       - Clean up the dist directory"
 	@echo "  kill        - Kill the Patal process"
+	@echo "  refresh-menu- Restart TextInputMenuAgent (Input Menu 캐시 새로고침, CFBundleName/버전 표시 변경 시)"
 	@echo "  remove      - Remove both root and user Patal apps"
 	@echo "  remove-root - Remove the root Patal app"
 	@echo "  remove-user - Remove the user Patal app"
