@@ -18,14 +18,16 @@ struct Han3P3Layout: HangulAutomata {
 
     /// 기호 확장 설정: 2단계 직접 조회 (오른쪽ㅗ/ㅜ → 기호키)
     /// 오른쪽 ㅗ·ㅜ를 누른 뒤 바로 기호 글쇠를 눌러 입력 (pat.im/1128 참조)
+    /// 조합 중 매 키 입력마다 접근되므로 static 인스턴스를 재사용한다
+    private static let _symbolExtensionConfig = SymbolExtensionConfig(
+        triggerKeys: ["/", "9"],
+        triggerState: .vowelOnly,
+        layerKeys: [],
+        symbolMap: Han3P3Layout.symbolMap
+    )
+
     var symbolExtensionConfig: SymbolExtensionConfig? {
-        guard can기호확장 else { return nil }
-        return SymbolExtensionConfig(
-            triggerKeys: ["/", "9"],
-            triggerState: .vowelOnly,
-            layerKeys: [],
-            symbolMap: Self.symbolMap
-        )
+        can기호확장 ? Self._symbolExtensionConfig : nil
     }
 
     /// 기호 맵: [트리거키][기호키] → 기호 문자열

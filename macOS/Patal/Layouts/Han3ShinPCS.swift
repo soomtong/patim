@@ -18,14 +18,16 @@ struct Han3ShinPcsLayout: HangulAutomata {
     var traits: Set<LayoutTrait> = []
 
     /// 기호 확장 설정: 초성 충돌 트리거 (ㅇ+ㄱ/ㅈ/ㅂ)
+    /// 조합 중 매 키 입력마다 접근되므로 static 인스턴스를 재사용한다
+    private static let _symbolExtensionConfig = SymbolExtensionConfig(
+        triggerKeys: ["j"],
+        triggerState: .initialConsonant,
+        layerKeys: ["k", "l", ";"],
+        symbolMap: Han3ShinPcsLayout.symbolMap
+    )
+
     var symbolExtensionConfig: SymbolExtensionConfig? {
-        guard can기호확장 else { return nil }
-        return SymbolExtensionConfig(
-            triggerKeys: ["j"],
-            triggerState: .initialConsonant,
-            layerKeys: ["k", "l", ";"],
-            symbolMap: Self.symbolMap
-        )
+        can기호확장 ? Self._symbolExtensionConfig : nil
     }
 
     /// 기호 맵: P2와 동일한 배열 사용 (신세벌 공통)
