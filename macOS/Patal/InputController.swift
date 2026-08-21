@@ -37,7 +37,10 @@ class InputController: IMKInputController {
         if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
             processor.hangulLayout.traits = loadedTraits
         } else {
-            processor.hangulLayout.traits = processor.hangulLayout.availableTraits.subtracting([.글자단위삭제])
+            // ESC라틴은 입력 소스를 바꾸는 동작이라 기본값을 켜두지 않는다
+            processor.hangulLayout.traits = processor.hangulLayout.availableTraits.subtracting([
+                .글자단위삭제, .ESC라틴,
+            ])
         }
 
         optionMenu = OptionMenu(layout: processor.hangulLayout)
@@ -127,7 +130,10 @@ class InputController: IMKInputController {
         if let loadedTraits = loadActiveOptions(traitKey: traitKey) {
             processor.hangulLayout.traits = loadedTraits
         } else {
-            processor.hangulLayout.traits = processor.hangulLayout.availableTraits.subtracting([.글자단위삭제])
+            // ESC라틴은 입력 소스를 바꾸는 동작이라 기본값을 켜두지 않는다
+            processor.hangulLayout.traits = processor.hangulLayout.availableTraits.subtracting([
+                .글자단위삭제, .ESC라틴,
+            ])
         }
 
         optionMenu = OptionMenu(layout: processor.hangulLayout)

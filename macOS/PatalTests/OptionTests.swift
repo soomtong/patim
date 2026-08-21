@@ -20,7 +20,7 @@ struct OptionTests {
         var optionMenu: OptionMenu!
         let holders = [
             LayoutTrait.글자단위삭제.rawValue, LayoutTrait.수정기호.rawValue, LayoutTrait.빠른마침표.rawValue,
-            LayoutTrait.옵션라틴.rawValue, LayoutTrait.기호확장.rawValue,
+            LayoutTrait.옵션라틴.rawValue, LayoutTrait.기호확장.rawValue, LayoutTrait.ESC라틴.rawValue,
         ]
 
         init() {
@@ -101,6 +101,47 @@ struct OptionTests {
             // keyCode 12 = 'Q'
             let resultQ = KeyCodeMapper.mapKeyCodeToHangulChar(keyCode: 12, modifiers: shiftOnly)
             #expect(resultQ == "Q")
+        }
+    }
+
+    @Suite("ESC라틴 trait")
+    struct EscLatinTraitTests {
+
+        @Test("모든 자판에 ESC라틴 trait 포함")
+        func allLayoutsHaveEscLatinTrait() {
+            let p3 = createLayoutInstance(name: LayoutName.HAN3_P3)
+            let shinP2 = createLayoutInstance(name: LayoutName.HAN3_SHIN_P2)
+            let shinPcs = createLayoutInstance(name: LayoutName.HAN3_SHIN_PCS)
+
+            #expect(p3.availableTraits.contains(LayoutTrait.ESC라틴))
+            #expect(shinP2.availableTraits.contains(LayoutTrait.ESC라틴))
+            #expect(shinPcs.availableTraits.contains(LayoutTrait.ESC라틴))
+        }
+
+        @Test("ESC라틴 기본값 비활성")
+        func escLatinDefaultOff() {
+            let layout = createLayoutInstance(name: LayoutName.HAN3_P3)
+            #expect(layout.canESC라틴 == false)
+        }
+
+        @Test("ESC라틴 활성화 확인")
+        func escLatinCanBeEnabled() {
+            var layout = createLayoutInstance(name: LayoutName.HAN3_P3)
+            layout.traits.insert(LayoutTrait.ESC라틴)
+            #expect(layout.canESC라틴 == true)
+        }
+
+        @Test("ESC 키코드는 한글 조합 대상이 아님")
+        func escIsNotComposable() {
+            var layout = createLayoutInstance(name: LayoutName.HAN3_P3)
+            layout.traits.insert(LayoutTrait.ESC라틴)
+            let processor = HangulProcessor(layout: layout)
+
+            // ESC가 조합 경로로 새면 라틴 전환 분기까지 오지 못한다
+            #expect(
+                processor.verifyProcessable(
+                    "\u{1B}", keyCode: KeyCode.ESC.rawValue, modifierCode: ModifierCode.NONE.rawValue
+                ) == false)
         }
     }
 

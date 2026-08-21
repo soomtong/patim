@@ -54,6 +54,22 @@ func getCurrentInputMethodID() -> String? {
     return nil
 }
 
+/// 마지막으로 쓰던 라틴 자판으로 전환한다.
+///
+/// 되돌아오는 방향(라틴 → 팥알)은 CJKV 입력기로 들어가는 전환이라 `TISSelectInputSource`가
+/// 간헐적으로 실패한다. 그 방향은 시스템 한/영 키에 맡기고 나가는 방향만 다룬다.
+/// 대상 자판은 macOS가 관리하는 "가장 최근에 쓴 ASCII 자판"이므로 우선순위 목록을 두지 않는다.
+/// - Returns: 전환에 성공하면 true, 돌아갈 라틴 자판이 없거나 TIS가 거부하면 false
+@discardableResult
+func selectLatinInputSource() -> Bool {
+    // 팥알은 ASCII 자판이 아니므로 이 API는 팥알이 아닌 직전 라틴 자판을 돌려준다
+    guard let source = TISCopyCurrentASCIICapableKeyboardInputSource()?.takeRetainedValue() else {
+        return false
+    }
+
+    return TISSelectInputSource(source) == noErr
+}
+
 func getInputLayoutID(id: String) -> LayoutName {
     switch id {
     case "com.soomtong.inputmethod.3-p3":
