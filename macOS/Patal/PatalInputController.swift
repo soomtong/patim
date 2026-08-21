@@ -98,6 +98,24 @@ extension InputController {
             // 현재 키 이벤트는 아래에서 정상 처리
         }
 
+        /// ESC라틴: 조합을 확정하고 라틴 자판으로 빠져나간다 (vi 노멀 모드 진입용)
+        if keyCode == KeyCode.ESC.rawValue && modifiers == ModifierCode.NONE.rawValue
+            && processor.hangulLayout.canESC라틴
+        {
+            let flushed = processor.flushCommit()
+            if !flushed.isEmpty {
+                logger.debug("ESC라틴 flush: \(flushed)")
+                flushed.forEach { client.insertText($0, replacementRange: .notFoundRange) }
+            }
+            // TIS 전환은 이 컨트롤러를 해제하므로 현재 이벤트를 반환한 뒤로 미룬다
+            DispatchQueue.main.async { [logger] in
+                let switched = selectLatinInputSource()
+                logger.debug("ESC라틴 전환: \(switched)")
+            }
+            // ESC 자체는 앱이 받아야 vi가 노멀 모드로 들어간다
+            return false
+        }
+
         /// 빠른마침표: 한글 flush 후 스페이스를 보류
         if keyCode == KeyCode.SPACE.rawValue && modifiers == ModifierCode.NONE.rawValue
             && processor.hangulLayout.can빠른마침표

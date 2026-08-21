@@ -13,7 +13,7 @@ import Foundation
 
 /// enum LayoutName 의 createLayoutInstance 조합기 이름과 같아야 합니다.
 struct Han3P3Layout: HangulAutomata {
-    let availableTraits: Set<LayoutTrait> = [LayoutTrait.모아주기, LayoutTrait.두줄숫자, LayoutTrait.글자단위삭제, LayoutTrait.빠른마침표, LayoutTrait.옵션라틴, LayoutTrait.기호확장]
+    let availableTraits: Set<LayoutTrait> = [LayoutTrait.모아주기, LayoutTrait.두줄숫자, LayoutTrait.글자단위삭제, LayoutTrait.빠른마침표, LayoutTrait.옵션라틴, LayoutTrait.기호확장, LayoutTrait.ESC라틴]
     var traits: Set<LayoutTrait> = []
 
     /// 기호 확장 설정: 2단계 직접 조회 (오른쪽ㅗ/ㅜ → 기호키)
