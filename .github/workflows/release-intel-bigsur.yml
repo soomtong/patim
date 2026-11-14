@@ -9,9 +9,6 @@ on:
       tag:
         description: "빌드할 릴리스 태그 (예: v1.6.3)"
         required: true
-  push:
-    branches: ["claude/confident-keller-r990xl"]
-    paths: [".github/workflows/release-intel-bigsur.yml"]
 
 permissions:
   contents: write
