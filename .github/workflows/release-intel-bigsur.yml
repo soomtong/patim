@@ -61,6 +61,17 @@ jobs:
           /usr/libexec/PlistBuddy -c 'Print :LSMinimumSystemVersion' "$APP/Contents/Info.plist"
           /usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist"
           otool -L "$BIN"
+          echo "--- LC_RPATH"
+          otool -l "$BIN" | grep -A2 LC_RPATH
+          echo "--- Contents/Frameworks"
+          ls -la "$APP/Contents/Frameworks" || true
+          # macOS 11 에는 /usr/lib/swift/libswift_Concurrency.dylib 가 없으므로 번들에 포함되어 있어야 한다
+          if otool -L "$BIN" | grep -q "@rpath/libswift_Concurrency.dylib"; then
+            test -f "$APP/Contents/Frameworks/libswift_Concurrency.dylib"
+            lipo -archs "$APP/Contents/Frameworks/libswift_Concurrency.dylib"
+            otool -l "$BIN" | grep -A2 LC_RPATH | grep -q "@executable_path/../Frameworks"
+          fi
+          codesign --verify --deep --strict --verbose=2 "$APP"
           codesign -dv --verbose=2 "$APP" 2>&1 || true
 
       - name: Build installer package
