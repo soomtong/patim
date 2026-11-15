@@ -1,0 +1,125 @@
+name: Release - Intel macOS 11 (Big Sur) Package
+
+# 인텔(x86_64) macOS 11.0 Big Sur 이상에서 동작하는 설치 패키지를 빌드해 GitHub 릴리스에 첨부한다.
+# 코드 서명 인증서가 없으므로 앱은 ad-hoc 서명, pkg 는 미서명 상태로 배포된다.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "빌드할 릴리스 태그 (예: v1.6.3)"
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  RELEASE_TAG: ${{ github.event.inputs.tag || 'v1.6.3' }}
+  DEPLOYMENT_TARGET: "11.0"
+  APPID: com.soomtong.inputmethod.Patal
+
+jobs:
+  build:
+    name: Build x86_64 pkg for macOS 11
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Build Patal.app (x86_64, macOS 11.0)
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project macOS/Patal.xcodeproj \
+            -scheme Patal \
+            -configuration Release \
+            -destination 'generic/platform=macOS' \
+            -derivedDataPath build/DerivedData \
+            ARCHS=x86_64 ONLY_ACTIVE_ARCH=NO \
+            MACOSX_DEPLOYMENT_TARGET=${DEPLOYMENT_TARGET} \
+            CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM= \
+            CONFIGURATION_BUILD_DIR="$PWD/build/Release" \
+            | xcbeautify
+
+      - name: Verify binary
+        run: |
+          APP=build/Release/Patal.app
+          BIN="$APP/Contents/MacOS/Patal"
+          echo "archs: $(lipo -archs "$BIN")"
+          test "$(lipo -archs "$BIN")" = "x86_64"
+          vtool -show-build "$BIN"
+          vtool -show-build "$BIN" | grep -E "minos ${DEPLOYMENT_TARGET}"
+          /usr/libexec/PlistBuddy -c 'Print :LSMinimumSystemVersion' "$APP/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist"
+          otool -L "$BIN"
+          echo "--- LC_RPATH"
+          otool -l "$BIN" | grep -A2 LC_RPATH
+          echo "--- Contents/Frameworks"
+          ls -la "$APP/Contents/Frameworks" || true
+          # macOS 11 에는 /usr/lib/swift/libswift_Concurrency.dylib 가 없으므로 번들에 포함되어 있어야 한다
+          if otool -L "$BIN" | grep -q "@rpath/libswift_Concurrency.dylib"; then
+            test -f "$APP/Contents/Frameworks/libswift_Concurrency.dylib"
+            lipo -archs "$APP/Contents/Frameworks/libswift_Concurrency.dylib"
+            otool -l "$BIN" | grep -A2 LC_RPATH | grep -q "@executable_path/../Frameworks"
+          fi
+          codesign --verify --deep --strict --verbose=2 "$APP"
+          codesign -dv --verbose=2 "$APP" 2>&1 || true
+
+      - name: Build installer package
+        run: |
+          VERSION=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' build/Release/Patal.app/Contents/Info.plist)
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          mkdir -p dist
+          pkgbuild \
+            --root build/Release/Patal.app \
+            --identifier "$APPID" \
+            --version "$VERSION" \
+            --install-location "/Library/Input Methods/Patal.app" \
+            dist/PatalInputMethod.pkg
+
+          cat > dist/Distribution.xml <<EOF
+          <?xml version="1.0" encoding="utf-8"?>
+          <installer-gui-script minSpecVersion="1">
+            <title>팥알 입력기 (Intel, macOS 11)</title>
+            <pkg-ref id="$APPID"/>
+            <options customize="never" require-scripts="false" hostArchitectures="x86_64"/>
+            <volume-check>
+              <allowed-os-versions>
+                <os-version min="${DEPLOYMENT_TARGET}"/>
+              </allowed-os-versions>
+            </volume-check>
+            <choices-outline>
+              <line choice="default">
+                <line choice="$APPID"/>
+              </line>
+            </choices-outline>
+            <choice id="default"/>
+            <choice id="$APPID" visible="false">
+              <pkg-ref id="$APPID"/>
+              <description>한글 입력기</description>
+            </choice>
+            <pkg-ref id="$APPID" version="$VERSION" onConclusion="RequireLogout">PatalInputMethod.pkg</pkg-ref>
+          </installer-gui-script>
+          EOF
+
+          OUT="dist/PatalInputMethod_${VERSION}_Intel_BigSur.pkg"
+          productbuild --distribution dist/Distribution.xml --package-path dist "$OUT"
+          echo "PKG_PATH=$OUT" >> "$GITHUB_ENV"
+          pkgutil --payload-files "$OUT" | head -20
+          shasum -a 256 "$OUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PatalInputMethod-Intel-BigSur
+          path: ${{ env.PKG_PATH }}
+
+      - name: Attach to GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$RELEASE_TAG" "$PKG_PATH" --clobber --repo "$GITHUB_REPOSITORY"
